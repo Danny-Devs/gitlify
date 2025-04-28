@@ -227,8 +227,8 @@ export default function ApiTester() {
                           <li
                             key={template.id}
                             className={`text-sm p-2 rounded cursor-pointer flex justify-between items-center ${selectedTemplate?.id === template.id
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
-                                : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
+                              : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                               }`}
                           >
                             <div
