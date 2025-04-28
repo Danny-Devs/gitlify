@@ -6,6 +6,7 @@ export default function ApiKeyForm({ initialData, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
+    type: initialData?.type || "dev"
   });
   const [errors, setErrors] = useState({});
 
@@ -56,38 +57,57 @@ export default function ApiKeyForm({ initialData, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
           {initialData ? "Update API Key" : "Create New API Key"}
         </h3>
-        <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
-          <p>
-            {initialData
-              ? "Update the details of your API key."
-              : "Create a new API key that can be used to authenticate with our API."}
-          </p>
-        </div>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {initialData
+            ? "Update the details of your API key."
+            : "Create a new API key that can be used to authenticate with the Gitlify API."}
+        </p>
 
         <form className="mt-5 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Name <span className="text-red-500">*</span>
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className={`shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${errors.name ? "border-red-500 dark:border-red-500" : ""
-                  }`}
-                placeholder="e.g., Production API Key"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
-              )}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Name <span className="text-red-500">*</span>
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className={`shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${errors.name ? "border-red-500 dark:border-red-500" : ""
+                    }`}
+                  placeholder="e.g., Production API Key"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="type" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Key Type
+              </label>
+              <div className="mt-1">
+                <select
+                  id="type"
+                  name="type"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  value={formData.type}
+                  onChange={handleChange}
+                >
+                  <option value="dev">Development</option>
+                  <option value="test">Testing</option>
+                  <option value="prod">Production</option>
+                </select>
+              </div>
             </div>
           </div>
 
