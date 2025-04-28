@@ -45,11 +45,20 @@ export const getApiKeys = async () => {
 // Create a new API key
 export const createApiKey = async (newKeyData) => {
   try {
+    // Get the current user's ID from the session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error('No authenticated user found');
+      return null;
+    }
+
     const newKey = {
       name: newKeyData.name,
       key: generateKeyString(newKeyData.type || 'dev'),
       type: newKeyData.type || 'dev',
-      usage: 0
+      usage: 0,
+      user_id: user.id // Add the user_id from the authenticated session
     };
 
     const { data, error } = await supabase

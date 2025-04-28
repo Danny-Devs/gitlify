@@ -113,7 +113,8 @@ export const executeRequest = async (requestConfig) => {
         response_status: response.status,
         response_headers: responseHeaders,
         response_body: typeof responseData === 'string' ? responseData : JSON.stringify(responseData),
-        duration
+        duration,
+        api_key_id: apiKeyId
       }]);
     }
 
@@ -142,6 +143,14 @@ export const saveRequestTemplate = async (name, requestConfig) => {
   try {
     const { method, url, headers, body, auth } = requestConfig;
 
+    // Get the current user's ID from the session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error('No authenticated user found');
+      return null;
+    }
+
     const { data, error } = await supabase
       .from('request_templates')
       .insert([{
@@ -150,7 +159,8 @@ export const saveRequestTemplate = async (name, requestConfig) => {
         url,
         headers: headers || {},
         body: typeof body === 'string' ? body : JSON.stringify(body),
-        auth_config: auth || {}
+        auth_config: auth || {},
+        user_id: user.id
       }])
       .select()
       .single();
