@@ -6,6 +6,7 @@ import ApiKeyList from "../components/ApiKeyList";
 import ApiKeyForm from "../components/ApiKeyForm";
 import ThemeToggle from "../theme/theme-toggle";
 import Header from "../components/Header";
+import CreateApiKeyModal from "../components/CreateApiKeyModal";
 
 export default function Dashboard() {
   const [apiKeys, setApiKeys] = useState([]);
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingKey, setEditingKey] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch API keys
   useEffect(() => {
@@ -74,6 +76,9 @@ export default function Dashboard() {
     setEditingKey(key);
     setIsFormOpen(true);
   };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -155,7 +160,7 @@ export default function Dashboard() {
 
                 {!isFormOpen && (
                   <button
-                    onClick={() => { setEditingKey(null); setIsFormOpen(true); }}
+                    onClick={openModal}
                     className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -217,7 +222,7 @@ export default function Dashboard() {
                         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new API key.</p>
                         <div className="mt-6">
                           <button
-                            onClick={() => { setEditingKey(null); setIsFormOpen(true); }}
+                            onClick={openModal}
                             className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                           >
                             <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -307,6 +312,13 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Create API Key Modal */}
+      <CreateApiKeyModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleCreateKey}
+      />
     </div>
   );
 } 

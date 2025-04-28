@@ -1,7 +1,25 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Header from "./components/Header";
+import CreateApiKeyModal from "./components/CreateApiKeyModal";
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleCreateKey = (newKey) => {
+    // This would be replaced with actual API call
+    console.log("Creating new key:", newKey);
+
+    // For a real implementation, you might redirect to the dashboard or
+    // show a success message after creating the key
+    closeModal();
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
@@ -132,15 +150,15 @@ export default function Home() {
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">API Keys</h2>
-                  <Link
-                    href="/dashboard"
+                  <button
+                    onClick={openModal}
                     className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     New Key
-                  </Link>
+                  </button>
                 </div>
                 <p className="text-sm text-gray-500 mb-4">
                   The key is used to authenticate your requests to the API. To learn more, see the <a href="#" className="font-medium text-blue-600 hover:text-blue-500">documentation</a> page.
@@ -238,6 +256,13 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Create API Key Modal */}
+      <CreateApiKeyModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleCreateKey}
+      />
     </div>
   );
 }
