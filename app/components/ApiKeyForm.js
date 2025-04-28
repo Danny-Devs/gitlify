@@ -62,10 +62,10 @@ export default function ApiKeyForm({ initialData, onSubmit, onCancel }) {
         <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
           {initialData ? "Update API Key" : "Create New API Key"}
         </h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           {initialData
             ? "Update the details of your API key."
-            : "Create a new API key that can be used to authenticate with the Gitlify API."}
+            : "Create a new API key that can be used to authenticate with the APIBuddy API."}
         </p>
 
         <form className="mt-5 space-y-6" onSubmit={handleSubmit}>

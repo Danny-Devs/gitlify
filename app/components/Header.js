@@ -2,15 +2,34 @@
 
 import Link from "next/link";
 import ThemeToggle from "../theme/theme-toggle";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // After mounting, we can safely show the UI that depends on the theme
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
+            {mounted && (
+              <div className="h-8 w-8 mr-1 flex items-center">
+                {resolvedTheme === 'dark' ? (
+                  <img src="/apibuddy-logo-dark.svg" alt="APIBuddy Logo" className="h-full w-full" />
+                ) : (
+                  <img src="/apibuddy-logo-light.svg" alt="APIBuddy Logo" className="h-full w-full" />
+                )}
+              </div>
+            )}
             <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700">
-              gitlify
+              APIBuddy
             </Link>
           </div>
           <div className="flex items-center">

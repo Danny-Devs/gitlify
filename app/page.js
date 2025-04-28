@@ -45,46 +45,38 @@ export default function Home() {
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Overview</h1>
               </div>
 
-              {/* Plan Card */}
-              <div className="bg-gradient-to-r from-pink-200 via-purple-300 to-blue-300 dark:from-pink-900/40 dark:via-purple-800/40 dark:to-blue-900/40 rounded-lg shadow-sm overflow-hidden mb-8">
+              {/* Overview Card */}
+              <div className="bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400 dark:from-indigo-900/60 dark:via-purple-900/60 dark:to-blue-900/60 rounded-lg shadow-sm overflow-hidden mb-8">
                 <div className="px-6 py-5">
-                  <h2 className="text-xs font-medium text-white/90 uppercase tracking-wide">Current Plan</h2>
+                  <h2 className="text-xs font-medium text-white uppercase tracking-wide">APIBuddy Dashboard</h2>
                   <div className="mt-2 flex justify-between items-center">
-                    <p className="text-3xl font-bold text-white">Developer</p>
+                    <p className="text-3xl font-bold text-white">Welcome to APIBuddy</p>
                     <Link
-                      href="#"
-                      className="inline-flex items-center px-3 py-1.5 border border-white/20 rounded-md shadow-sm text-sm font-medium bg-white/20 text-white hover:bg-white/30 focus:outline-none"
+                      href="/api-tester"
+                      className="inline-flex items-center px-3 py-1.5 border border-white/30 rounded-md shadow-sm text-sm font-medium bg-white/20 text-white hover:bg-white/30 focus:outline-none"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                       </svg>
-                      Manage Plan
+                      Test API
                     </Link>
                   </div>
 
-                  <div className="mt-6">
-                    <div className="flex items-center">
-                      <h3 className="text-sm font-medium text-white/90 flex items-center">
-                        API Usage
-                        <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </h3>
-                      <div className="ml-auto text-sm text-white/90">0 / 1,000 Credits</div>
-                    </div>
-                    <div className="mt-2 w-full bg-white/20 rounded-full h-2.5">
-                      <div className="bg-white h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                    </div>
-
-                    <div className="mt-4 flex items-center">
-                      <label className="flex items-center">
-                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" defaultChecked />
-                        <span className="ml-2 text-sm text-white/90">Pay as you go</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </label>
+                  <div className="mt-4 text-white/90">
+                    <p>A powerful tool for testing, monitoring, and managing API endpoints and authentication.</p>
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white/20 rounded-lg p-3">
+                        <h3 className="text-sm font-medium text-white">API Testing</h3>
+                        <p className="text-xs mt-1 text-white/80">Test your API endpoints with various authentication methods</p>
+                      </div>
+                      <div className="bg-white/20 rounded-lg p-3">
+                        <h3 className="text-sm font-medium text-white">API Key Management</h3>
+                        <p className="text-xs mt-1 text-white/80">Create and manage API keys for secure access</p>
+                      </div>
+                      <div className="bg-white/20 rounded-lg p-3">
+                        <h3 className="text-sm font-medium text-white">Request Templates</h3>
+                        <p className="text-xs mt-1 text-white/80">Save and reuse common API request configurations</p>
+                      </div>
                     </div>
                   </div>
                 </div>
