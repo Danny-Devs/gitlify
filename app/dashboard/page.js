@@ -80,9 +80,9 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <div className="text-2xl font-bold text-blue-600">
+              <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700">
                 gitlify
-              </div>
+              </Link>
             </div>
             <div className="flex items-center">
               <div className="ml-4 flex items-center md:ml-6">
@@ -282,8 +282,8 @@ export default function Dashboard() {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${apiKey.type === 'prod' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                    apiKey.type === 'test' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                      'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                                  apiKey.type === 'test' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                    'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
                                   }`}>
                                   {apiKey.type}
                                 </span>
