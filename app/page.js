@@ -91,14 +91,6 @@ export default function Home() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Overview</h1>
-                <div className="flex items-center">
-                  <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                    <svg className="-ml-1 mr-1.5 h-2 w-2 text-green-500" fill="currentColor" viewBox="0 0 8 8">
-                      <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    Operational
-                  </span>
-                </div>
               </div>
 
               {/* Plan Card */}
@@ -225,31 +217,6 @@ export default function Home() {
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
-
-              {/* Expert Section */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                <div className="px-6 py-5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium text-blue-500">Gitlify Expert</h3>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Powered by AI
-                    </div>
-                  </div>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                    Your expert is a specialized agent, always up to date with Gitlify&apos;s latest documentation and best practices. To be used in AI-native IDEs to accurately implement and test Gitlify tools within your application.
-                  </p>
-                  <div className="mt-4">
-                    <Link
-                      href="https://github.com/Danny-Devs/gitlify"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      Get your Gitlify Expert
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>
