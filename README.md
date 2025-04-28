@@ -24,7 +24,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ### ApiKeySection
 
-The `ApiKeySection` component is a reusable component that provides a consistent UI for displaying and managing API keys throughout the application. It is used in both the main dashboard and homepage.
+The `ApiKeySection` component is a reusable component that provides a consistent UI for displaying and managing API keys throughout the application. It is used in the dashboard page for full API key management.
 
 Features:
 
@@ -44,6 +44,22 @@ Props:
 - `onDeleteKey`: Optional function to handle deleting a key
 - `showBreadcrumbs`: Boolean to control breadcrumb display (default: false)
 - `title`: String for section title (default: "API Keys")
+
+### ApiKeySummary
+
+The `ApiKeySummary` component provides a condensed overview of API keys for the homepage. It shows a count of keys and displays the most recent keys without the full management capabilities.
+
+Features:
+
+- Shows total count of API keys
+- Displays up to 2 most recently created keys
+- Provides a link to the full API keys dashboard
+- Responsive design with appropriate loading and empty states
+
+Props:
+
+- `apiKeys`: Array of API key objects
+- `isLoading`: Boolean indicating if keys are loading
 
 ## Learn More
 

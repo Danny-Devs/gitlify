@@ -4,12 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import CreateApiKeyModal from "./components/CreateApiKeyModal";
-import ApiKeySection from "./components/ApiKeySection";
-import { getApiKeys, createApiKey } from "./services/apiKeysService";
+import ApiKeySummary from "./components/ApiKeySummary";
+import { getApiKeys } from "./services/apiKeysService";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,23 +23,6 @@ export default function Home() {
       setIsLoading(false);
     }
   }, []);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const handleCreateKey = (newKey) => {
-    // Use the service to create a new key
-    const createdKey = createApiKey(newKey);
-    if (createdKey) {
-      setApiKeys([...apiKeys, createdKey]);
-    }
-    closeModal();
-  };
-
-  const handleEditKey = (apiKey) => {
-    // Navigate to dashboard for editing
-    window.location.href = `/dashboard?edit=${apiKey.id}`;
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -105,24 +86,15 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* API Keys Section */}
-              <ApiKeySection
+              {/* API Keys Summary */}
+              <ApiKeySummary
                 apiKeys={apiKeys}
                 isLoading={isLoading}
-                onCreateKey={openModal}
-                onEditKey={handleEditKey}
               />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Create API Key Modal */}
-      <CreateApiKeyModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={handleCreateKey}
-      />
     </div>
   );
 }
