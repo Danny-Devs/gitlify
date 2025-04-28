@@ -38,18 +38,12 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
   // Use a class on the root element that's isolated from the dark mode context
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div
-        className="bg-white dark:bg-gray-900 rounded-lg max-w-md w-full mx-4 overflow-hidden"
-        style={{ color: '#171717' }}
-      >
+      <div className="bg-white dark:bg-gray-900 rounded-lg max-w-md w-full mx-4 overflow-hidden">
         <div className="p-6">
-          <h2
-            className="text-xl font-semibold mb-4"
-            style={{ color: '#171717' }}
-          >
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
             Create a new API key
           </h2>
-          <p className="text-sm mb-6" style={{ color: '#374151' }}>
+          <p className="text-sm mb-6 text-gray-700 dark:text-gray-300">
             Enter a name and limit for the new API key.
           </p>
 
@@ -57,15 +51,14 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
             <div className="mb-4">
               <label
                 htmlFor="keyName"
-                className="block text-sm font-medium mb-1"
-                style={{ color: '#374151' }}
+                className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
               >
                 Key Name — A unique name to identify this key
               </label>
               <input
                 type="text"
                 id="keyName"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
                 placeholder="Key Name"
                 value={keyName}
                 onChange={e => setKeyName(e.target.value)}
@@ -74,10 +67,7 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
             </div>
 
             <div className="mb-6">
-              <label
-                className="block text-sm font-medium mb-1"
-                style={{ color: '#374151' }}
-              >
+              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
                 Key Type — Choose the environment for this key
               </label>
 
@@ -98,13 +88,10 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
                     </div>
                   </div>
                   <div>
-                    <h3
-                      className="text-sm font-medium"
-                      style={{ color: '#111827' }}
-                    >
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                       Production
                     </h3>
-                    <p className="text-xs" style={{ color: '#4B5563' }}>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
                       Rate limited to 1000 requests/minute
                     </p>
                   </div>
@@ -126,13 +113,10 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
                     </div>
                   </div>
                   <div>
-                    <h3
-                      className="text-sm font-medium"
-                      style={{ color: '#111827' }}
-                    >
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                       Development
                     </h3>
-                    <p className="text-xs" style={{ color: '#4B5563' }}>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
                       Rate limited to 100 requests/minute
                     </p>
                   </div>
@@ -147,7 +131,7 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
                     checked={isLimitEnabled}
                     onChange={() => setIsLimitEnabled(!isLimitEnabled)}
                   />
-                  <span className="ml-2 text-sm" style={{ color: '#374151' }}>
+                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                     Limit monthly usage*
                   </span>
                 </label>
@@ -155,7 +139,7 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
                 {isLimitEnabled && (
                   <input
                     type="number"
-                    className="mt-2 w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                    className="mt-2 w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
                     placeholder="1000"
                     value={monthlyLimit}
                     onChange={e => setMonthlyLimit(e.target.value)}
@@ -164,7 +148,7 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
                 )}
 
                 {isLimitEnabled && (
-                  <p className="mt-1 text-xs" style={{ color: '#6B7280' }}>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                     *If the combined usage of all your keys exceeds your plan's
                     limit, all requests will be rejected.
                   </p>
@@ -175,7 +159,7 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
             <div className="flex justify-end space-x-3">
               <button
                 type="button"
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none rounded-md"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none rounded-md"
                 onClick={onClose}
               >
                 Cancel

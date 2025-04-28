@@ -174,6 +174,10 @@ export default function ApiTester() {
     }
   };
 
+  // Common input and select styles with improved text contrast
+  const inputClass = "px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-700 dark:text-white";
+  const selectClass = "px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-700 dark:text-white";
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
@@ -206,7 +210,8 @@ export default function ApiTester() {
                         value={templateName}
                         onChange={(e) => setTemplateName(e.target.value)}
                         placeholder="Template name"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        className={inputClass}
+                        style={{ width: "100%" }}
                       />
                       <button
                         onClick={handleSaveTemplate}
@@ -268,7 +273,7 @@ export default function ApiTester() {
                       <select
                         value={requestConfig.method}
                         onChange={(e) => handleInputChange('method', e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        className={`${selectClass} rounded-l-md rounded-r-none`}
                       >
                         <option value="GET">GET</option>
                         <option value="POST">POST</option>
@@ -282,7 +287,7 @@ export default function ApiTester() {
                         value={requestConfig.url}
                         onChange={(e) => handleInputChange('url', e.target.value)}
                         placeholder="https://api.example.com/endpoint"
-                        className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-r-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        className={`${inputClass} flex-1 rounded-l-none rounded-r-md`}
                       />
                     </div>
 
@@ -294,7 +299,7 @@ export default function ApiTester() {
                           <select
                             value={requestConfig.auth.type}
                             onChange={(e) => handleAuthChange('type', e.target.value)}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                            className={`${selectClass} w-full`}
                           >
                             <option value="none">None</option>
                             <option value="bearer">Bearer Token</option>
@@ -314,7 +319,7 @@ export default function ApiTester() {
                                   requestConfig.auth.type === 'bearer' ? 'Bearer token' :
                                     requestConfig.auth.type === 'basic' ? 'username:password' : 'API key'
                                 }
-                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                className={`${inputClass} w-full`}
                               />
                             </div>
 
@@ -325,7 +330,7 @@ export default function ApiTester() {
                                   value={requestConfig.auth.headerName}
                                   onChange={(e) => handleAuthChange('headerName', e.target.value)}
                                   placeholder="Header name"
-                                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                  className={`${inputClass} w-full`}
                                 />
                               </div>
                             )}
@@ -340,7 +345,7 @@ export default function ApiTester() {
                       <select
                         value={requestConfig.apiKeyId}
                         onChange={(e) => handleInputChange('apiKeyId', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        className={`${selectClass} w-full`}
                       >
                         <option value="">Don't track</option>
                         {apiKeys.map((key) => (
@@ -382,14 +387,14 @@ export default function ApiTester() {
                                   });
                                 }}
                                 placeholder="Header name"
-                                className="col-span-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                className={`${inputClass} col-span-1`}
                               />
                               <input
                                 type="text"
                                 value={value}
                                 onChange={(e) => handleHeaderChange(key, e.target.value)}
                                 placeholder="Value"
-                                className="col-span-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                className={`${inputClass} col-span-2`}
                               />
                             </div>
                           ))}
@@ -406,7 +411,7 @@ export default function ApiTester() {
                           onChange={(e) => handleInputChange('body', e.target.value)}
                           rows={6}
                           placeholder='{"key": "value"}'
-                          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono"
+                          className={`${inputClass} w-full font-mono`}
                         />
                         <div className="text-right mt-1">
                           <button
