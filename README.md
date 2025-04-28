@@ -20,6 +20,31 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Components
+
+### ApiKeySection
+
+The `ApiKeySection` component is a reusable component that provides a consistent UI for displaying and managing API keys throughout the application. It is used in both the main dashboard and homepage.
+
+Features:
+
+- Displays API keys in a table format
+- Shows/hides full API key values
+- Provides copy-to-clipboard functionality
+- Supports key management actions (create, edit, delete)
+- Displays appropriate loading and empty states
+- Optional breadcrumbs for navigation context
+
+Props:
+
+- `apiKeys`: Array of API key objects
+- `isLoading`: Boolean indicating if keys are loading
+- `onCreateKey`: Function to handle creating a new key
+- `onEditKey`: Optional function to handle editing a key
+- `onDeleteKey`: Optional function to handle deleting a key
+- `showBreadcrumbs`: Boolean to control breadcrumb display (default: false)
+- `title`: String for section title (default: "API Keys")
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

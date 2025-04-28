@@ -5,6 +5,7 @@ import Link from "next/link";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import CreateApiKeyModal from "./components/CreateApiKeyModal";
+import ApiKeySection from "./components/ApiKeySection";
 import { getApiKeys, createApiKey } from "./services/apiKeysService";
 
 export default function Home() {
@@ -35,6 +36,11 @@ export default function Home() {
       setApiKeys([...apiKeys, createdKey]);
     }
     closeModal();
+  };
+
+  const handleEditKey = (apiKey) => {
+    // Navigate to dashboard for editing
+    window.location.href = `/dashboard?edit=${apiKey.id}`;
   };
 
   return (
@@ -100,94 +106,12 @@ export default function Home() {
               </div>
 
               {/* API Keys Section */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">API Keys</h2>
-                  <button
-                    onClick={openModal}
-                    className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    New Key
-                  </button>
-                </div>
-                <p className="text-sm text-gray-500 mb-4">
-                  The key is used to authenticate your requests to the API. To learn more, see the <a href="#" className="font-medium text-blue-600 hover:text-blue-500">documentation</a> page.
-                </p>
-
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
-                  {isLoading ? (
-                    <div className="p-4 text-center text-gray-500">Loading API keys...</div>
-                  ) : (
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                      <thead className="bg-gray-50 dark:bg-gray-900/50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Name
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Type
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Usage
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Key
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Options
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {apiKeys.map((apiKey) => (
-                          <tr key={apiKey.id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                              {apiKey.name}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                              {apiKey.type}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                              {apiKey.usage}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-mono">
-                              {apiKey.key.substring(0, 8)}{'•'.repeat(16)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                              <button className="text-gray-400 hover:text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                              </button>
-                              <button className="text-gray-400 hover:text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                              </button>
-                              <Link href={`/dashboard?edit=${apiKey.id}`} className="text-gray-400 hover:text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                        {apiKeys.length === 0 && (
-                          <tr>
-                            <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                              No API keys found. Create your first key with the &ldquo;New Key&rdquo; button.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </div>
+              <ApiKeySection
+                apiKeys={apiKeys}
+                isLoading={isLoading}
+                onCreateKey={openModal}
+                onEditKey={handleEditKey}
+              />
             </div>
           </div>
         </div>

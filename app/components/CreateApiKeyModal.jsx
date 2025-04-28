@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
 export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
@@ -9,25 +9,6 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
   const [isLimitEnabled, setIsLimitEnabled] = useState(false);
   const [keyType, setKeyType] = useState('development'); // "production" or "development"
   const { theme } = useTheme();
-  const modalRef = useRef(null);
-
-  // Handle click outside to close modal
-  const handleBackdropClick = e => {
-    // If clicking the backdrop (not the modal content), close the modal
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
-
-  // Reset form when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setKeyName('');
-      setMonthlyLimit('');
-      setIsLimitEnabled(false);
-      setKeyType('development');
-    }
-  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -46,18 +27,18 @@ export default function CreateApiKeyModal({ isOpen, onClose, onSubmit }) {
       onSubmit(newKey);
     }
 
-    // Reset form and close modal handled by the useEffect now
+    // Reset form and close modal
+    setKeyName('');
+    setMonthlyLimit('');
+    setIsLimitEnabled(false);
+    setKeyType('development');
     onClose();
   };
 
   // Use a class on the root element that's isolated from the dark mode context
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div
-        ref={modalRef}
         className="bg-white dark:bg-gray-900 rounded-lg max-w-md w-full mx-4 overflow-hidden"
         style={{ color: '#171717' }}
       >
