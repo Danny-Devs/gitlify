@@ -21,15 +21,15 @@ export default function Sidebar({ activePage }) {
             <Link
               href="/"
               className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${activePage === 'overview'
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={`mr-3 flex-shrink-0 h-6 w-6 ${activePage === 'overview'
-                    ? 'text-blue-500'
-                    : 'text-gray-400 dark:text-gray-500'
+                  ? 'text-blue-500'
+                  : 'text-gray-400 dark:text-gray-500'
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -42,15 +42,15 @@ export default function Sidebar({ activePage }) {
             <Link
               href="/dashboard"
               className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${activePage === 'api-keys'
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-200'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={`mr-3 flex-shrink-0 h-6 w-6 ${activePage === 'api-keys'
-                    ? 'text-blue-500'
-                    : 'text-gray-400 dark:text-gray-500'
+                  ? 'text-blue-500'
+                  : 'text-gray-400 dark:text-gray-500'
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
