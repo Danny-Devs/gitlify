@@ -19,43 +19,59 @@ export default function Dashboard() {
 
   // Fetch API keys
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      // Simulate API delay
-      setTimeout(() => {
-        const keys = getApiKeys();
+    const fetchApiKeys = async () => {
+      try {
+        setIsLoading(true);
+        const keys = await getApiKeys();
         setApiKeys(keys);
         setIsLoading(false);
-      }, 500);
-    } catch (err) {
-      setError("Failed to load API keys");
-      setIsLoading(false);
-    }
+      } catch (err) {
+        setError("Failed to load API keys");
+        setIsLoading(false);
+      }
+    };
+
+    fetchApiKeys();
   }, []);
 
-  const handleCreateKey = (newKey) => {
-    const createdKey = createApiKey(newKey);
-    if (createdKey) {
-      setApiKeys([...apiKeys, createdKey]);
+  const handleCreateKey = async (newKey) => {
+    try {
+      const createdKey = await createApiKey(newKey);
+      if (createdKey) {
+        setApiKeys([...apiKeys, createdKey]);
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error creating API key:", error);
+      setError("Failed to create API key");
     }
-    setIsModalOpen(false);
   };
 
-  const handleUpdateKey = (updatedKey) => {
-    const success = updateApiKey(updatedKey);
-    if (success) {
-      setApiKeys(apiKeys.map(key =>
-        key.id === updatedKey.id ? { ...key, ...updatedKey } : key
-      ));
+  const handleUpdateKey = async (updatedKey) => {
+    try {
+      const success = await updateApiKey(updatedKey);
+      if (success) {
+        setApiKeys(apiKeys.map(key =>
+          key.id === updatedKey.id ? { ...key, ...updatedKey } : key
+        ));
+      }
+      setEditingKey(null);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error("Error updating API key:", error);
+      setError("Failed to update API key");
     }
-    setEditingKey(null);
-    setIsFormOpen(false);
   };
 
-  const handleDeleteKey = (id) => {
-    const success = deleteApiKey(id);
-    if (success) {
-      setApiKeys(apiKeys.filter(key => key.id !== id));
+  const handleDeleteKey = async (id) => {
+    try {
+      const success = await deleteApiKey(id);
+      if (success) {
+        setApiKeys(apiKeys.filter(key => key.id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting API key:", error);
+      setError("Failed to delete API key");
     }
   };
 

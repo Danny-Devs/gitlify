@@ -1,56 +1,69 @@
 // apiKeysService.js - A service layer for API keys management
-// Currently using localStorage but designed to be swapped with Supabase later
+// Using Supabase for data storage
 
-const STORAGE_KEY = 'gitlify_api_keys';
-
-// Default/initial keys if none exist
-const defaultKeys = [
-  {
-    id: "1",
-    name: "default",
-    key: "gitl-dev-xxxxxxxxxxxx",
-    type: "dev",
-    usage: 0,
-    createdAt: new Date().toISOString().split('T')[0]
-  }
-];
+import supabase from '../lib/supabase';
 
 // Helper to generate a unique key string
 const generateKeyString = (type) => {
   return `gitl_${type}_${Math.random().toString(36).substring(2, 15)}`;
 };
 
-// Get all API keys
-export const getApiKeys = () => {
-  if (typeof window === 'undefined') return defaultKeys;
+// Format the API key from database format to application format
+const formatApiKey = (dbKey) => {
+  if (!dbKey) return null;
 
+  return {
+    id: dbKey.id,
+    name: dbKey.name,
+    key: dbKey.key,
+    type: dbKey.type,
+    usage: dbKey.usage,
+    createdAt: new Date(dbKey.created_at).toISOString().split('T')[0]
+  };
+};
+
+// Get all API keys
+export const getApiKeys = async () => {
   try {
-    const keys = localStorage.getItem(STORAGE_KEY);
-    return keys ? JSON.parse(keys) : defaultKeys;
+    const { data, error } = await supabase
+      .from('api_keys')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching API keys:', error);
+      return [];
+    }
+
+    return data.map(formatApiKey);
   } catch (error) {
     console.error('Error getting API keys:', error);
-    return defaultKeys;
+    return [];
   }
 };
 
 // Create a new API key
-export const createApiKey = (newKeyData) => {
+export const createApiKey = async (newKeyData) => {
   try {
-    const keys = getApiKeys();
-
     const newKey = {
-      id: Date.now().toString(),
+      name: newKeyData.name,
       key: generateKeyString(newKeyData.type || 'dev'),
       type: newKeyData.type || 'dev',
-      usage: 0,
-      createdAt: new Date().toISOString().split('T')[0],
-      ...newKeyData
+      usage: 0
     };
 
-    const updatedKeys = [...keys, newKey];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedKeys));
+    const { data, error } = await supabase
+      .from('api_keys')
+      .insert([newKey])
+      .select()
+      .single();
 
-    return newKey;
+    if (error) {
+      console.error('Error creating API key:', error);
+      return null;
+    }
+
+    return formatApiKey(data);
   } catch (error) {
     console.error('Error creating API key:', error);
     return null;
@@ -58,14 +71,22 @@ export const createApiKey = (newKeyData) => {
 };
 
 // Update an existing API key
-export const updateApiKey = (updatedKey) => {
+export const updateApiKey = async (updatedKey) => {
   try {
-    const keys = getApiKeys();
-    const updatedKeys = keys.map(key =>
-      key.id === updatedKey.id ? { ...key, ...updatedKey } : key
-    );
+    const { error } = await supabase
+      .from('api_keys')
+      .update({
+        name: updatedKey.name,
+        type: updatedKey.type,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', updatedKey.id);
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedKeys));
+    if (error) {
+      console.error('Error updating API key:', error);
+      return false;
+    }
+
     return true;
   } catch (error) {
     console.error('Error updating API key:', error);
@@ -74,12 +95,18 @@ export const updateApiKey = (updatedKey) => {
 };
 
 // Delete an API key
-export const deleteApiKey = (id) => {
+export const deleteApiKey = async (id) => {
   try {
-    const keys = getApiKeys();
-    const updatedKeys = keys.filter(key => key.id !== id);
+    const { error } = await supabase
+      .from('api_keys')
+      .delete()
+      .eq('id', id);
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedKeys));
+    if (error) {
+      console.error('Error deleting API key:', error);
+      return false;
+    }
+
     return true;
   } catch (error) {
     console.error('Error deleting API key:', error);
@@ -87,6 +114,19 @@ export const deleteApiKey = (id) => {
   }
 };
 
-// When migrating to Supabase, you'll replace the implementations above
-// with Supabase client calls, but keep the same function signatures
-// so the rest of your application won't need to change. 
+// Increment the usage count for an API key
+export const incrementKeyUsage = async (id) => {
+  try {
+    const { error } = await supabase.rpc('increment_key_usage', { key_id: id });
+
+    if (error) {
+      console.error('Error incrementing API key usage:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error incrementing API key usage:', error);
+    return false;
+  }
+}; 

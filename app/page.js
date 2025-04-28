@@ -12,16 +12,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      // Get API keys from localStorage through the service
-      const keys = getApiKeys();
-      setApiKeys(keys);
-      setIsLoading(false);
-    } catch (err) {
-      console.error("Error loading API keys:", err);
-      setIsLoading(false);
-    }
+    const fetchApiKeys = async () => {
+      try {
+        setIsLoading(true);
+        // Get API keys from Supabase through the service
+        const keys = await getApiKeys();
+        setApiKeys(keys);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error loading API keys:", err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchApiKeys();
   }, []);
 
   return (
