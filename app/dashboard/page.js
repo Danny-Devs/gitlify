@@ -7,6 +7,7 @@ import ApiKeyForm from "../components/ApiKeyForm";
 import ThemeToggle from "../theme/theme-toggle";
 import Header from "../components/Header";
 import CreateApiKeyModal from "../components/CreateApiKeyModal";
+import { getApiKeys, createApiKey, updateApiKey, deleteApiKey } from "../services/apiKeysService";
 
 export default function Dashboard() {
   const [apiKeys, setApiKeys] = useState([]);
@@ -18,58 +19,44 @@ export default function Dashboard() {
 
   // Fetch API keys
   useEffect(() => {
-    // This would be replaced with actual API call
-    const fetchKeys = async () => {
-      try {
-        setIsLoading(true);
-        // Mock data for demonstration
-        const mockData = [
-          { id: "1", name: "Production API Key", key: "gitl_prod_xxxxxxxxxxxx", type: "prod", usage: 245, createdAt: "2023-10-15" },
-          { id: "2", name: "Development API Key", key: "gitl_dev_xxxxxxxxxxxx", type: "dev", usage: 56, createdAt: "2023-11-20" },
-          { id: "3", name: "Testing API Key", key: "gitl_test_xxxxxxxxxxx", type: "test", usage: 0, createdAt: "2023-12-05" },
-        ];
-
-        // Simulate API delay
-        setTimeout(() => {
-          setApiKeys(mockData);
-          setIsLoading(false);
-        }, 500);
-      } catch (err) {
-        setError("Failed to load API keys");
+    try {
+      setIsLoading(true);
+      // Simulate API delay
+      setTimeout(() => {
+        const keys = getApiKeys();
+        setApiKeys(keys);
         setIsLoading(false);
-      }
-    };
-
-    fetchKeys();
+      }, 500);
+    } catch (err) {
+      setError("Failed to load API keys");
+      setIsLoading(false);
+    }
   }, []);
 
   const handleCreateKey = (newKey) => {
-    // This would be replaced with actual API call
-    const key = {
-      id: Date.now().toString(),
-      key: `gitl_${newKey.type || 'dev'}_${Math.random().toString(36).substring(2, 15)}`,
-      type: newKey.type || 'dev',
-      usage: 0,
-      createdAt: new Date().toISOString().split('T')[0],
-      ...newKey
-    };
-
-    setApiKeys([...apiKeys, key]);
+    const createdKey = createApiKey(newKey);
+    if (createdKey) {
+      setApiKeys([...apiKeys, createdKey]);
+    }
     setIsFormOpen(false);
   };
 
   const handleUpdateKey = (updatedKey) => {
-    // This would be replaced with actual API call
-    setApiKeys(apiKeys.map(key =>
-      key.id === updatedKey.id ? { ...key, ...updatedKey } : key
-    ));
+    const success = updateApiKey(updatedKey);
+    if (success) {
+      setApiKeys(apiKeys.map(key =>
+        key.id === updatedKey.id ? { ...key, ...updatedKey } : key
+      ));
+    }
     setEditingKey(null);
     setIsFormOpen(false);
   };
 
   const handleDeleteKey = (id) => {
-    // This would be replaced with actual API call
-    setApiKeys(apiKeys.filter(key => key.id !== id));
+    const success = deleteApiKey(id);
+    if (success) {
+      setApiKeys(apiKeys.filter(key => key.id !== id));
+    }
   };
 
   const openEditForm = (key) => {
