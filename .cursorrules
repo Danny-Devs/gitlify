@@ -30,6 +30,7 @@ CodeNarrator transforms public GitHub repositories into engaging audio code tour
 - Create accessible audio player controls and visualization components
 - Separate UI components from data-fetching logic
 - Use React Query for API data fetching and caching
+- Use Lucide icons from Shadcn UI instead of Hero icons for all iconography
 
 ### File Structure
 
@@ -69,10 +70,11 @@ CodeNarrator transforms public GitHub repositories into engaging audio code tour
 
 ## Technology Constraints
 
-- Next.js 14+ with App Router for frontend and API routes
+- Next.js 15+ with App Router for frontend and API routes
 - TypeScript for type safety throughout
 - PostgreSQL with Prisma ORM for database
 - TailwindCSS with Shadcn/UI components for UI
+- Lucide icons through Shadcn/UI integration for iconography
 - Octokit.js for GitHub API access
 - Text-to-speech services for audio generation
 - Visualization libraries for supporting diagrams
