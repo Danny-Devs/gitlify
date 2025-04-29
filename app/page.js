@@ -63,19 +63,19 @@ export default function Home() {
                   </div>
 
                   <div className="mt-4 text-white/90">
-                    <p>A powerful tool for testing, monitoring, and managing API endpoints and authentication.</p>
+                    <p className="text-lg">A powerful tool for testing, monitoring, and managing API endpoints and authentication.</p>
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/10">
-                        <h3 className="text-sm font-medium text-white">API Testing</h3>
-                        <p className="text-xs mt-1 text-white/80">Test your API endpoints with various authentication methods</p>
+                        <h3 className="text-md font-medium text-white">API Testing</h3>
+                        <p className="text-sm mt-1 text-white/80">Test your API endpoints with various authentication methods</p>
                       </div>
                       <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/10">
-                        <h3 className="text-sm font-medium text-white">API Key Management</h3>
-                        <p className="text-xs mt-1 text-white/80">Create and manage API keys for secure access</p>
+                        <h3 className="text-md font-medium text-white">API Key Management</h3>
+                        <p className="text-sm mt-1 text-white/80">Create and manage API keys for secure access</p>
                       </div>
                       <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/10">
-                        <h3 className="text-sm font-medium text-white">Request Templates</h3>
-                        <p className="text-xs mt-1 text-white/80">Save and reuse common API request configurations</p>
+                        <h3 className="text-md font-medium text-white">Request Templates</h3>
+                        <p className="text-sm mt-1 text-white/80">Save and reuse common API request configurations</p>
                       </div>
                     </div>
                   </div>
