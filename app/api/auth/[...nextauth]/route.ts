@@ -28,15 +28,16 @@ const handler = NextAuth({
     }
   },
   pages: {
-    signIn: '/auth/signin'
+    signIn: '/auth/signin',
+    error: '/auth/error'
     // signOut: '/auth/signout',
-    // error: '/auth/error',
     // verifyRequest: '/auth/verify-request',
     // newUser: '/auth/new-user'
   },
   session: {
     strategy: 'database'
-  }
+  },
+  debug: process.env.NODE_ENV === 'development' // Enable debug in development
 });
 
 export { handler as GET, handler as POST };

@@ -2,12 +2,18 @@
 
 import Link from 'next/link';
 import ThemeToggle from '../../theme/ThemeToggle';
+import { useSession } from 'next-auth/react';
+import { UserProfile } from '../auth/UserProfile';
+import { SignInButton } from '../auth/SignInButton';
 
 interface HeaderProps {
   showNavigation?: boolean;
 }
 
 export default function Header({ showNavigation = true }: HeaderProps) {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
   return (
     <header className="border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,9 +57,11 @@ export default function Header({ showNavigation = true }: HeaderProps) {
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
-              Sign In
-            </button>
+            {isAuthenticated ? (
+              <UserProfile />
+            ) : (
+              <SignInButton>Sign In</SignInButton>
+            )}
           </div>
         </div>
       </div>
