@@ -1,0 +1,86 @@
+# Gist of Git: Project Rules for Cursor AI
+
+## Project Overview
+
+Gist of Git is a tool for analyzing GitHub repositories using locally hosted LLMs. The application fetches repository data, passes it to local LLMs, and displays the analysis results.
+
+## Development Principles
+
+- Start with simplicity - build core features before advanced ones
+- User privacy is critical - all code analysis happens locally
+- Follow incremental development - build in small, functional steps
+- Progressive enhancement - make basic features work well first
+
+## Code Style Guidelines
+
+### General
+
+- Use TypeScript for all code
+- Follow functional programming principles where appropriate
+- Use clear, descriptive variable and function names
+- Keep functions small and focused on a single responsibility
+- Add inline comments for complex logic, but prefer self-documenting code
+
+### React Components
+
+- Use functional components with hooks
+- Follow a structure of imports → types → component → exports
+- Separate UI components from data-fetching logic
+- Use React Query for API data fetching
+
+### File Structure
+
+- Place components in app/components/
+- Services in app/services/
+- API routes in app/api/
+- Utility functions in app/lib/
+- Database models and queries in prisma/
+
+### Database
+
+- Always use Prisma client for database access
+- Define all schema changes in prisma/schema.prisma
+- Create migrations for all schema changes
+
+### Naming Conventions
+
+- React components: PascalCase
+- Functions and variables: camelCase
+- Files: kebab-case.tsx for components, kebab-case.ts for others
+- Database tables: PascalCase
+- API routes: kebab-case
+
+## Implementation Priorities
+
+1. GitHub repository fetching and display
+2. Local LLM integration
+3. Analysis templates and processing
+4. Results display
+5. Enhanced features and UI improvements
+
+## Technology Constraints
+
+- Next.js for frontend and API routes
+- PostgreSQL with Prisma ORM for database
+- TailwindCSS for styling
+- Octokit.js for GitHub API access
+- Simple REST clients for LLM integration
+
+## Testing Requirements
+
+- Jest for unit and integration tests
+- React Testing Library for component tests
+- Good test coverage for core functionality
+
+## Documentation Standards
+
+- JSDoc comments for functions and components
+- Update README.md with new features
+- Document API endpoints in their respective route files
+
+## Accessibility
+
+- All components should be accessible
+- Use semantic HTML elements
+- Include proper ARIA attributes where needed
+- Ensure keyboard navigation works properly

@@ -1,0 +1,42 @@
+import NextAuth from 'next-auth';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import GitHub from 'next-auth/providers/github';
+import prisma from '@/app/lib/prisma';
+
+const handler = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          // We get read-only access to public repositories by default
+          // If we need more access, we can add more scopes here
+          scope: 'read:user user:email'
+        }
+      }
+    })
+  ],
+  callbacks: {
+    async session({ session, user }) {
+      // Add user ID to the session so we can use it in our app
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    }
+  },
+  pages: {
+    signIn: '/auth/signin'
+    // signOut: '/auth/signout',
+    // error: '/auth/error',
+    // verifyRequest: '/auth/verify-request',
+    // newUser: '/auth/new-user'
+  },
+  session: {
+    strategy: 'database'
+  }
+});
+
+export { handler as GET, handler as POST };
