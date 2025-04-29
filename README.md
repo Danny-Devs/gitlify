@@ -11,6 +11,7 @@ CodeGrok transforms complex GitHub repositories into intuitive learning experien
 - **Visual Understanding**: View generated diagrams that illustrate component relationships
 - **Contribution Pathways**: Identify opportunities to contribute through tests, documentation, or refactoring
 - **Zero API Costs**: Use your own computing resources instead of paying for closed-source LLMs
+- **Repository Reimagination**: Extract detailed PRDs from existing repos to create improved versions
 - **Community Enhancement**: Explanations improve through user feedback and A/B testing
 
 ## Features
@@ -18,6 +19,8 @@ CodeGrok transforms complex GitHub repositories into intuitive learning experien
 - Explore curated repositories organized by domain and complexity
 - Get instant architectural overviews and component relationship diagrams
 - Study code with intelligent annotations and explanations
+- Generate comprehensive PRDs from existing repositories
+- Build improved versions based on extracted requirements
 - Identify patterns, dependencies, and design decisions
 - Track your learning progress across multiple repositories
 - Discover contribution opportunities with guided workflows

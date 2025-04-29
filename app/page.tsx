@@ -65,6 +65,51 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <div className="mt-20">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-8">
+            Why CodeGrok?
+          </h3>
+
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+            <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
+              <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
+                Learning Acceleration
+              </div>
+              <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                CodeGrok leverages the power of LLMs to transform steep learning
+                curves into fast-track comprehension through multi-layered
+                explanations, architectural insights, and specialized learning
+                tools that help users quickly understand code flow, patterns,
+                and structure.
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
+              <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
+                Cost Efficiency
+              </div>
+              <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                Users leverage their own computing resources and local LLMs
+                instead of paying for expensive closed-source LLM API calls,
+                making the tool completely free to use. No subscriptions, no
+                usage limits, no surprise bills.
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
+              <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
+                Repository Reimagination
+              </div>
+              <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                Extract detailed project requirements from existing codebases,
+                then use them to build improved versions with modern best
+                practices. Identify opportunities to contribute superior
+                implementations back to the original projects.
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <Footer />
