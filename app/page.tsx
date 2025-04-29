@@ -12,11 +12,11 @@ export default function Home() {
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-            Analyze GitHub Repositories with Local LLMs
+            Master GitHub Repositories In Record Time
           </h2>
           <p className="mt-3 text-xl text-gray-500 dark:text-gray-400 sm:mt-4">
-            Grok public repositories for FREE - use your own computing power
-            instead of paying for closed-source LLMs.
+            Grok public repositories in record time with our revolutionary
+            learning tools - all for FREE using your own computing power.
           </p>
           <div className="mt-8 flex justify-center">
             <Link
@@ -48,8 +48,8 @@ export default function Home() {
                 2. Analyze
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Our system uses your local LLM - zero API costs compared to
-                commercial alternatives.
+                Our intelligent system enhances local LLMs with specialized
+                algorithms to extract key architectural insights.
               </div>
             </div>
 
@@ -58,8 +58,9 @@ export default function Home() {
                 3. Grok
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Master any public codebase&apos;s architecture, flow, and
-                patterns.
+                Rapidly master any codebase with our multi-layered learning
+                tools that transform steep learning curves into fast-track
+                comprehension.
               </div>
             </div>
           </div>
