@@ -2,16 +2,17 @@
 
 ## Project Overview
 
-**CodeGrok** is an application designed to help developers deeply understand public GitHub repositories through AI-powered analysis and progressive learning paths. The platform provides multiple layers of explanation, from high-level architectural overviews to detailed code annotations, alongside interactive visualizations. The primary goal is to reduce the learning curve for complex codebases, enabling users to progress from initial understanding to making meaningful open source contributions.
+**CodeGrok** is an application designed to help developers master public GitHub repositories through AI-powered analysis and progressive learning paths. The platform provides multiple layers of explanation, from high-level architectural overviews to detailed code annotations, alongside interactive visualizations - all without the recurring costs of commercial LLM APIs. The primary goal is to reduce the learning curve for complex codebases, enabling users to progress from initial understanding to making meaningful open source contributions while leveraging their existing computing resources.
 
 ### Value Proposition
 
-Developers struggle with understanding unfamiliar codebases, especially when considering contributing to open source projects. CodeGrok solves this by:
+Developers struggle with mastering unfamiliar codebases, especially when considering contributing to open source projects. CodeGrok solves this by:
 
 - Providing multi-layered explanations that adapt to the user's current understanding level
 - Generating side-by-side code annotations that explain complex functions and components
 - Creating architectural visualizations that illustrate system relationships
 - Building progressive learning paths from basic comprehension to contribution readiness
+- Eliminating API costs by using local LLMs instead of expensive closed-source models
 - Identifying opportunities for contributions (missing tests, documentation, refactoring)
 - Enabling users to track their progress across repositories they're studying
 - Leveraging collective feedback to continuously improve explanations
@@ -25,6 +26,7 @@ Developers struggle with understanding unfamiliar codebases, especially when con
 - **Side-by-side Code Annotations**: Explanations that appear alongside the actual code
 - **Architectural Summaries**: Bird's-eye views of system components and interactions
 - **Design Pattern Recognition**: Identification of common patterns used in the codebase
+- **Cost-Free Analysis**: Process large repositories without worrying about API costs
 
 ### 2. Visual Understanding Tools
 
@@ -164,6 +166,7 @@ Developers struggle with understanding unfamiliar codebases, especially when con
 5. Repository explanations adapt effectively to different user knowledge levels
 6. Steady growth in the number of repositories being studied
 7. Measurable increase in contribution confidence among users
+8. Users report significant cost savings compared to using commercial LLM APIs
 
 ## Technical Implementation
 
@@ -172,7 +175,7 @@ The project will be built using:
 - Next.js 14+ with App Router for the web platform
 - TypeScript for type-safe development
 - PostgreSQL with Prisma ORM for data persistence
-- Local LLM integration for code analysis and explanation generation
+- Local LLM integration for cost-free code analysis and explanation generation
 - Interactive visualization libraries for component relationship diagrams
 - GitHub API integration for repository data
 

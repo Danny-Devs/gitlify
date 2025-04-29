@@ -15,8 +15,8 @@ export default function Home() {
             Analyze GitHub Repositories with Local LLMs
           </h2>
           <p className="mt-3 text-xl text-gray-500 dark:text-gray-400 sm:mt-4">
-            Get insights from public Github repositories without sending your
-            code to external services.
+            Grok public repositories for FREE - use your own computing power
+            instead of paying for closed-source LLMs.
           </p>
           <div className="mt-8 flex justify-center">
             <Link
@@ -36,7 +36,7 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-6">
               <div className="text-lg font-medium text-gray-900 dark:text-white">
-                1. Connect
+                1. Choose
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
                 Select any public GitHub repository you want to analyze.
@@ -48,18 +48,18 @@ export default function Home() {
                 2. Analyze
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Our system passes the repository code to your local LLM for
-                private, secure analysis.
+                Our system uses your local LLM - zero API costs compared to
+                commercial alternatives.
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-6">
               <div className="text-lg font-medium text-gray-900 dark:text-white">
-                3. Insights
+                3. Grok
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Get detailed insights about any public codebase&apos;s
-                architecture, quality, and patterns.
+                Master any public codebase&apos;s architecture, flow, and
+                patterns.
               </div>
             </div>
           </div>

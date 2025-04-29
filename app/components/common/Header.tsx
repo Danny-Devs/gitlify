@@ -21,7 +21,7 @@ export default function Header({ showNavigation = true }: HeaderProps) {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Gist of Git
+                CodeGrok
               </h1>
             </Link>
 
@@ -68,4 +68,3 @@ export default function Header({ showNavigation = true }: HeaderProps) {
     </header>
   );
 }
- 

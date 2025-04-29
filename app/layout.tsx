@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'Gist of Git',
-  description: 'Analyze GitHub repositories with AI powered by local LLMs'
+  title: 'CodeGrok',
+  description:
+    'Master GitHub repositories for FREE using your own computing power'
 };
 
 interface RootLayoutProps {
@@ -44,4 +45,3 @@ export default function RootLayout({ children }: RootLayoutProps) {
     </html>
   );
 }
- 

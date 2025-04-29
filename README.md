@@ -1,15 +1,16 @@
 # CodeGrok
 
-Deeply understand any public GitHub repository with AI-powered explanations and visualizations.
+Master any public GitHub repository with AI-powered explanations and visualizations - without spending a penny on API calls.
 
 ## Overview
 
-CodeGrok transforms complex GitHub repositories into intuitive learning experiences, helping developers understand unfamiliar codebases faster. Using locally hosted Large Language Models, we provide multi-layered explanations that cover everything from high-level architecture to detailed implementation, with the goal of enabling users to progress from understanding to meaningful contribution.
+CodeGrok transforms complex GitHub repositories into intuitive learning experiences, helping developers master unfamiliar codebases faster. Using locally hosted Large Language Models, we provide multi-layered explanations that cover everything from high-level architecture to detailed implementation, with the goal of enabling users to progress from understanding to meaningful contribution - all with zero API costs.
 
 - **Multi-layered Explanations**: Access explanations that adapt to your level of understanding
 - **Side-by-side Code Annotations**: See detailed explanations right alongside the code
 - **Visual Understanding**: View generated diagrams that illustrate component relationships
 - **Contribution Pathways**: Identify opportunities to contribute through tests, documentation, or refactoring
+- **Zero API Costs**: Use your own computing resources instead of paying for closed-source LLMs
 - **Community Enhancement**: Explanations improve through user feedback and A/B testing
 
 ## Features
@@ -22,6 +23,7 @@ CodeGrok transforms complex GitHub repositories into intuitive learning experien
 - Discover contribution opportunities with guided workflows
 - Rate explanations to help improve the collective understanding
 - Build a portfolio of repositories you've mastered
+- Save money by using your own computing power instead of paid API services
 
 ## Use Cases
 
@@ -30,6 +32,7 @@ CodeGrok transforms complex GitHub repositories into intuitive learning experien
 - **Learning Best Practices**: Study how successful projects are structured and implemented
 - **Code Review Enhancement**: Better understand code you're reviewing with contextual explanations
 - **Technical Evaluation**: Assess potential dependencies before adding them to your project
+- **Cost-Effective Analysis**: Analyze large codebases without worrying about mounting API costs
 
 ## Tech Stack
 
@@ -86,8 +89,8 @@ npm run dev
 
 ## How It Works
 
-1. **Repository Analysis**: We fetch and analyze the repository structure using local LLMs
-2. **Explanation Generation**: The system creates multiple layers of explanation for the codebase
+1. **Repository Analysis**: We fetch and analyze the repository structure using local LLMs - no expensive API calls
+2. **Explanation Generation**: The system creates multiple layers of explanation for the codebase at no additional cost
 3. **Visualization Creation**: Supporting diagrams are generated to illustrate component relationships
 4. **Learning Path Construction**: Progressive checkpoints guide users from overview to details
 5. **Contribution Preparation**: Areas for potential contribution are identified
@@ -97,7 +100,7 @@ npm run dev
 
 - Focus on creating clear, context-aware explanations
 - Build progressive learning paths from high-level to detailed understanding
-- Ensure all processing happens locally for privacy and control
+- Leverage local computing resources to eliminate API costs
 - Use community feedback to continuously improve explanation quality
 - Create visualizations that enhance understanding of complex relationships
 - Lower the barrier to meaningful open source contributions
