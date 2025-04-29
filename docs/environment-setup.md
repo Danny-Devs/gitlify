@@ -16,7 +16,7 @@ NEXTAUTH_SECRET="replace-with-a-strong-random-secret"
 
 # GitHub OAuth
 GITHUB_CLIENT_ID="your-github-client-id"
-GITHUB_CLIENT_SECRET="your-github-client-secret"
+**GITHUB_CLIENT_SECRET**="your-github-client-secret"
 ```
 
 ## Setting Up GitHub OAuth

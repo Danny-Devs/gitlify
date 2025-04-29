@@ -68,3 +68,4 @@ export default function Header({ showNavigation = true }: HeaderProps) {
     </header>
   );
 }
+ 
