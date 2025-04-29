@@ -15,8 +15,8 @@ export default function Home() {
             Analyze GitHub Repositories with Local LLMs
           </h2>
           <p className="mt-3 text-xl text-gray-500 dark:text-gray-400 sm:mt-4">
-            Get insights from your repositories without sending your code to
-            external services.
+            Get insights from public Github repositories without sending your
+            code to external services.
           </p>
           <div className="mt-8 flex justify-center">
             <Link
@@ -39,8 +39,7 @@ export default function Home() {
                 1. Connect
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Connect to your GitHub repositories and select what you want to
-                analyze.
+                Select any public GitHub repository you want to analyze.
               </div>
             </div>
 
@@ -49,8 +48,8 @@ export default function Home() {
                 2. Analyze
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Our system passes your code to your local LLM for private,
-                secure analysis.
+                Our system passes the repository code to your local LLM for
+                private, secure analysis.
               </div>
             </div>
 
@@ -59,8 +58,8 @@ export default function Home() {
                 3. Insights
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Get detailed insights about your codebase's architecture,
-                quality, and patterns.
+                Get detailed insights about any public codebase&apos;s
+                architecture, quality, and patterns.
               </div>
             </div>
           </div>

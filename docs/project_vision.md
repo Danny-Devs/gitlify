@@ -1,96 +1,104 @@
-# Project Vision: Gist of Git
+# Project Vision: CodeNarrator
 
 ## Core Vision
 
-**Gist of Git** helps developers understand GitHub repositories quickly through AI-powered analysis using locally-hosted Large Language Models (LLMs). Our goal is to reduce the time it takes to comprehend unfamiliar code from days to hours.
+**CodeNarrator** transforms how developers learn from code by providing audio-guided tours of any public GitHub repository. Our goal is to create a "podcast-like" learning experience that allows developers to understand unfamiliar codebases while commuting, exercising, or relaxing away from their screens. By combining AI-powered code analysis with high-quality text-to-speech conversion, we enable passive consumption of complex technical knowledge in a format that mimics having an expert developer personally guiding you through the codebase.
 
 ## The Problem
 
 Developers face significant challenges when working with unfamiliar codebases:
 
-- Understanding existing code takes significantly more time than writing new code
+- Understanding code requires constant, focused screen time that's mentally taxing
 - Documentation is often outdated, incomplete, or missing entirely
-- Onboarding to new projects or evaluating dependencies is time-consuming
-- Complex codebases can be intimidating, especially for less experienced developers
+- Learning from great codebases requires significant time investment
+- Existing solutions require active reading and concentration
+- Complex code visualization tools have steep learning curves
+- There's no equivalent to "tech podcasts" for specific codebase learning
+- Context-switching between documentation, code, and explanations is inefficient
 
 ## Our Solution
 
-Gist of Git provides AI-powered analysis of GitHub repositories with these key benefits:
+CodeNarrator provides an audio-first approach to code learning with these key benefits:
 
-- **Privacy-first**: All analysis happens on your local machine using your own LLM instances
-- **Quick insights**: Generate high-level overviews of repository structure and architecture
-- **Customizable analysis**: Use templates to extract specific insights about the codebase
-- **Visualization**: See relationships between components, dependencies, and patterns
+- **Audio Learning**: Generate engaging spoken explanations of codebase architecture and implementation
+- **Passive Consumption**: Learn about code while doing other activities, maximizing productive time
+- **Logical Organization**: Tours follow a logical flow that tells a coherent story about the code
+- **Supporting Visuals**: Key diagrams and visualizations enhance the audio explanations
+- **Community Improvement**: Tours get better through user feedback and A/B testing
+- **Bookmark and Resume**: Save your position and continue learning when convenient
+- **Personalized Library**: Build a collection of codebases you want to study and learn from
 
 ## Target Users
 
-- **Software Developers**: Looking to understand new codebases quickly
-- **Tech Leads**: Evaluating dependencies or helping team members understand code
-- **Open Source Contributors**: Wanting to comprehend project structure before contributing
-- **Software Engineering Students**: Learning from real-world codebases
+- **Software Developers**: Looking to understand new codebases without intense screen time
+- **Open Source Contributors**: Wanting to comprehend project structure while commuting
+- **Software Engineering Students**: Learning from real-world code through audio explanations
+- **Busy Professionals**: Maximizing learning time by consuming code knowledge during other activities
+- **Audio Learners**: Developers who absorb information better through listening than reading
 
 ## Minimum Viable Product
 
-The initial version of Gist of Git will focus on these core capabilities:
+The initial version of CodeNarrator will focus on these core capabilities:
 
-1. **Basic GitHub Integration**:
+1. **GitHub Repository Processing**:
 
-   - Input a public GitHub repository URL
-   - Fetch repository structure and files
-   - Display repository contents
+   - Input any public GitHub repository URL
+   - Analyze repository structure and code
+   - Identify key components and relationships
+   - Save repositories to personal library
 
-2. **Local LLM Integration**:
+2. **Audio Tour Generation**:
 
-   - Connect to locally running LLM instances (Ollama, LM Studio)
-   - Provide clear setup instructions for users to install these tools
-   - Simple configuration for model selection
+   - Generate engaging, natural language explanations
+   - Convert explanations to high-quality audio
+   - Organize content into logical "chapters"
+   - Create a cohesive narrative that explains the codebase
 
-3. **Analysis Templates**:
+3. **Supporting Visualizations**:
 
-   - Basic templates for common analysis types
-   - Apply templates to repositories
-   - View analysis results in structured format
+   - Generate simple architectural diagrams
+   - Create component relationship visuals
+   - Ensure diagrams complement the audio content
+   - Allow visualization browsing while listening
 
-4. **Simple UI**:
-   - Clean, functional interface
-   - Repository input
-   - Analysis configuration
-   - Results display
+4. **User Feedback System**:
+   - A/B testing of different explanation approaches
+   - User voting on helpful explanations
+   - Continuous improvement through feedback
+   - Tour quality metrics and tracking
 
 ## Development Approach
 
-We'll build Gist of Git incrementally with these principles:
+We'll build CodeNarrator with these principles:
 
-1. **Start with simplicity**: Focus on core functionality that provides immediate value
-2. **User self-service**: Provide clear instructions for components users need to install themselves
-3. **Progressive enhancement**: Make the basic version work well before adding advanced features
-4. **Rapid iterations**: Build in small, functional increments
-
-## Out of Scope for MVP
-
-To maintain focus on core functionality, these features are intentionally excluded from the initial release:
-
-1. **Private repository access**: Initially supporting only public repositories
-2. **User authentication**: Will be added in future versions
-3. **Advanced visualizations**: Basic visualizations only in the MVP
-4. **Template marketplace**: Future enhancement after core functionality
-5. **Complex code analysis**: Focus on high-level insights first
+1. **Audio-first design**: Optimize for listening experience over text scanning
+2. **Learning science integration**: Apply principles of effective knowledge transfer
+3. **Community feedback loop**: Build mechanisms to measure and improve quality
+4. **Progressive enhancement**: Start with core audio capabilities, then enhance with visuals
+5. **User-centric improvement**: Let user preferences guide the evolution of the product
 
 ## Success Criteria
 
 We'll consider the MVP successful if:
 
-1. Users can analyze a GitHub repository and receive useful insights
-2. Setup process for local LLMs is clear and accessible
-3. Analysis process takes less than 5 minutes for a medium-sized repository
-4. Users report saving significant time in understanding new codebases
+1. Users report learning effectively while away from their computer screens
+2. Audio explanations are rated as informative, engaging, and accurate
+3. Users return to listen to multiple repositories
+4. Community feedback measurably improves tour quality over time
+5. Users report increased confidence in understanding repositories after listening
+6. Time to meaningful comprehension is significantly reduced compared to traditional methods
 
-## Next Steps After MVP
+## Future Enhancements
 
-Once the core functionality is solid, we'll explore:
+After establishing the core audio tour functionality, we'll explore:
 
-1. User authentication and private repository access
-2. More advanced analysis templates
-3. Template sharing and community features
-4. Enhanced visualizations
-5. Integration with additional Git platforms (GitLab, Bitbucket)
+1. **Interactive Audio-Visual Sync**: Tighter integration between audio and visualizations
+2. **Custom Narrative Focus**: User-specified focus areas for repository exploration
+3. **Video Tour Generation**: Adding synchronized visual walkthrough components
+4. **Multi-Repository Learning Paths**: Connected tours across related repositories
+5. **Educational Assessments**: Optional knowledge checks after tour segments
+6. **Voice Customization**: Different narration styles and personalities
+
+## Conclusion
+
+CodeNarrator represents a paradigm shift in how developers learn from code. By transforming repositories into audio learning experiences, we enable efficient, passive consumption of technical knowledge that works with busy schedules and different learning styles. Our focus on continuous improvement through user feedback ensures that our tours will keep getting better, creating an ever-improving resource for the developer community.

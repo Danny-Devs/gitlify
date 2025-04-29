@@ -1,46 +1,53 @@
-# Gist of Git: Project Rules for Cursor AI
+# CodeNarrator: Project Rules for Cursor AI
 
 ## Project Overview
 
-Gist of Git is a tool for analyzing GitHub repositories using locally hosted LLMs. The application fetches repository data, passes it to local LLMs, and displays the analysis results.
+CodeNarrator transforms public GitHub repositories into engaging audio code tours using locally hosted LLMs. The application analyzes repositories, generates narrative explanations, converts them to audio, and provides supporting visualizations, creating a podcast-like learning experience for developers.
 
 ## Development Principles
 
-- Start with simplicity - build core features before advanced ones
-- User privacy is critical - all code analysis happens locally
-- Follow incremental development - build in small, functional steps
-- Progressive enhancement - make basic features work well first
+- Optimize for an engaging audio learning experience
+- Ensure high-quality text-to-speech conversion
+- Create logical, narrative flows through codebases
+- Generate visualizations that complement audio content
+- Implement user feedback mechanisms to improve tour quality
+- Design for passive consumption alongside active learning
 
 ## Code Style Guidelines
 
 ### General
 
-- Use TypeScript for all code
+- Use TypeScript for all code with strict type checking
 - Follow functional programming principles where appropriate
-- Use clear, descriptive variable and function names
+- Optimize audio generation and playback components
 - Keep functions small and focused on a single responsibility
-- Add inline comments for complex logic, but prefer self-documenting code
+- Apply learning science principles to content organization
 
 ### React Components
 
 - Use functional components with hooks
 - Follow a structure of imports → types → component → exports
+- Create accessible audio player controls and visualization components
 - Separate UI components from data-fetching logic
-- Use React Query for API data fetching
+- Use React Query for API data fetching and caching
 
 ### File Structure
 
 - Place components in app/components/
 - Services in app/services/
+- Audio generation in app/services/audio/
 - API routes in app/api/
 - Utility functions in app/lib/
 - Database models and queries in prisma/
+- Visualization components in app/components/visualization/
 
 ### Database
 
-- Always use Prisma client for database access
+- Always use Prisma client for database access with type safety
 - Define all schema changes in prisma/schema.prisma
 - Create migrations for all schema changes
+- Store audio generation progress and results
+- Track user feedback and A/B testing results
 
 ### Naming Conventions
 
@@ -52,35 +59,45 @@ Gist of Git is a tool for analyzing GitHub repositories using locally hosted LLM
 
 ## Implementation Priorities
 
-1. GitHub repository fetching and display
-2. Local LLM integration
-3. Analysis templates and processing
-4. Results display
-5. Enhanced features and UI improvements
+1. GitHub repository processing and analysis
+2. Natural language explanation generation
+3. Text-to-speech conversion and audio player
+4. Chapter-based tour organization
+5. Supporting visualization generation
+6. User feedback and A/B testing system
+7. Repository bookmarking and tour resumption
 
 ## Technology Constraints
 
-- Next.js for frontend and API routes
+- Next.js 14+ with App Router for frontend and API routes
+- TypeScript for type safety throughout
 - PostgreSQL with Prisma ORM for database
-- TailwindCSS for styling
+- TailwindCSS with Shadcn/UI components for UI
 - Octokit.js for GitHub API access
-- Simple REST clients for LLM integration
+- Text-to-speech services for audio generation
+- Visualization libraries for supporting diagrams
+- Local LLM integration (Ollama, LM Studio)
 
 ## Testing Requirements
 
 - Jest for unit and integration tests
 - React Testing Library for component tests
-- Good test coverage for core functionality
+- Audio playback testing strategies
+- Mock GitHub API responses for testing
+- User feedback simulation for A/B test development
 
 ## Documentation Standards
 
 - JSDoc comments for functions and components
 - Update README.md with new features
-- Document API endpoints in their respective route files
+- Document audio tour generation process
+- Include examples of different tour types
+- Create user guides for optimal listening experience
 
 ## Accessibility
 
-- All components should be accessible
-- Use semantic HTML elements
-- Include proper ARIA attributes where needed
-- Ensure keyboard navigation works properly
+- All components should be accessible (WCAG 2.1 AA compliance)
+- Audio player controls must be fully keyboard accessible
+- Provide text transcripts of audio content
+- Ensure visualizations have text alternatives
+- Support variable playback speeds for different listening preferences

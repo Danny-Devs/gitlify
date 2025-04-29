@@ -40,10 +40,11 @@ This document outlines the features and capabilities required by users of the Gi
 
 1.1. **Repository Input**
 
-- The system shall allow users to input a GitHub repository URL
+- The system shall allow users to input any public GitHub repository URL
 - The system shall validate the repository URL format
 - The system shall check repository accessibility before analysis
-- The system shall support public GitHub repositories
+- The system shall support all public GitHub repositories, with emphasis on exploring repositories the user doesn't own
+- The system shall help users discover interesting repositories worth analyzing
 
   1.2. **Analysis Configuration**
 

@@ -18,7 +18,7 @@ export function SignInButton({
   return (
     <button
       onClick={() => signIn(provider, { callbackUrl })}
-      className={`inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 ${className}`}
+      className={`inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer ${className}`}
       {...props}
     >
       {children}

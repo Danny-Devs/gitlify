@@ -23,9 +23,10 @@ This document outlines a simplified, incremental approach to building Gist of Gi
    - Set up development environment
 
 2. **GitHub API Integration**
-   - Create service for fetching public repository data
+   - Create service for fetching and analyzing any public repository data
    - Build basic repository metadata display
    - Implement file browser component
+   - Design repository discovery suggestions for learning purposes
 
 ### Week 2: Core UI & Database
 
@@ -162,9 +163,11 @@ For maximum simplicity and development speed, we'll use:
 
 2. **GitHub Integration Scope**
 
-   - Initially limited to public repositories
+   - Focused exclusively on public repositories that anyone can learn from
    - Will use unauthenticated GitHub API with appropriate rate limit handling
    - Repository data will be cached to minimize API calls
+   - Emphasis on helping users discover and learn from repositories they don't own
+   - Interface will encourage exploration of well-designed open source projects
 
 3. **Initial Feature Limits**
    - Analysis will focus on high-level insights (architecture, structure, patterns)
