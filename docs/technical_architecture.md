@@ -1,6 +1,8 @@
 # Technical Architecture
 
-This document outlines the architecture for the Gitlify platform, focusing on the core components needed to deliver PRD generation and community curation functionality.
+This document outlines the architecture for the Gitlify platform, focusing on the core components needed to deliver PRD generation and community curation functionality. It also covers key implementation considerations.
+
+_Note: This document provides the planned architecture. Specific implementation details may evolve during development._
 
 ## Guiding Principles
 
@@ -20,7 +22,7 @@ graph TD
         A[React UI Components]
         B[Next.js Router]
         C[Repository Explorer]
-        A <-- -> B
+        A <-- --> B
         B <-- -> C
     end
 
@@ -31,7 +33,7 @@ graph TD
         G[LLM Orchestrator]
         H[Database]
 
-        D <-- -> E
+        D <-- --> E
         D <-- -> F
         F <-- -> G
         E <-- -> H
@@ -48,308 +50,200 @@ graph TD
     G --> J
 ```
 
-## Key Components
+## Core Architecture Layers & Components
 
-### 1. Frontend Components
+### 1. Web Application Layer (Frontend & UI)
 
-#### Repository Explorer
+- **Framework**: Next.js 15+ with App Router (Server Components, API Routes)
+- **UI Library**: React 19+
+- **Styling**: Tailwind CSS v4 with Shadcn/UI components
+- **Authentication**: NextAuth.js with GitHub OAuth provider
+- **State Management**: React Hooks (useState, useEffect, useContext), potentially Zustand or Jotai for complex global state if needed.
+- **Key Components**:
+  - `Repository Explorer`: Allows users to find and select repositories.
+  - `PRD Viewer`: Displays generated PRDs with navigation and diagram rendering.
+  - `Community Interface`: Handles ratings, comments, user profiles.
 
-- **Purpose**: Browse and select GitHub repositories for analysis
+### 2. Repository Processing Layer (Backend Service)
+
+- **Purpose**: Handles interaction with GitHub and initial analysis.
 - **Key Features**:
-  - Repository URL input
-  - Curated repository browsing
-  - Repository metadata display
-  - Analysis initiation
+  - GitHub API Integration (using `lib/github/githubClient.ts`)
+  - Repository structure analysis & metadata extraction.
+  - Code parsing (potentially using lightweight parsers if needed).
+  - Caching of repository data to minimize redundant API calls.
+  - Logic for handling large repositories (e.g., analyzing only key files initially).
 
-#### PRD Viewer
+### 3. PRD Generation Layer (Backend Service)
 
-- **Purpose**: Display and navigate generated PRDs
-- **Key Features**:
-  - Chapter-based navigation
-  - Section collapsing/expanding
-  - Interactive diagram rendering
-  - Export functionality
-  - Print-friendly view
+- **Purpose**: Orchestrates the LLM-powered analysis and PRD construction.
+- **Workflow Engine**: PocketFlow-inspired node system (details below).
+- **LLM Integration**: Connects to local LLM services via `lib/llm/llmClient.ts`.
+- **State Management**: Tracks workflow progress and intermediate results, likely persisted in the database.
+- **Diagram Generation**: Uses LLM prompts (see `prompt_engineering.md`) to generate Mermaid syntax.
 
-#### Community Interface
+### 4. Data Storage Layer
 
-- **Purpose**: Enable community interaction with PRDs
-- **Key Features**:
-  - Rating and review system
-  - Comment functionality
-  - User profiles
-  - PRD sharing tools
+- **Database**: PostgreSQL
+- **ORM**: Prisma (schema defined in `prisma/schema.prisma`, client setup in `lib/prisma.ts`)
+- **Key Data**: User accounts, repository metadata, PRD content (potentially stored as structured JSON or Markdown), chapter details, generated diagrams, workflow states, community feedback (ratings, comments).
 
-### 2. Backend Services
+### 5. Community Layer (Backend Service & Frontend)
 
-#### Repository Service
+- **Purpose**: Manages user interactions around PRDs.
+- **Features**: PRD rating system, commenting engine, user reputation tracking (future phase).
+- **Implementation**: Likely involves dedicated API routes and database tables for ratings, comments, etc.
 
-- **Purpose**: Fetch and analyze GitHub repository data
-- **Key Features**:
-  - GitHub API integration
-  - Repository structure analysis
-  - Code parsing
-  - Metadata extraction
-  - Large repository chunking
+## Technology Stack Summary
 
-#### PRD Generation Service
+| Component       | Technology                                   | Justification                                      |
+| --------------- | -------------------------------------------- | -------------------------------------------------- |
+| Framework       | Next.js 15+, React 19+                       | Modern full-stack React framework, App Router      |
+| Language        | TypeScript                                   | Type safety, improved maintainability              |
+| Database        | PostgreSQL, Prisma ORM                       | Robust relational DB, excellent type-safe ORM      |
+| Styling         | Tailwind CSS v4, Shadcn/UI                   | Utility-first CSS, pre-built accessible components |
+| Authentication  | NextAuth.js (GitHub Provider)                | Simplified authentication setup                    |
+| GitHub Access   | Custom Client (`lib/github/githubClient.ts`) | Simple wrapper around fetch for API calls          |
+| LLM Integration | Custom Client (`lib/llm/llmClient.ts`)       | Provider-agnostic local LLM communication          |
+| Diagramming     | Mermaid.js                                   | Standard text-based diagramming for Markdown       |
+| LLM Workflow    | PocketFlow-inspired Node System              | Manages complex, multi-step LLM tasks effectively  |
+| Deployment      | Vercel (Frontend/Backend), Supabase (DB)     | Recommended hosting platforms for Next.js/Postgres |
+| Analytics       | Plausible/Simple Analytics (Future)          | Privacy-focused analytics                          |
 
-- **Purpose**: Transform repository analysis into structured PRDs
-- **Key Features**:
-  - Requirement extraction workflow
-  - Document structuring
-  - Chapter organization
-  - Template application
-  - Export formatting
-  - Diagram generation
+_Note on Client Libraries: We use simple fetch-based wrappers in `lib/` for GitHub and LLM clients currently. If complexity increases, libraries like Octokit.js might be reconsidered._
 
-#### LLM Orchestrator
+## LLM Processing Architecture (PocketFlow Implementation)
 
-- **Purpose**: Manage complex LLM workflows for PRD generation
-- **Key Features**:
-  - PocketFlow-inspired node and flow system
-  - Context window management
-  - Optimized prompting for requirement extraction
-  - Response processing
-  - Error handling
+The core of PRD generation relies on a workflow inspired by PocketFlow, breaking the task into manageable nodes.
 
-### 3. Data Storage
+### Node Architecture
 
-#### Core Database Tables
+Each node encapsulates a specific step (prep -> exec -> post):
 
-- **Users**: User accounts and profiles
-- **Repositories**: Metadata about analyzed repositories
-- **PRDs**: Generated project requirement documents
-- **Chapters**: Modular sections of PRDs
-- **Diagrams**: Generated architecture visualizations
-- **Ratings**: User ratings and reviews of PRDs
-- **Comments**: User comments and discussions
-- **Templates**: PRD templates and formats
-
-## Technology Stack
-
-For efficient development and scalability, we'll use:
-
-| Component       | Technology                              | Justification                                       |
-| --------------- | --------------------------------------- | --------------------------------------------------- |
-| Frontend        | Next.js 15+, React 19+, Tailwind CSS v4 | Modern, responsive UI with efficient routing        |
-| Backend         | Next.js API routes                      | Unified deployment, serverless architecture         |
-| Database        | PostgreSQL, Prisma                      | Type-safe database access, robust ORM               |
-| GitHub Access   | Octokit.js                              | Well-maintained GitHub API client                   |
-| LLM Integration | REST clients                            | Flexible integration with various LLM providers     |
-| UI Components   | Shadcn/UI                               | Consistent, accessible interface components         |
-| CSS Framework   | Tailwind CSS v4 (@tailwindcss/postcss)  | Modern utility-first CSS with updated plugin system |
-| Diagramming     | Mermaid.js                              | Industry-standard diagram rendering in Markdown     |
-| LLM Workflow    | PocketFlow-inspired                     | Simple, transparent orchestration of LLM operations |
-
-## LLM Processing Architecture
-
-Inspired by PocketFlow's simplicity and effectiveness, our LLM workflow system uses a graph-based approach with nodes, flows, and shared stores:
-
-```mermaid
-graph TD
-    A[Repository Input] --> B[Fetch Repository]
-    B --> C[Identify Core Abstractions]
-    C --> D[Analyze Relationships]
-    D --> E[Structure Chapters]
-    E --> F[Generate Individual Chapters]
-    F --> G[Create Architecture Diagrams]
-    G --> H[Assemble Complete PRD]
-
-    subgraph "Shared Store"
-        I[Repository Data]
-        J[Extracted Abstractions]
-        K[Relationship Map]
-        L[Chapter Structure]
-        M[Generated Chapters]
-        N[Architecture Diagrams]
-    end
-
-    B -.-> I
-    C -.-> J
-    D -.-> K
-    E -.-> L
-    F -.-> M
-    G -.-> N
+```
+┌───────────────────┐      ┌───────────────────┐      ┌───────────────────┐
+│       prep        │────▶ │       exec        │────▶ │       post        │
+│ (Prepare Context) │      │ (Call LLM/Service)│      │ (Process Results) │
+└───────────────────┘      └───────────────────┘      └───────────────────┘
 ```
 
-### Workflow Nodes
+### Core Workflow (Conceptual)
 
-1. **Fetch Repository Node**
+```mermaid
+flowchart TD
+    START([User Initiates PRD Generation]) --> FetchRepo[Fetch Repository Data Node]
+    FetchRepo --> AnalyzeStructure[Analyze Structure Node]
+    AnalyzeStructure --> IdentifyAbstractions[Identify Core Abstractions Node]
+    IdentifyAbstractions --> ReqLoop{Loop: For Each Abstraction}
+    ReqLoop -- Abstraction --> ExtractReqs[Extract Requirements Node]
+    ExtractReqs -- Requirements --> ReqLoop
+    ReqLoop -- All Abstractions Processed --> GenerateDiagrams[Generate Diagrams Node]
+    GenerateDiagrams -- Diagrams & Requirements --> StructureChapters[Structure Chapters Node]
+    StructureChapters -- Chapter Structure --> GenerateChapters[Generate Chapter Content Node]
+    GenerateChapters -- Completed Chapters --> AssemblePRD[Assemble Final PRD Node]
+    AssemblePRD --> StorePRD[Store PRD in DB]
+    StorePRD --> END([PRD Ready])
 
-   - **Prep**: Takes repository URL
-   - **Exec**: Downloads repository files, excludes irrelevant files
-   - **Post**: Stores repository data
+    subgraph "Workflow State (DB)"
+        StateData[Intermediate Results: Abstractions, Reqs, Diagrams, etc.]
+    end
 
-2. **Identify Core Abstractions Node**
+    FetchRepo --> StateData
+    AnalyzeStructure --> StateData
+    IdentifyAbstractions --> StateData
+    ExtractReqs --> StateData
+    GenerateDiagrams --> StateData
+    StructureChapters --> StateData
+    GenerateChapters --> StateData
+    AssemblePRD --> StateData
+```
 
-   - **Prep**: Takes repository data
-   - **Exec**: Analyzes codebase to identify key components and concepts
-   - **Post**: Stores list of abstractions with descriptions
+_This is a simplified flow; actual implementation may involve more granular nodes or parallel processing where applicable._
 
-3. **Analyze Relationships Node**
+### Workflow State Management
 
-   - **Prep**: Takes abstractions and repository data
-   - **Exec**: Analyzes dependencies and relationships between abstractions
-   - **Post**: Stores relationship map
-
-4. **Structure Chapters Node**
-
-   - **Prep**: Takes abstractions and relationships
-   - **Exec**: Organizes content into logical chapters
-   - **Post**: Stores chapter structure
-
-5. **Generate Individual Chapters Node**
-
-   - **Prep**: Takes chapter structure, abstractions, and relationships
-   - **Exec**: Generates detailed content for each chapter
-   - **Post**: Stores completed chapters
-
-6. **Create Architecture Diagrams Node**
-
-   - **Prep**: Takes abstractions and relationships
-   - **Exec**: Generates Mermaid diagrams showing system architecture
-   - **Post**: Stores diagram code
-
-7. **Assemble Complete PRD Node**
-   - **Prep**: Takes chapters and diagrams
-   - **Exec**: Combines all content into final PRD format
-   - **Post**: Stores completed PRD
+- Workflow progress and intermediate data (extracted requirements, diagram code, etc.) will be stored in the database (see `WorkflowRun`, `WorkflowState` tables in `database_schema.md`).
+- This allows for resumability, progress tracking, and debugging.
 
 ### Context Window Management
 
-To handle large repositories that would exceed typical LLM context windows:
+Strategies to handle LLM context limits:
 
-1. **Chunking Strategy**: Divide repository analysis into logical units
-2. **Progressive Loading**: Process repository in stages, carrying forward essential information
-3. **Information Distillation**: Summarize key points before proceeding to next stage
-4. **Focused Prompting**: Target specific aspects of the codebase in each prompt
-5. **Memory Management**: Keep track of already processed information to avoid redundancy
+1.  **Chunking**: Process repository files or sections in smaller pieces.
+2.  **Summarization/Distillation**: Summarize findings from one step to feed concise context into the next.
+3.  **Targeted Analysis**: Focus prompts on specific aspects relevant to the current node's task.
+4.  **Vector Embeddings (Future)**: Potentially use embeddings for semantic search within the codebase for highly relevant context retrieval.
 
 ## Diagram Generation System
 
-Gitlify automatically generates multiple types of architectural diagrams:
+- Leverages LLM prompts based on analyzed abstractions and relationships.
+- Generates Mermaid syntax stored in the `Diagram` table.
+- Frontend renders diagrams using Mermaid.js library.
+- See `mermaid-diagram-guide.md` for types and examples.
 
-### Component Diagram
+## API Architecture Overview
 
-```mermaid
-graph TD
-    A[Component A] --> B[Component B]
-    A --> C[Component C]
-    B --> D[Component D]
-    C --> D
-```
+Core API endpoints will be implemented using Next.js API Routes within the `app/api/` directory.
 
-### Data Flow Diagram
+- **`/api/auth/...`**: Handles authentication via NextAuth.js.
+- **`/api/repositories`**: Manages user-saved repositories (CRUD).
+- **`/api/prds`**: Manages generated PRDs (CRUD, status checks).
+- **`/api/prds/[id]/generate`**: Endpoint to trigger PRD generation workflow for a repository.
+- **`/api/github/...`**: Proxied requests or direct interactions with GitHub API (e.g., search).
+- **`/api/community/...`**: Endpoints for ratings, comments (Future Phase).
 
-```mermaid
-graph LR
-    A[Data Source] --> B[Processor]
-    B --> C[Storage]
-    C --> D[Consumer]
-```
+_Refer to `api_documentation.md` for more detailed (evolving) endpoint specifications._
 
-### State Diagram
-
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> Processing: Start
-    Processing --> Success: Complete
-    Processing --> Error: Fail
-    Success --> Idle: Reset
-    Error --> Idle: Reset
-```
-
-### Entity Relationship Diagram
-
-```mermaid
-erDiagram
-    USER ||--o{ PRD : creates
-    PRD ||--|{ CHAPTER : contains
-    PRD ||--|{ DIAGRAM : includes
-```
-
-### Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    User->>System: Request PRD
-    System->>GitHub: Fetch Repository
-    GitHub-->>System: Repository Data
-    System->>LLM: Process Repository
-    LLM-->>System: Generated PRD
-    System-->>User: Display PRD
-```
-
-## Data Flow
+## Data Flow Examples
 
 ### PRD Generation Flow
 
-1. User inputs a GitHub repository URL or selects from curated list
-2. System validates repository and fetches basic metadata
-3. User confirms PRD generation
-4. System processes repository through the LLM workflow:
-   - Fetches repository content
-   - Identifies core abstractions
-   - Analyzes relationships between components
-   - Structures content into logical chapters
-   - Generates detailed chapter content
-   - Creates architecture diagrams
-   - Assembles final PRD
-5. PRD is stored in database and presented to user
-6. User can navigate through chapters and view diagrams
-7. User can review, rate, and share the PRD
+1.  User selects repository and clicks "Generate PRD" in the UI.
+2.  Frontend calls `POST /api/prds/[repoId]/generate`.
+3.  Backend API route validates request, initiates a new `WorkflowRun`.
+4.  PocketFlow engine executes nodes sequentially (Fetch -> Analyze -> Extract -> Diagram -> Assemble).
+    - Each node interacts with GitHub API or Local LLM via clients in `lib/`.
+    - Intermediate state saved via `WorkflowState` records.
+5.  Upon completion, final PRD data (chapters, diagrams) is stored in `PRD`, `Chapter`, `Diagram` tables.
+6.  WorkflowRun status updated to 'Completed'.
+7.  Frontend polls `GET /api/prds/[id]/status` or uses WebSockets (future) to detect completion.
+8.  User navigates to the PRD view page, which fetches data from `GET /api/prds/[id]`.
 
-### Community Interaction Flow
+### Community Interaction Flow (Simplified - Future Phase)
 
-1. User browses available PRDs
-2. User selects PRD of interest
-3. System displays PRD with chapter navigation and diagrams
-4. User can add ratings, reviews, or comments
-5. User can follow PRD creators or share PRDs
-6. System updates reputation scores based on community feedback
+1.  User views a PRD.
+2.  User submits a rating/comment via UI form.
+3.  Frontend calls `POST /api/community/prds/[id]/ratings` or `/comments`.
+4.  Backend API validates input, stores rating/comment in the database, potentially updating PRD metadata.
+5.  UI updates to reflect the new rating/comment.
 
-## Security and Privacy
+## Security and Privacy Considerations
 
-- GitHub API access limited to public repositories (no authentication required)
-- All repository analysis performed locally
-- User data protected with modern authentication practices
-- Rating and review systems include moderation to prevent abuse
+- **Local LLM Focus**: Core principle is that repository code is _not_ sent to external cloud LLMs. Analysis happens locally.
+- **GitHub Access**: Primarily uses unauthenticated GitHub API for public data. OAuth is used for user identity, _not_ necessarily for accessing private code (unless explicitly added as a future feature with user consent).
+- **Authentication**: Standard practices via NextAuth.js (session cookies, secure secret).
+- **Input Sanitization**: API endpoints must sanitize inputs to prevent injection attacks.
+- **Dependency Management**: Regularly audit dependencies (`npm audit`) for vulnerabilities.
 
 ## Deployment Strategy
 
-For optimal performance and cost, we'll use:
+- **Frontend/Backend**: Vercel (recommended for Next.js)
+- **Database**: Supabase (managed PostgreSQL)
+- **Environment Variables**: Use Vercel/Supabase environment variable management for production secrets.
 
-- **Frontend/Backend**: Vercel (Next.js hosting)
-- **Database**: Supabase (PostgreSQL as a service)
-- **Analytics**: Simple privacy-focused analytics (Plausible or similar)
+## Development Approach & Performance
 
-## Development Approach
-
-We'll follow a phased approach to development:
-
-1. **Build Repository Analysis**: Implement GitHub API integration and basic structure analysis
-2. **Develop LLM Workflow System**: Create PocketFlow-inspired node/flow system
-3. **Implement Diagram Generation**: Build Mermaid diagram generation
-4. **Create Chapter-Based PRD Generation**: Implement progressive chapter creation
-5. **Add User Features**: Implement user accounts, saved PRDs, and export functionality
-6. **Build Community Features**: Develop rating, review, and sharing capabilities
-
-## Performance Considerations
-
-- Efficient caching of GitHub API responses
-- Optimization of LLM prompts for better performance
-- Progressive loading of PRD content
-- Pagination for community features
-- Background processing for large repository analysis
-- Lazy loading of diagrams in UI
+- Follow phased approach outlined in `implementation_plan.md`.
+- Prioritize efficient database queries (use Prisma query optimization features).
+- Implement caching for GitHub API responses and potentially intermediate analysis steps.
+- Optimize LLM prompts for speed and cost (token usage).
+- Consider background job queues (e.g., using Vercel Serverless Functions with longer timeouts, or external queue like BullMQ/Redis) for long-running PRD generation tasks.
+- Frontend performance: Code splitting, lazy loading (especially for diagrams), optimized component rendering.
 
 ## Future Technical Enhancements
 
-- Advanced AI models for more nuanced requirement extraction
-- Real-time collaborative editing of PRDs
-- Automated quality assessment of generated PRDs
-- Integration with development environments
-- API access for third-party applications
-- Interactive Q&A system for PRD exploration
+- Real-time collaboration features (WebSockets).
+- Advanced context retrieval using vector embeddings.
+- Integration with CI/CD pipelines for automated PRD generation/updates.
+- Public API for third-party integrations.
+- More sophisticated LLM orchestration (e.g., agent-based systems).

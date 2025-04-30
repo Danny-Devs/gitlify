@@ -1,139 +1,121 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { z } from 'zod';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import prisma from '@/app/lib/prisma';
+import {
+  addRepository,
+  getRepositories,
+  deleteRepository
+} from '@/app/services/repository/repositoryService';
 
-// Schema for repository validation
-const repositorySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  owner: z.string().min(1, 'Owner is required'),
-  description: z.string().optional().nullable(),
-  url: z.string().url('Repository URL must be valid'),
-  isPrivate: z.boolean().default(false),
-  stars: z.number().optional().nullable(),
-  forks: z.number().optional().nullable()
-});
-
-// GET - Get repositories or a specific repository
-export async function GET(request: Request) {
+/**
+ * GET /api/repositories
+ * Get all repositories for the current user
+ */
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const url = searchParams.get('url');
+    const userId = session.user.id;
+    const result = await getRepositories(userId);
 
-    // If URL is provided, look up a specific repository
-    if (url) {
-      const repository = await prisma.repository.findFirst({
-        where: {
-          url,
-          userId: session.user.id
-        }
-      });
-
-      return NextResponse.json({ repository });
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    // Otherwise, return all repositories for the user
-    const repositories = await prisma.repository.findMany({
-      where: {
-        userId: session.user.id
-      },
-      orderBy: {
-        updatedAt: 'desc'
-      }
-    });
-
-    return NextResponse.json({ repositories });
+    return NextResponse.json(result.data);
   } catch (error) {
-    console.error('Error fetching repositories:', error);
+    console.error('Error in GET /api/repositories:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch repositories' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
 
-// POST - Create a new repository
-export async function POST(request: Request) {
+/**
+ * POST /api/repositories
+ * Add a new repository for the current user
+ */
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const userId = session.user.id;
     const body = await request.json();
-    const validationResult = repositorySchema.safeParse(body);
 
-    if (!validationResult.success) {
+    if (!body.url) {
       return NextResponse.json(
-        { error: validationResult.error.errors },
+        { error: 'Repository URL is required' },
         { status: 400 }
       );
     }
 
-    const { name, owner, description, url, isPrivate, stars, forks } =
-      validationResult.data;
+    const result = await addRepository(userId, body.url);
 
-    // Check if repository already exists for this user
-    const existingRepository = await prisma.repository.findFirst({
-      where: {
-        url,
-        userId: session.user.id
-      }
-    });
-
-    if (existingRepository) {
-      // Update the repository with new information
-      const updatedRepository = await prisma.repository.update({
-        where: {
-          id: existingRepository.id
-        },
-        data: {
-          name,
-          owner,
-          description,
-          isPrivate,
-          stars,
-          forks,
-          updatedAt: new Date()
-        }
-      });
-
-      return NextResponse.json(updatedRepository);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    // Create a new repository record
-    const repository = await prisma.repository.create({
-      data: {
-        name,
-        owner,
-        description,
-        url,
-        isPrivate,
-        stars,
-        forks,
-        userId: session.user.id
-      }
-    });
-
-    return NextResponse.json(repository, { status: 201 });
+    return NextResponse.json(result.data, { status: 201 });
   } catch (error) {
-    console.error('Error creating repository:', error);
+    console.error('Error in POST /api/repositories:', error);
+
+    if (
+      error instanceof Error &&
+      error.message === 'Invalid GitHub repository URL'
+    ) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
     return NextResponse.json(
-      { error: 'Failed to create repository' },
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/repositories/:id
+ * Delete a repository
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Repository ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const result = await deleteRepository(id, userId);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error('Error in DELETE /api/repositories:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

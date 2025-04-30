@@ -1,144 +1,57 @@
 # Getting Started with Gitlify
 
-This guide will help you get started with Gitlify, whether you're using the platform to generate PRDs, exploring the PRD library, or contributing to the project's development.
+This guide provides a quick overview for different users interacting with Gitlify.
 
-## For Users
+## For End Users (Generating & Exploring PRDs)
 
 ### Prerequisites
 
 - A modern web browser (Chrome, Firefox, Safari, Edge)
-- Basic familiarity with GitHub and software development concepts
-- Optional: Local LLM setup for enhanced PRD generation (see [LLM Setup Guide](llm_setup_guide.md))
+- A GitHub account (for saving/community features, not strictly required for basic generation)
+- Basic familiarity with GitHub repositories
+- _Optional_: A local LLM setup for potentially faster or more private generation (see [LLM Setup Guide](llm_setup_guide.md))
 
 ### Quick Start
 
-1. **Visit the Gitlify Platform**
+1.  **Visit the Platform**: Navigate to the Gitlify web application.
+2.  **Sign In (Optional)**: Sign in with GitHub for personalized features.
+3.  **Generate a PRD**: Find the "New PRD" or similar option. Enter a public GitHub repository URL.
+4.  **Configure (Optional)**: Adjust basic analysis settings if needed.
+5.  **Start Generation**: Initiate the PRD creation process.
+6.  **Explore**: Once complete, browse the generated PRD chapters and diagrams.
+7.  **Feedback (Optional)**: Rate the PRD or leave comments if desired.
 
-   - Navigate to [gitlify.io](https://gitlify.io) (or your local development instance)
-   - Create an account or sign in with GitHub OAuth
+### Using PRDs
 
-2. **Generate Your First PRD**
+- **Understand Projects**: Grasp goals, requirements, and design decisions.
+- **Learn**: Use the requirements as a basis for learning or rebuilding the project.
+- **Contribute**: Identify areas for improvement and prepare contributions to the original repository.
 
-   - Click "New PRD" from the dashboard
-   - Enter a GitHub repository URL or select from curated options
-   - Configure basic analysis options (depth, focus areas)
-   - Click "Generate PRD" and wait for the analysis to complete
+## For Developers (Contributing to Gitlify)
 
-3. **Explore the PRD**
+To contribute to the Gitlify codebase itself:
 
-   - Browse through the generated document sections
-   - Use the navigation panel to jump to specific requirements
-   - Export the PRD if needed (PDF, Markdown, etc.)
+1.  **Set Up Environment**: Follow the detailed instructions in the [Development Setup Guide](setup_guide.md).
+2.  **Understand Architecture**: Review the [Technical Architecture](technical_architecture.md) document.
+3.  **Find an Issue/Task**: Check the project's issue tracker or contribution guidelines.
+4.  **Follow Workflow**: Adhere to the branching, coding, testing, and PR process outlined in the [Development Setup Guide](setup_guide.md).
 
-4. **Provide Feedback**
-   - Rate the PRD quality
-   - Leave comments on specific sections
-   - Suggest improvements
+### Key Development Documents:
 
-### Using PRDs for Learning and Contributing
-
-1. **Understanding Projects**
-
-   - Use the PRD to understand project goals and requirements
-   - Compare requirements with actual implementation
-   - Learn from design decisions documented in the PRD
-
-2. **Building Your Own Implementation**
-
-   - Use the PRD as a blueprint for your own coding project
-   - Build a solution that meets the same requirements
-   - Experiment with alternative approaches
-
-3. **Contributing Back**
-   - Compare your implementation with the original
-   - Identify areas where your approach might be better
-   - Prepare meaningful contributions to the original project
-
-## For Developers
-
-### Setting Up Development Environment
-
-#### Prerequisites
-
-- Node.js 16+ and npm
-- PostgreSQL or Docker for local database
-- Git
-
-#### Installation Steps
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/yourusername/gitlify.git
-   cd gitlify
-   ```
-
-2. **Install Dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Set Up Environment Variables**
-
-   - Copy `.env.example` to `.env.local`
-   - Update values as needed for local development
-
-4. **Initialize Database**
-
-   ```bash
-   npx prisma migrate dev
-   ```
-
-5. **Start Development Server**
-
-   ```bash
-   npm run dev
-   ```
-
-6. **Access the Application**
-   - Visit `http://localhost:3000` in your browser
-
-#### Tailwind CSS v4 Configuration
-
-Gitlify uses Tailwind CSS v4, which has significant differences from Tailwind v3:
-
-- **Plugin System**: Uses `@tailwindcss/postcss` instead of the previous plugins
-- **Import Syntax**: Uses `@import "tailwindcss";` instead of `@tailwind` directives
-- **Opacity Syntax**: Uses the slash syntax (e.g., `bg-primary/90` for 90% opacity)
-- **Theme Configuration**: Uses modern `@theme` directives in CSS
-
-When working with styles, ensure you follow the v4 patterns. For reference, check:
-
-- `postcss.config.mjs` for plugin configuration
-- `app/globals.css` for import and theme setup
-
-For more details, refer to the [Tailwind CSS v4 documentation](https://tailwindcss.com/docs).
-
-### Project Structure
-
-- `/app` - Next.js application with pages, components, and API routes
-- `/components` - Reusable UI components
-- `/lib` - Utility functions and helpers
-- `/prisma` - Database schema and migrations
-- `/public` - Static assets
-
-### Development Workflow
-
-1. Create a feature branch from `main`
-2. Implement your changes
-3. Add tests for new functionality
-4. Run the test suite: `npm test`
-5. Submit a pull request with a clear description
+- [Development Setup Guide](setup_guide.md)
+- [Technical Architecture](technical_architecture.md)
+- [Testing Strategy](testing_strategy.md)
+- [Database Schema](database_schema.md)
+- [PocketFlow Guide](pocket_flow_guide.md)
 
 ## Getting Help
 
-- **Documentation**: Check the [documentation](./README.md) for detailed guides
-- **GitHub Issues**: Report bugs or request features through the issue tracker
-- **Community Forums**: Join discussions about Gitlify usage and development
+- **Documentation**: Check the main [Documentation Index](./README.md) first.
+- **GitHub Issues**: Report bugs or request features via the project's issue tracker.
+- **Community**: Join relevant community channels (if available) for discussions.
 
 ## Next Steps
 
-- Explore the [PRD Library](https://gitlify.io/prds) for examples
-- Learn how to [customize PRD templates](./prd-customization.md)
-- Dive into [contributing guidelines](./contributing.md) if you want to help develop Gitlify
+- Explore existing PRDs in the library (once available).
+- Dive deeper into specific technical guides based on your interest.
+- Consider contributing to the project documentation or codebase.

@@ -91,19 +91,37 @@ For more details, see our documentation:
 
    ```bash
    cp .env.example .env.local
-   # Edit .env.local with your database and LLM configuration
+   # Edit .env.local with your Supabase and GitHub configuration
    ```
 
-4. Initialize the database
+   Configure the following environment variables:
+
+   - `DATABASE_URL` and `DIRECT_URL`: Supabase PostgreSQL connection strings
+   - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase client credentials
+   - `GITHUB_ACCESS_TOKEN`: GitHub personal access token for API access
+
+4. Initialize the database with Prisma
 
    ```bash
-   npx prisma migrate dev
+   npx prisma db push
+   # Or if you prefer to create migrations:
+   # npx prisma migrate dev
    ```
 
 5. Start the development server
    ```bash
    npm run dev
    ```
+
+### Supabase and Prisma Integration
+
+Gitlify uses a combination of:
+
+- **Prisma ORM**: For type-safe database access and schema management
+- **Supabase PostgreSQL**: As the database provider
+- **Supabase SDK**: For authentication, storage, and other Supabase features
+
+The database schema is defined in `prisma/schema.prisma` and all database operations go through Prisma for type safety and query optimization.
 
 ### Setting Up Local LLMs
 
@@ -122,3 +140,61 @@ Contributions are welcome! Please check out our [contributing guidelines](CONTRI
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Implementation Progress
+
+### Phase 1: Core Functionality
+
+- ✅ Repository analysis workflow
+  - ✅ GitHub repository integration
+  - ✅ Repository structure analysis
+  - ✅ Core abstractions extraction
+  - ✅ Requirements extraction
+- ✅ Basic PRD generation
+
+### Phase 2: Testing and CI/CD
+
+- ✅ Testing infrastructure with Jest and React Testing Library
+  - ✅ Unit tests for core functionality
+  - ✅ Integration tests for workflow nodes
+  - ✅ Component tests for UI elements
+- ✅ Continuous Integration setup
+  - ✅ GitHub Actions workflow
+  - ✅ Test coverage reporting
+  - ✅ Linting and type checking
+
+### Phase 3: Enhanced Features
+
+- 🔄 PRD templates
+- 🔄 Collaborative editing
+- 🔄 Export to different formats
+- 🔄 Version control for PRDs
+
+### Phase 4: Advanced Features
+
+- 🚫 Custom LLM integrations
+- 🚫 Fine-tuning for specific domains
+- 🚫 Enterprise features
+  - 🚫 Team management
+  - 🚫 SSO integration
+  - 🚫 Custom branding
+
+## Testing
+
+We have comprehensive test coverage for Gitlify's core functionality. Read more about our testing approach in [docs/testing.md](docs/testing.md).
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode (useful during development)
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run validation (lint + type-check + test)
+npm run validate
+```

@@ -1,23 +1,23 @@
 # Development Setup Guide
 
-This guide will help you set up your development environment to work on the Gitlify project.
+This guide provides comprehensive instructions for setting up your development environment to work on the Gitlify project.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js** (v18.x or later)
-- **npm** (v9.x or later) or **yarn** (v1.22.x or later)
-- **Git**
-- **PostgreSQL** (v14.x or later) or Docker for running PostgreSQL
-- **Local LLM** (Ollama, LM Studio, or similar)
+- **Node.js**: **v18.x or later** (Verify with `node -v`)
+- **npm**: v9.x or later (Comes with Node.js, verify with `npm -v`)
+- **Git**: (Verify with `git --version`)
+- **PostgreSQL**: v14.x or later (or Docker)
+- **Local LLM Service**: Ollama or LM Studio recommended (See [LLM Setup Guide](llm_setup_guide.md))
 
-## Getting Started
+## Installation Steps
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/gitlify.git
+git clone https://github.com/your-org/gitlify.git # Replace with your actual repo URL
 cd gitlify
 ```
 
@@ -25,164 +25,138 @@ cd gitlify
 
 ```bash
 npm install
-# or
-yarn install
 ```
 
 ### 3. Set Up Environment Variables
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in the project root by copying the example file:
 
+```bash
+cp .env.example .env.local
 ```
-# Database
-DATABASE_URL="postgresql://postgres:password@localhost:5432/gitlify"
 
-# GitHub API (no auth required for MVP)
-GITHUB_API_BASE_URL="https://api.github.com"
+Now, edit `.env.local` and fill in the required values:
 
-# LLM API (for local LLM integration)
+```env
+# Database Connection
+# Example for local PostgreSQL:
+DATABASE_URL="postgresql://postgres:password@localhost:5432/gitlify?schema=public"
+
+# NextAuth Configuration
+# Used for session management and securing API routes
+NEXTAUTH_URL="http://localhost:3000" # Change port if needed
+# Generate a strong secret using: openssl rand -base64 32
+NEXTAUTH_SECRET="YOUR_STRONG_RANDOM_SECRET_HERE"
+
+# GitHub OAuth Credentials (Required for Sign In)
+# Obtain these from GitHub Developer Settings -> OAuth Apps
+GITHUB_CLIENT_ID="YOUR_GITHUB_CLIENT_ID"
+GITHUB_CLIENT_SECRET="YOUR_GITHUB_CLIENT_SECRET"
+
+# Local LLM API Endpoint
+# Default for Ollama. Adjust if using LM Studio or different port.
 LLM_API_URL="http://localhost:11434/api"
+
+# Add other variables as needed (e.g., specific API keys for external services)
 ```
+
+**Detailed Variable Setup:**
+
+- **`DATABASE_URL`**: Update the username, password, host, port, and database name to match your PostgreSQL setup.
+- **`NEXTAUTH_URL`**: Ensure this matches the URL where your development server runs (typically `http://localhost:3000`).
+- **`NEXTAUTH_SECRET`**: Generate a secure random string using `openssl rand -base64 32` in your terminal and paste the result here.
+- **`GITHUB_CLIENT_ID` & `GITHUB_CLIENT_SECRET`**:
+  1.  Go to [GitHub Developer Settings > OAuth Apps](https://github.com/settings/developers).
+  2.  Click "New OAuth App".
+  3.  **Application name**: `Gitlify Dev` (or similar)
+  4.  **Homepage URL**: `http://localhost:3000` (or your dev port)
+  5.  **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github` (adjust port if needed)
+  6.  Register the application.
+  7.  Copy the "Client ID" into `GITHUB_CLIENT_ID`.
+  8.  Generate a "New client secret" and copy it into `GITHUB_CLIENT_SECRET`.
+- **`LLM_API_URL`**: Use `http://localhost:11434/api` for Ollama's default. For LM Studio, check the URL provided when you start its local server (often `http://localhost:1234/v1`).
 
 ### 4. Set Up the Database
 
-If you have PostgreSQL installed locally:
+**Option A: Local PostgreSQL Installation**
 
-```bash
-# Create the database
-createdb gitlify
+1.  Ensure your PostgreSQL server is running.
+2.  Create the database (if it doesn't exist):
+    ```bash
+    createdb gitlify
+    ```
+3.  Apply migrations and generate Prisma client:
+    ```bash
+    npx prisma migrate dev
+    ```
 
-# Run migrations
-npx prisma migrate dev
-```
+**Option B: Using Docker**
 
-If you prefer using Docker:
-
-```bash
-# Start PostgreSQL container
-docker run --name gitlify-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=gitlify -p 5432:5432 -d postgres:14
-
-# Run migrations
-npx prisma migrate dev
-```
+1.  Make sure Docker is running.
+2.  Start a PostgreSQL container:
+    ```bash
+    docker run --name gitlify-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=gitlify -p 5432:5432 -d postgres:14
+    ```
+    _(Adjust `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` if needed and update your `DATABASE_URL` accordingly)_
+3.  Apply migrations and generate Prisma client:
+    ```bash
+    npx prisma migrate dev
+    ```
 
 ### 5. Start the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+The application should now be available at `http://localhost:3000` (or the port specified in `NEXTAUTH_URL` / chosen by Next.js if 3000 is busy).
 
-## Setting Up Local LLM
+## Setting Up Local LLM Service
 
-For PRD generation, you'll need to set up a local LLM service:
+Refer to the [LLM Setup Guide](llm_setup_guide.md) for detailed instructions on installing and running Ollama or LM Studio and downloading appropriate code models like CodeLlama.
 
-### Option 1: Ollama
-
-1. Follow the installation instructions on the [Ollama website](https://ollama.ai)
-2. Pull a code-focused model:
-   ```bash
-   ollama pull codellama:7b
-   ```
-3. Ensure Ollama is running in the background
-
-### Option 2: LM Studio
-
-1. Download and install [LM Studio](https://lmstudio.ai/)
-2. Download a code-focused model (CodeLlama, WizardCoder, etc.)
-3. Start the local server from the LM Studio interface
-
-## Project Structure
+## Project Structure Overview
 
 ```
 gitlify/
-├── app/              # Next.js app directory
-│   ├── api/          # API routes
-│   │   ├── auth/     # Authentication endpoints
-│   │   ├── github/   # GitHub API integration
-│   │   └── llm/      # LLM integration endpoints
-│   ├── components/   # React components
-│   │   ├── analysis/   # PRD analysis components
-│   │   ├── auth/       # Authentication components
-│   │   ├── common/     # Shared UI components
-│   │   └── repository/ # Repository components
-│   ├── lib/          # Utility functions
-│   ├── services/     # Service layer
-│   │   ├── analysis/   # PRD generation services
-│   │   ├── llm/        # LLM orchestration services
-│   │   └── repository/ # Repository handling services
-│   └── theme/        # UI theme and styling
-├── prisma/           # Prisma schema and migrations
-├── public/           # Static assets
-└── docs/             # Documentation
+├── app/              # Next.js app directory (routes, UI)
+├── components/       # Shared React components (UI logic)
+├── docs/             # Project documentation
+├── lib/              # Shared utilities, clients (Prisma, LLM, GitHub)
+├── prisma/           # Prisma schema, migrations, seeds
+├── public/           # Static assets (images, fonts)
+├── scripts/          # Utility scripts (e.g., reset-db.sql)
+├── .env.example      # Example environment variables
+├── .gitignore
+├── next.config.mjs   # Next.js configuration
+├── package.json
+├── postcss.config.mjs # PostCSS config (for Tailwind)
+├── README.md         # Project overview
+└── tsconfig.json     # TypeScript configuration
 ```
 
 ## Development Workflow
 
-1. **Create a new branch** for your feature or bugfix:
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Make your changes** and ensure they pass linting and tests:
-
-   ```bash
-   npm run lint
-   npm run test
-   ```
-
-3. **Submit a pull request** against the main branch
+1.  **Branching**: Create feature branches from `main` (e.g., `feature/new-prd-viewer`).
+2.  **Coding**: Implement features, following code style guidelines (`.cursorrules`, linting).
+3.  **Testing**: Write unit/integration tests (see `testing_strategy.md`). Run tests: `npm test`.
+4.  **Linting**: Check code quality: `npm run lint`.
+5.  **Committing**: Write clear, concise commit messages.
+6.  **Pull Request**: Submit PRs to `main` for review.
 
 ## Common Tasks
 
-### Update Database Schema
-
-1. Modify the schema in `prisma/schema.prisma`
-2. Create a migration:
-   ```bash
-   npx prisma migrate dev --name your-migration-name
-   ```
-
-### Add a New API Endpoint
-
-Create a new file in the appropriate location within `app/api/` following the Next.js App Router conventions.
-
-### Implement PocketFlow-Inspired Workflow
-
-When implementing PRD generation nodes:
-
-1. Create node classes in the appropriate service directory
-2. Define prep, exec, and post methods for each node
-3. Set up flows to connect nodes and manage data
+- **Update Database Schema**: Modify `prisma/schema.prisma`, then run `npx prisma migrate dev --name <migration_name>`.
+- **Generate Prisma Client**: Usually automatic after migration, but can run manually: `npx prisma generate`.
+- **Reset Database**: Use the script: `psql -U <user> -d gitlify -a -f scripts/reset-db.sql` (adjust user/db) or `npx prisma migrate reset`.
+- **Add API Endpoint**: Create route handlers in `app/api/...` following Next.js conventions.
+- **Implement Workflow Node**: Create node classes (likely in a `services/` or `workflows/` directory - TBD), define `prep`, `exec`, `post` methods.
 
 ## Troubleshooting
 
-### Database Connection Issues
+- **Database Connection**: Verify `DATABASE_URL`, ensure PostgreSQL is running, check credentials.
+- **Next.js Errors**: Try clearing cache: `rm -rf .next`, then restart `npm run dev`.
+- **LLM Connection**: Ensure LLM service is running, `LLM_API_URL` is correct, model is available.
+- **Auth Issues**: Double-check GitHub OAuth credentials and callback URL in GitHub settings and `.env.local`. Ensure `NEXTAUTH_SECRET` is set.
 
-- Ensure PostgreSQL is running
-- Verify your DATABASE_URL in `.env.local`
-- Check that your PostgreSQL credentials are correct
-
-### Next.js Build Errors
-
-- Clear the `.next` cache folder:
-  ```bash
-  rm -rf .next
-  npm run dev
-  ```
-
-### LLM Connection Issues
-
-- Ensure your LLM service is running
-- Check that LLM_API_URL is set correctly in `.env.local`
-- Make sure you've pulled the necessary model
-- Verify your model has sufficient capabilities for code analysis
-
-### GitHub API Rate Limiting
-
-- The GitHub API has rate limits for unauthenticated requests
-- Consider adding GitHub authentication for higher rate limits during development
+_For further details on specific areas like LLM setup, PocketFlow, or Testing, refer to the dedicated guides in the `/docs` directory._
