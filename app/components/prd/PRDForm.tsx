@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
@@ -9,6 +9,8 @@ import { Label } from '@/app/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { toast } from '@/app/components/ui/use-toast';
 import { Repository } from '@prisma/client';
+import { Alert, AlertDescription } from '@/app/components/ui/alert';
+import { ServerOff } from 'lucide-react';
 
 interface PRDFormProps {
   repository: Repository;
@@ -17,6 +19,7 @@ interface PRDFormProps {
 export default function PRDForm({ repository }: PRDFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [ollamaConnected, setOllamaConnected] = useState<boolean | null>(null);
   const [formData, setFormData] = useState({
     title: `${repository.name} PRD`,
     summary: '',
@@ -27,8 +30,24 @@ export default function PRDForm({ repository }: PRDFormProps) {
     []
   );
 
+  // Check Ollama connection
+  useEffect(() => {
+    const checkOllamaConnection = async () => {
+      try {
+        const response = await fetch('/api/llm/status');
+        const data = await response.json();
+        setOllamaConnected(data.connected);
+      } catch (error) {
+        console.error('Error checking Ollama status:', error);
+        setOllamaConnected(false);
+      }
+    };
+
+    checkOllamaConnection();
+  }, []);
+
   // Fetch LLM configurations on component mount
-  useState(() => {
+  useEffect(() => {
     const fetchLlmConfigs = async () => {
       try {
         const response = await fetch('/api/llm/configs');
@@ -63,6 +82,29 @@ export default function PRDForm({ repository }: PRDFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check Ollama connection again before submitting
+    try {
+      const response = await fetch('/api/llm/status');
+      const data = await response.json();
+      if (!data.connected) {
+        toast({
+          title: 'Error',
+          description:
+            'Ollama server is not running. Please start Ollama to generate PRDs.',
+          variant: 'destructive'
+        });
+        return;
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Unable to connect to Ollama server.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -101,6 +143,16 @@ export default function PRDForm({ repository }: PRDFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {ollamaConnected === false && (
+        <Alert variant="destructive" className="mb-4">
+          <ServerOff className="h-4 w-4 mr-2" />
+          <AlertDescription>
+            Cannot connect to Ollama server. PRD generation will not work until
+            Ollama is running.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
         <Input
@@ -149,9 +201,20 @@ export default function PRDForm({ repository }: PRDFormProps) {
         )}
       </div>
 
-      <Button type="submit" disabled={loading || llmConfigs.length === 0}>
+      <Button
+        type="submit"
+        disabled={
+          loading || llmConfigs.length === 0 || ollamaConnected === false
+        }
+      >
         {loading ? 'Creating...' : 'Generate PRD'}
       </Button>
+
+      {ollamaConnected === false && (
+        <p className="text-sm text-red-500 mt-2">
+          Button disabled because Ollama is not running.
+        </p>
+      )}
     </form>
   );
 }

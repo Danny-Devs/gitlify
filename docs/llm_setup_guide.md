@@ -77,6 +77,31 @@ ollama pull codellama:13b
    ollama run codellama:7b "What is a React component?"
    ```
 
+## Using Ollama with Gitlify
+
+### Ollama Status Indicator
+
+Gitlify includes an Ollama status indicator in the header when you're logged in:
+
+- **Green checkmark**: Ollama is running and connected
+- **Red X**: Ollama is not running or not accessible
+- **Info button**: Click for setup instructions
+
+If you try to generate a PRD without Ollama running, you'll see clear error messages and instructions on how to set up Ollama.
+
+### Configuring Gitlify for Ollama
+
+1. Sign in to Gitlify
+2. Go to Settings
+3. Under "LLM Configurations", add a new configuration:
+   - **Name**: "Local Ollama"
+   - **Endpoint**: `http://localhost:11434/api/generate`
+   - **Model Name**: The name of your installed model (e.g., `codellama:7b`)
+   - **Context Window**: `16384` (or appropriate for your model)
+4. Click "Add Configuration"
+
+The Ollama status indicator will automatically check if your Ollama server is accessible with the configured model.
+
 ## Option 2: LM Studio
 
 ### System Requirements

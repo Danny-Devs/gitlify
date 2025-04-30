@@ -5,6 +5,7 @@ import ThemeToggle from '../../theme/ThemeToggle';
 import { useSession } from 'next-auth/react';
 import { UserProfile } from '../auth/UserProfile';
 import { SignInButton } from '../auth/SignInButton';
+import OllamaStatus from './OllamaStatus';
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -56,6 +57,7 @@ export default function Header({ showNavigation = true }: HeaderProps) {
           </div>
 
           <div className="flex items-center space-x-4">
+            {isAuthenticated && <OllamaStatus />}
             <ThemeToggle />
             {isAuthenticated ? (
               <UserProfile />

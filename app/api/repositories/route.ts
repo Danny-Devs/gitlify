@@ -6,12 +6,14 @@ import {
   getRepositories,
   deleteRepository
 } from '@/app/services/repository/repositoryService';
+import prisma from '@/lib/prisma';
 
 /**
  * GET /api/repositories
- * Get all repositories for the current user
+ * Get the user's repositories
+ * Can filter by URL or ID
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -19,18 +21,54 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
-    const result = await getRepositories(userId);
+    const url = new URL(request.url);
+    const repoUrl = url.searchParams.get('url');
+    const repoId = url.searchParams.get('id');
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    if (repoId) {
+      // Get a specific repository by ID
+      const repository = await prisma.repository.findFirst({
+        where: {
+          id: repoId,
+          userId: session.user.id
+        }
+      });
+
+      if (!repository) {
+        return NextResponse.json(
+          { error: 'Repository not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({ repository });
+    } else if (repoUrl) {
+      // Get a specific repository by URL
+      const repository = await prisma.repository.findFirst({
+        where: {
+          url: repoUrl,
+          userId: session.user.id
+        }
+      });
+
+      return NextResponse.json({ repository: repository || null });
+    } else {
+      // Get all repositories for the user
+      const repositories = await prisma.repository.findMany({
+        where: {
+          userId: session.user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      });
+
+      return NextResponse.json({ repositories });
     }
-
-    return NextResponse.json(result.data);
   } catch (error) {
-    console.error('Error in GET /api/repositories:', error);
+    console.error('Error getting repositories:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to get repositories' },
       { status: 500 }
     );
   }
@@ -38,7 +76,7 @@ export async function GET() {
 
 /**
  * POST /api/repositories
- * Add a new repository for the current user
+ * Save a repository
  */
 export async function POST(request: NextRequest) {
   try {
@@ -48,35 +86,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
     const body = await request.json();
 
-    if (!body.url) {
-      return NextResponse.json(
-        { error: 'Repository URL is required' },
-        { status: 400 }
-      );
+    // Check if the repo already exists
+    const existingRepo = await prisma.repository.findFirst({
+      where: {
+        url: body.url,
+        userId: session.user.id
+      }
+    });
+
+    if (existingRepo) {
+      return NextResponse.json(existingRepo);
     }
 
-    const result = await addRepository(userId, body.url);
+    // Create a new repository
+    const repository = await prisma.repository.create({
+      data: {
+        name: body.name,
+        owner: body.owner,
+        description: body.description || '',
+        url: body.url,
+        isPrivate: body.isPrivate || false,
+        stars: body.stars || 0,
+        forks: body.forks || 0,
+        userId: session.user.id
+      }
+    });
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
-    }
-
-    return NextResponse.json(result.data, { status: 201 });
+    return NextResponse.json(repository, { status: 201 });
   } catch (error) {
-    console.error('Error in POST /api/repositories:', error);
-
-    if (
-      error instanceof Error &&
-      error.message === 'Invalid GitHub repository URL'
-    ) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
+    console.error('Error saving repository:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to save repository' },
       { status: 500 }
     );
   }

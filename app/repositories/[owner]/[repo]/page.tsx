@@ -121,6 +121,18 @@ export default function RepositoryDetailPage({
     setIsGenerating(true);
 
     try {
+      // First check if Ollama is running
+      const ollamaStatus = await fetch('/api/llm/status');
+      const statusData = await ollamaStatus.json();
+
+      if (!statusData.connected) {
+        setError(
+          'Ollama server is not running. Please install and start Ollama to generate PRDs.'
+        );
+        setIsGenerating(false);
+        return;
+      }
+
       // Save repository if not already saved
       if (!savedRepository) {
         const saveResponse = await fetch('/api/repositories', {
@@ -168,7 +180,28 @@ export default function RepositoryDetailPage({
       <div className="container mx-auto py-12 px-4">
         <Alert variant="destructive" className="mb-8">
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>
+            {error}
+            {error.includes('Ollama server') && (
+              <div className="mt-2">
+                <p className="font-medium">
+                  Ollama is required to generate PRDs.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => {
+                    // Clear error and open documentation dialog
+                    setError(null);
+                    document.getElementById('ollama-help-button')?.click();
+                  }}
+                >
+                  View Setup Instructions
+                </Button>
+              </div>
+            )}
+          </AlertDescription>
         </Alert>
         <Button onClick={() => router.back()}>Go Back</Button>
       </div>

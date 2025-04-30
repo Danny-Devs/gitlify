@@ -77,6 +77,7 @@ CodeNarrator transforms public GitHub repositories into engaging audio code tour
   - Using @tailwindcss/postcss plugin (NOT autoprefixer/postcss-import from v3)
   - Imports via `@import "tailwindcss";` (not @tailwind directives)
   - Uses new opacity syntax with / (e.g., bg-primary/90)
+  - To add new Shadcn UI components, use: `npx shadcn@latest add <component>`
 - Lucide icons through Shadcn/UI integration for iconography
 - Octokit.js for GitHub API access
 - Text-to-speech services for audio generation
