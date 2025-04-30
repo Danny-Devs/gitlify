@@ -1,117 +1,122 @@
-# CodeGrok
+# Gitlify
 
-Master any public GitHub repository with AI-powered explanations and visualizations - without spending a penny on API calls.
+Gitlify transforms GitHub repositories into comprehensive Project Requirement Documents (PRDs), enabling developers to understand, rebuild, and contribute to open-source projects.
 
-## Overview
+## 🚀 Features
 
-CodeGrok transforms complex GitHub repositories into intuitive learning experiences, helping developers master unfamiliar codebases faster. Using locally hosted Large Language Models, we provide multi-layered explanations that cover everything from high-level architecture to detailed implementation, with the goal of enabling users to progress from understanding to meaningful contribution - all with zero API costs.
+- **Reverse-Engineer PRDs**: Generate detailed specifications from public GitHub repositories
+- **Chapter-Based Organization**: Progressively explore projects from high-level concepts to implementation details
+- **Architecture Visualization**: Automatically create Mermaid diagrams showing component relationships and system architecture
+- **Local LLM Integration**: Use your own computing resources with Ollama, LM Studio, or other local LLM providers
+- **PocketFlow-Inspired Workflow**: Advanced LLM orchestration for handling large repositories and complex analysis
+- **Community Curation**: Rate, review, and improve PRDs to build a valuable resource for developers
 
-- **Multi-layered Explanations**: Access explanations that adapt to your level of understanding
-- **Side-by-side Code Annotations**: See detailed explanations right alongside the code
-- **Visual Understanding**: View generated diagrams that illustrate component relationships
-- **Contribution Pathways**: Identify opportunities to contribute through tests, documentation, or refactoring
-- **Zero API Costs**: Use your own computing resources instead of paying for closed-source LLMs
-- **Repository Reimagination**: Extract detailed PRDs from existing repos to create improved versions
-- **Community Enhancement**: Explanations improve through user feedback and A/B testing
+## 🔍 How It Works
 
-## Features
+1. **Select Repository**: Choose any public GitHub repository you want to analyze
+2. **Configure Analysis**: Set analysis depth and focus areas
+3. **Generate PRD**: Our system analyzes the repository to extract requirements and generate detailed specifications
+4. **Explore Results**: Navigate through the PRD's progressive chapters and visualizations
+5. **Rebuild & Contribute**: Use the PRD to implement your own version, then contribute improvements back to the original
 
-- Explore curated repositories organized by domain and complexity
-- Get instant architectural overviews and component relationship diagrams
-- Study code with intelligent annotations and explanations
-- Generate comprehensive PRDs from existing repositories
-- Build improved versions based on extracted requirements
-- Identify patterns, dependencies, and design decisions
-- Track your learning progress across multiple repositories
-- Discover contribution opportunities with guided workflows
-- Rate explanations to help improve the collective understanding
-- Build a portfolio of repositories you've mastered
-- Save money by using your own computing power instead of paid API services
+## 🧩 Why Gitlify?
 
-## Use Cases
+Gitlify helps developers:
 
-- **Faster Onboarding**: Quickly understand complex projects with minimal friction
-- **Open Source Contribution**: Progress from understanding to making meaningful contributions
-- **Learning Best Practices**: Study how successful projects are structured and implemented
-- **Code Review Enhancement**: Better understand code you're reviewing with contextual explanations
-- **Technical Evaluation**: Assess potential dependencies before adding them to your project
-- **Cost-Effective Analysis**: Analyze large codebases without worrying about mounting API costs
+- **Understand Projects Deeply**: Go beyond code to discover the "why" behind implementation decisions
+- **Learn Software Design**: See how successful projects are structured and architected
+- **Build Better Software**: Use PRDs as a foundation for creating improved implementations
+- **Contribute Meaningfully**: Make significant contributions to open-source projects based on deep understanding
 
-## Tech Stack
+## 🔄 PocketFlow Architecture
 
-- Next.js 14+ with App Router
-- TypeScript
-- PostgreSQL with Prisma ORM
-- TailwindCSS with Shadcn/UI
+Gitlify uses a PocketFlow-inspired workflow to analyze repositories of any size:
+
+1. **Node-Based Processing**: Breaking PRD generation into discrete, focused steps
+2. **Progressive Analysis**: Building up context from repository overview to detailed requirements
+3. **State Management**: Maintaining analysis state for resumable, reliable processing
+4. **Context Optimization**: Strategically managing context windows to handle large repositories
+
+This approach enables Gitlify to generate high-quality PRDs from even the largest and most complex codebases.
+
+## 🛠️ Technology Stack
+
+- Next.js and React for the frontend and API routes
+- TypeScript for type safety
+- PostgreSQL with Prisma ORM for data storage
+- TailwindCSS with Shadcn/UI for UI components
 - Local LLM integration (Ollama, LM Studio)
-- Interactive visualization libraries
-- GitHub API integration
+- Mermaid.js for architecture diagrams
+- PocketFlow-inspired workflow for LLM orchestration
 
-## Getting Started
+## 📚 Documentation
+
+For more details, see our documentation:
+
+- [Project Vision](docs/project_vision.md)
+- [Project Requirements Document](docs/prd.md)
+- [Technical Architecture](docs/technical_architecture.md)
+- [Getting Started](docs/getting_started.md)
+- [PocketFlow Implementation Guide](docs/pocket_flow_guide.md)
+- [Mermaid Diagram Guide](docs/mermaid-diagram-guide.md)
+- [Prompt Engineering Guidelines](docs/prompt_engineering.md)
+- [Complete Documentation Index](docs/README.md)
+
+## 🧪 Development
 
 ### Prerequisites
 
 - Node.js 18+
 - PostgreSQL database
-- A local LLM setup (like Ollama, LM Studio, etc.)
+- Local LLM setup (Ollama, LM Studio, or similar)
 
 ### Installation
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/your-username/code-grok.git
-cd code-grok
-```
+   ```bash
+   git clone https://github.com/yourusername/gitlify.git
+   cd gitlify
+   ```
 
 2. Install dependencies
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Set up environment variables
 
-```bash
-cp .env.example .env.local
-```
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your database and LLM configuration
+   ```
 
-4. Fill in the required environment variables in `.env.local`
+4. Initialize the database
 
-5. Run database migrations
+   ```bash
+   npx prisma migrate dev
+   ```
 
-```bash
-npx prisma migrate dev
-```
+5. Start the development server
+   ```bash
+   npm run dev
+   ```
 
-6. Start the development server
+### Setting Up Local LLMs
 
-```bash
-npm run dev
-```
+For optimal PRD generation, we recommend:
 
-## How It Works
+1. Ollama with CodeLlama 7B or 13B
+2. LM Studio with a suitable code-oriented model
+3. At least 16GB RAM for efficient processing
 
-1. **Repository Analysis**: We fetch and analyze the repository structure using local LLMs - no expensive API calls
-2. **Explanation Generation**: The system creates multiple layers of explanation for the codebase at no additional cost
-3. **Visualization Creation**: Supporting diagrams are generated to illustrate component relationships
-4. **Learning Path Construction**: Progressive checkpoints guide users from overview to details
-5. **Contribution Preparation**: Areas for potential contribution are identified
-6. **Feedback Loop**: User ratings and A/B testing continuously improve explanation quality
+See our [LLM Setup Guide](docs/llm_setup_guide.md) for detailed instructions.
 
-## Development Principles
+## 🤝 Contributing
 
-- Focus on creating clear, context-aware explanations
-- Build progressive learning paths from high-level to detailed understanding
-- Leverage local computing resources to eliminate API costs
-- Use community feedback to continuously improve explanation quality
-- Create visualizations that enhance understanding of complex relationships
-- Lower the barrier to meaningful open source contributions
+Contributions are welcome! Please check out our [contributing guidelines](CONTRIBUTING.md) to get started.
 
-## Documentation
+## 📄 License
 
-For more detailed information about the project, check out the [documentation](./docs/README.md).
-
-## License
-
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

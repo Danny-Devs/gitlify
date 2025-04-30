@@ -1,6 +1,6 @@
 # Glossary
 
-This document defines key terminology used throughout the Gist of Git project documentation.
+This document defines key terminology used throughout the CodeGrok project documentation.
 
 ## Project-Specific Terms
 
@@ -36,7 +36,7 @@ A record of when and how a template was used during an analysis, including succe
 
 ### API Key
 
-A unique identifier used for authentication with the Gist of Git API.
+A unique identifier used for authentication with the CodeGrok API.
 
 ### Context Window
 

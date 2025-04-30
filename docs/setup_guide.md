@@ -1,6 +1,6 @@
 # Development Setup Guide
 
-This guide will help you set up your development environment to work on the Gist of Git project.
+This guide will help you set up your development environment to work on the Gitlify project.
 
 ## Prerequisites
 
@@ -10,14 +10,15 @@ Before you begin, ensure you have the following installed:
 - **npm** (v9.x or later) or **yarn** (v1.22.x or later)
 - **Git**
 - **PostgreSQL** (v14.x or later) or Docker for running PostgreSQL
+- **Local LLM** (Ollama, LM Studio, or similar)
 
 ## Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/gist-of-git.git
-cd gist-of-git
+git clone https://github.com/your-org/gitlify.git
+cd gitlify
 ```
 
 ### 2. Install Dependencies
@@ -34,13 +35,13 @@ Create a `.env.local` file in the project root:
 
 ```
 # Database
-DATABASE_URL="postgresql://postgres:password@localhost:5432/gistofgit"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/gitlify"
 
 # GitHub API (no auth required for MVP)
 GITHUB_API_BASE_URL="https://api.github.com"
 
-# Ollama API
-OLLAMA_API_URL="http://localhost:11434/api"
+# LLM API (for local LLM integration)
+LLM_API_URL="http://localhost:11434/api"
 ```
 
 ### 4. Set Up the Database
@@ -49,7 +50,7 @@ If you have PostgreSQL installed locally:
 
 ```bash
 # Create the database
-createdb gistofgit
+createdb gitlify
 
 # Run migrations
 npx prisma migrate dev
@@ -59,7 +60,7 @@ If you prefer using Docker:
 
 ```bash
 # Start PostgreSQL container
-docker run --name gistofgit-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=gistofgit -p 5432:5432 -d postgres:14
+docker run --name gitlify-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=gitlify -p 5432:5432 -d postgres:14
 
 # Run migrations
 npx prisma migrate dev
@@ -75,9 +76,11 @@ yarn dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## Setting Up Ollama (Optional)
+## Setting Up Local LLM
 
-For testing LLM integration locally, you'll need to install Ollama:
+For PRD generation, you'll need to set up a local LLM service:
+
+### Option 1: Ollama
 
 1. Follow the installation instructions on the [Ollama website](https://ollama.ai)
 2. Pull a code-focused model:
@@ -86,15 +89,31 @@ For testing LLM integration locally, you'll need to install Ollama:
    ```
 3. Ensure Ollama is running in the background
 
+### Option 2: LM Studio
+
+1. Download and install [LM Studio](https://lmstudio.ai/)
+2. Download a code-focused model (CodeLlama, WizardCoder, etc.)
+3. Start the local server from the LM Studio interface
+
 ## Project Structure
 
 ```
-gist-of-git/
+gitlify/
 ├── app/              # Next.js app directory
 │   ├── api/          # API routes
+│   │   ├── auth/     # Authentication endpoints
+│   │   ├── github/   # GitHub API integration
+│   │   └── llm/      # LLM integration endpoints
 │   ├── components/   # React components
+│   │   ├── analysis/   # PRD analysis components
+│   │   ├── auth/       # Authentication components
+│   │   ├── common/     # Shared UI components
+│   │   └── repository/ # Repository components
 │   ├── lib/          # Utility functions
 │   ├── services/     # Service layer
+│   │   ├── analysis/   # PRD generation services
+│   │   ├── llm/        # LLM orchestration services
+│   │   └── repository/ # Repository handling services
 │   └── theme/        # UI theme and styling
 ├── prisma/           # Prisma schema and migrations
 ├── public/           # Static assets
@@ -132,15 +151,13 @@ gist-of-git/
 
 Create a new file in the appropriate location within `app/api/` following the Next.js App Router conventions.
 
-### Run Tests
+### Implement PocketFlow-Inspired Workflow
 
-```bash
-# Run all tests
-npm test
+When implementing PRD generation nodes:
 
-# Run tests in watch mode
-npm test -- --watch
-```
+1. Create node classes in the appropriate service directory
+2. Define prep, exec, and post methods for each node
+3. Set up flows to connect nodes and manage data
 
 ## Troubleshooting
 
@@ -158,8 +175,14 @@ npm test -- --watch
   npm run dev
   ```
 
-### Ollama Connection Issues
+### LLM Connection Issues
 
-- Ensure Ollama is running (`ps aux | grep ollama`)
-- Check that OLLAMA_API_URL is set correctly in `.env.local`
-- Make sure you've pulled the necessary model (`ollama list`)
+- Ensure your LLM service is running
+- Check that LLM_API_URL is set correctly in `.env.local`
+- Make sure you've pulled the necessary model
+- Verify your model has sufficient capabilities for code analysis
+
+### GitHub API Rate Limiting
+
+- The GitHub API has rate limits for unauthenticated requests
+- Consider adding GitHub authentication for higher rate limits during development

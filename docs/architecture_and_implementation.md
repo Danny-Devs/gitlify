@@ -1,328 +1,326 @@
-# Architecture and Implementation Guide
+# Gitlify Architecture and Implementation Guide
 
-## Overview
+This document provides a comprehensive overview of Gitlify's architecture and implementation approach, serving as a reference for developers working on the platform.
 
-This document provides a comprehensive overview of the technical architecture, implementation strategy, and development roadmap for the Gist of Git application. It consolidates and enhances the technical details from various documentation files to ensure a cohesive implementation approach.
+## System Overview
 
-## System Architecture
+Gitlify is a web application that leverages local Large Language Models (LLMs) to reverse-engineer Project Requirement Documents (PRDs) from GitHub repositories. The system:
 
-### Key Architectural Principles
+1. Extracts implicit requirements from code
+2. Generates detailed specifications and architecture diagrams
+3. Organizes findings into structured, navigable chapters
+4. Provides community curation and feedback mechanisms
 
-- **Privacy-First Design**: All code analysis occurs locally using the user's own LLM instances
-- **Modular Component Structure**: Clear separation of concerns for maintainability and extensibility
-- **Progressive Enhancement**: Core functionality works on modest hardware with enhanced capabilities on more powerful systems
-- **Type Safety**: Comprehensive type definitions throughout the codebase
+## Core Architecture Components
 
-### Technology Stack
+### 1. Web Application Layer
 
-| Layer              | Technologies                            | Justification                                                                 |
-| ------------------ | --------------------------------------- | ----------------------------------------------------------------------------- |
-| **Frontend**       | Next.js, React, TypeScript, TailwindCSS | Server components for improved performance, type safety, rapid UI development |
-| **Backend**        | Next.js API routes, Node.js             | Unified deployment model, serverless capabilities                             |
-| **Database**       | PostgreSQL, Prisma ORM                  | Type-safe database access, relational integrity                               |
-| **Authentication** | NextAuth.js                             | OAuth integration with GitHub, session management                             |
-| **Testing**        | Jest, React Testing Library, Playwright | Comprehensive testing at unit, integration, and E2E levels                    |
-| **CI/CD**          | GitHub Actions                          | Automated testing, deployment, and quality gates                              |
-| **Monitoring**     | Sentry, Prometheus (optional)           | Error tracking, performance monitoring                                        |
+- **Next.js App Router**: Server components and API routes
+- **React Frontend**: Progressive, responsive UI
+- **Authentication**: GitHub OAuth integration for user identity
 
-### Component Architecture
+### 2. Repository Processing Layer
+
+- **GitHub API Integration**: Repository data retrieval
+- **Code Analysis**: Structure parsing and key file identification
+- **Caching**: Efficient repository data storage
+
+### 3. PRD Generation Layer
+
+- **PocketFlow Workflow**: Node-based processing pipeline
+- **LLM Integration**: Local model orchestration
+- **State Management**: Persistent workflow state tracking
+
+### 4. Data Storage Layer
+
+- **PostgreSQL Database**: Relational data storage
+- **Prisma ORM**: Type-safe database access
+- **Workflow State Persistence**: Long-running job tracking
+
+### 5. Community Layer
+
+- **PRD Rating System**: Quality evaluation mechanisms
+- **Comments and Feedback**: User input collection
+- **PRD Library**: Searchable PRD collection
+
+## PocketFlow Implementation
+
+The heart of Gitlify is the PocketFlow-inspired workflow system that enables processing repositories of any size despite LLM context limitations.
+
+### Node Architecture
+
+Each processing node follows this structure:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Client (Browser)                         │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │   React UI  │  │   Next.js   │  │  Client-Side Analysis   │  │
-│  │  Components │◄─┤    Router   │◄─┤   & Visualization       │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
-│          ▲                ▲                     ▲               │
-└──────────┼────────────────┼─────────────────────┼───────────────┘
-           │                │                     │
-┌──────────┼────────────────┼─────────────────────┼───────────────┐
-│          ▼                ▼                     ▼               │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │  API Routes │  │  Auth & User│  │    Analysis Service     │  │
-│  │             │  │  Management │  │                         │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
-│          ▲                ▲                     ▲               │
-│          │                │                     │               │
-│  ┌───────┴────────────────┴─────────────────────┴───────────┐   │
-│  │                      Database                            │   │
-│  │                       (Prisma)                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                               ▲                                  │
-└───────────────────────────────┼──────────────────────────────────┘
-                                │
-┌───────────────────────────────┼──────────────────────────────────┐
-│                               ▼                                  │
-│  ┌──────────────────┐  ┌─────────────────┐  ┌───────────────┐   │
-│  │  GitHub API      │  │  Local LLM      │  │  File System  │   │
-│  │  Integration     │  │  Integration    │  │  Cache        │   │
-│  └──────────────────┘  └─────────────────┘  └───────────────┘   │
-│                                                                 │
-│                    External Integrations                         │
-└─────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────┐
+│                       Node                            │
+├───────────────────────────────────────────────────────┤
+│                                                       │
+│  ┌─────────┐       ┌─────────┐       ┌─────────────┐  │
+│  │  prep   │──────▶│  exec   │──────▶│    post     │  │
+│  └─────────┘       └─────────┘       └─────────────┘  │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+   ▲ input                                     output ▼
 ```
 
-### Key Components
+- **prep**: Prepares the LLM prompt and necessary context
+- **exec**: Executes the prompt against the configured LLM
+- **post**: Processes the LLM response and updates workflow state
 
-#### Frontend Components
+### Core Workflow Nodes
 
-- **Repository Explorer**: Displays repository structure and content
-- **Analysis Dashboard**: Shows analysis results and insights
-- **Template Manager**: Interface for creating/editing analysis templates
-- **LLM Configuration**: Setup and management of local LLM connections
-- **Authentication**: User login, registration, and profile management
-- **Community Features**: Template sharing, rating, and collaboration tools
+```mermaid
+flowchart TD
+    START([Start]) --> RepoNode[Repository Analysis Node]
+    RepoNode --> AbstractionsNode[Core Abstractions Node]
+    AbstractionsNode --> ReqLoop{For each abstraction}
+    ReqLoop --> ReqNode[Requirements Extraction Node]
+    ReqNode --> ReqLoop
+    ReqLoop --> DiagramNodes[Diagram Generation Nodes]
+    DiagramNodes --> ChapterNodes[Chapter Generation Nodes]
+    ChapterNodes --> CompileNode[PRD Compilation Node]
+    CompileNode --> END([End])
+```
 
-#### Backend Services
+1. **Repository Analysis Node**: High-level repository assessment
+2. **Core Abstractions Node**: Identification of key system components
+3. **Requirements Extraction Nodes**: Per-abstraction requirement extraction
+4. **Diagram Generation Nodes**: Architecture visualization creation
+5. **Chapter Generation Nodes**: PRD chapter content creation
+6. **PRD Compilation Node**: Final document assembly
 
-- **GitHub Integration Service**: Fetches repository data
-- **Analysis Orchestrator**: Coordinates repository analysis workflow
-- **Template Processing Service**: Renders templates into LLM prompts
-- **LLM Connector Service**: Communicates with local LLM instances
-- **User Management Service**: Handles authentication and user data
-- **API Service**: Exposes RESTful endpoints for client consumption
+### State Management
+
+Workflow state is tracked in the database allowing:
+
+- Resumption of interrupted workflows
+- Progress tracking for users
+- Audit trail of generation steps
+- Recovery from failures
+
+## LLM Integration
+
+Gitlify supports multiple local LLM options:
+
+### Ollama Integration
+
+```typescript
+class OllamaExecutor implements LLMExecutor {
+  constructor(private endpoint: string, private modelName: string) {}
+
+  async execute(prompt: string): Promise<string> {
+    const response = await fetch(`${this.endpoint}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: this.modelName,
+        prompt: prompt,
+        stream: false
+      })
+    });
+
+    const data = await response.json();
+    return data.response;
+  }
+}
+```
+
+### LM Studio Integration
+
+```typescript
+class LMStudioExecutor implements LLMExecutor {
+  constructor(private endpoint: string) {}
+
+  async execute(prompt: string): Promise<string> {
+    const response = await fetch(`${this.endpoint}/api/completion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: prompt,
+        temperature: 0.7,
+        max_tokens: 2048
+      })
+    });
+
+    const data = await response.json();
+    return data.content;
+  }
+}
+```
+
+### Model Selection
+
+The application dynamically selects LLMs based on:
+
+1. Task requirements (code understanding, requirements extraction, etc.)
+2. User configuration
+3. Available local resources
+
+## Mermaid Diagram Generation
+
+Architecture diagrams are generated using carefully crafted prompts:
+
+```typescript
+function createDiagramPrompt(
+  diagramType: string,
+  abstractions: Abstraction[]
+): string {
+  return `Create a ${diagramType} diagram using Mermaid syntax that shows the relationships between these components:
+
+${formatAbstractionsForDiagram(abstractions)}
+
+Return only the Mermaid code without explanation.`;
+}
+```
+
+The system generates three primary diagram types:
+
+1. **Component Diagrams**: System structure visualization
+2. **Data Flow Diagrams**: Information movement mapping
+3. **Entity Relationship Diagrams**: Data model visualization
+
+## PRD Chapter Organization
+
+PRDs are organized into progressive chapters for optimal comprehension:
+
+```
+1. Executive Summary
+   └── High-level overview of the project
+
+2. User Personas
+   └── Target users and their needs
+
+3. Functional Requirements
+   ├── Core features
+   └── User interactions
+
+4. Non-Functional Requirements
+   ├── Performance considerations
+   ├── Security requirements
+   └── Scalability needs
+
+5. Architecture
+   ├── Component overview
+   ├── Data flow
+   └── Entity relationships
+
+6. Implementation Considerations
+   ├── Technical constraints
+   ├── Dependencies
+   └── Deployment considerations
+```
+
+## API Architecture
+
+Gitlify exposes these core API endpoints:
+
+### Repository Management
+
+- `POST /api/repositories`: Register a repository for analysis
+- `GET /api/repositories`: List all registered repositories
+- `GET /api/repositories/:id`: Get repository details
+
+### PRD Generation
+
+- `POST /api/repositories/:id/generate`: Start PRD generation
+- `GET /api/repositories/:id/status`: Check generation status
+- `GET /api/repositories/:id/prd`: Get generated PRD
+
+### Community Features
+
+- `POST /api/prds/:id/ratings`: Rate a PRD
+- `POST /api/prds/:id/comments`: Comment on a PRD
+- `GET /api/prds`: List PRDs with filtering options
 
 ## Database Schema
 
-The application uses PostgreSQL with Prisma ORM for type-safe database access. The schema includes the following key entities:
+The core tables in the database are:
 
-### Core Entities
-
-- **User**: Authentication and profile information
-- **Repository**: GitHub repositories registered for analysis
-- **Analysis**: Individual analysis runs of repositories
-- **AnalysisResult**: Results and insights from analysis runs
-- **Template**: Analysis templates with prompts and configurations
-- **LLMConfiguration**: Settings for connecting to local LLM instances
-
-Refer to [Database Schema](./database_schema.md) for complete details.
-
-## Implementation Plan
-
-### Phase 1: Foundation (Weeks 1-4)
-
-**Goal**: Establish core infrastructure and GitHub integration
-
-1. **Week 1**: Project Setup
-
-   - Initialize Next.js application with TypeScript
-   - Configure Prisma and PostgreSQL
-   - Set up authentication with NextAuth.js
-   - Configure testing framework (Jest + RTL)
-
-2. **Week 2**: GitHub Integration
-
-   - Implement GitHub API integration
-   - Develop repository fetching and validation
-   - Create repository explorer UI components
-   - Build repository metadata storage
-
-3. **Week 3**: User Management
-
-   - Complete user authentication flow
-   - Implement user profile management
-   - Create API key management
-   - Develop user preferences
-
-4. **Week 4**: Data Layer Foundation
-   - Finalize database schema implementation
-   - Create data access layer with Prisma
-   - Implement migration system
-   - Develop basic API endpoints
-
-**Deliverables**:
-
-- Functioning application with user authentication
-- GitHub repository integration
-- Database foundation
-- Unit and integration tests for core features
-
-### Phase 2: Analysis Capabilities (Weeks 5-8)
-
-**Goal**: Integrate local LLM capabilities and develop analysis features
-
-1. **Week 5**: LLM Integration
-
-   - Implement connectors for popular LLM servers (Ollama, LM Studio)
-   - Develop LLM configuration management
-   - Create LLM connection testing tools
-   - Build model detection and selection UI
-
-2. **Week 6**: Template System
-
-   - Create template data structure
-   - Implement template editor
-   - Develop template rendering system
-   - Build template testing tools
-
-3. **Week 7**: Analysis Engine
-
-   - Implement analysis orchestration
-   - Create prompt generation pipeline
-   - Develop result parsing and storage
-   - Build basic visualization components
-
-4. **Week 8**: Analysis Results
-   - Implement results dashboard
-   - Create file analysis viewer
-   - Develop export functionality
-   - Build analysis history view
-
-**Deliverables**:
-
-- Local LLM integration
-- Template creation and management
-- Repository analysis functionality
-- Results visualization
-
-### Phase 3: Community and Refinement (Weeks 9-12)
-
-**Goal**: Develop community features and refine UI/UX
-
-1. **Week 9**: Template Sharing
-
-   - Implement template marketplace
-   - Create rating and review system
-   - Develop template versioning
-   - Build discovery features
-
-2. **Week 10**: Advanced Visualization
-
-   - Enhance component relationship diagrams
-   - Implement interactive code maps
-   - Create architectural visualizations
-   - Develop customizable reports
-
-3. **Week 11**: Performance Optimization
-
-   - Optimize repository analysis
-   - Implement caching strategies
-   - Enhance loading states and UX
-   - Profile and optimize performance
-
-4. **Week 12**: Polishing and Launch Preparation
-   - Conduct comprehensive testing
-   - Gather feedback and make refinements
-   - Create documentation and tutorials
-   - Prepare for initial release
-
-**Deliverables**:
-
-- Complete template marketplace
-- Advanced visualization features
-- Optimized performance
-- Comprehensive documentation
-
-## Development Guidelines
-
-### Coding Standards
-
-- Follow TypeScript best practices with strict typing
-- Implement comprehensive error handling
-- Document all public functions and interfaces
-- Maintain test coverage above 80%
-
-### Testing Approach
-
-- **Unit Tests**: Individual components and functions
-- **Integration Tests**: API endpoints and service interactions
-- **End-to-End Tests**: Critical user journeys
-- **Performance Tests**: Analysis processing benchmarks
-
-### Security Considerations
-
-- Secure storage of API keys and credentials
-- Proper validation of user input
-- CSRF protection for API endpoints
-- Rate limiting to prevent abuse
-
-### Performance Standards
-
-- Page load time under 2 seconds
-- Analysis start time under 5 seconds
-- Progressive results delivery for long-running analyses
-- Optimized bundle size with code splitting
-
-## Deployment Architecture
-
-```
-┌────────────────────┐     ┌────────────────────┐
-│                    │     │                    │
-│   Vercel/Netlify   │◄────┤   GitHub Actions   │
-│   (Hosting)        │     │   (CI/CD)          │
-│                    │     │                    │
-└────────────────────┘     └────────────────────┘
-          ▲                          ▲
-          │                          │
-          ▼                          │
-┌────────────────────┐               │
-│                    │               │
-│   PostgreSQL       │               │
-│   (Managed DB)     │               │
-│                    │               │
-└────────────────────┘               │
-                                     │
-                                     │
-┌────────────────────┐               │
-│                    │               │
-│   GitHub           │───────────────┘
-│   (Source Control) │
-│                    │
-└────────────────────┘
+```mermaid
+erDiagram
+    User ||--o{ Repository : analyzes
+    Repository ||--o{ PRD : generates
+    PRD ||--|{ Chapter : contains
+    PRD ||--|{ Diagram : includes
+    WorkflowRun ||--o{ WorkflowState : tracks
 ```
 
-### Deployment Strategy
+These tables enable:
 
-- **Development**: Local development with containerized database
-- **Staging**: Preview deployments for pull requests
-- **Production**: Automated deployment on main branch
-- **Database**: Managed PostgreSQL service with automated backups
+1. Tracking of users and their repositories
+2. Storage of generated PRDs and their components
+3. Workflow state persistence
+4. Community ratings and comments
 
-## Monitoring and Maintenance
+## Implementation Approach
 
-### Error Tracking
+### Phase 1: Foundation
 
-- Client-side error tracking with Sentry
-- Structured logging for backend services
-- Automated alerts for critical errors
+1. Setup Next.js application with basic UI
+2. Implement GitHub repository fetching
+3. Create database schema and Prisma models
+4. Implement authentication system
 
-### Performance Monitoring
+### Phase 2: Core PRD Generation
 
-- Core Web Vitals tracking
-- API response time monitoring
-- Database query performance tracking
+1. Implement PocketFlow node system
+2. Create repository analysis workflow
+3. Implement LLM integration
+4. Develop basic PRD generation pipeline
 
-### Maintenance Plan
+### Phase 3: Visualization and Navigation
 
-- Weekly dependency updates
-- Monthly security reviews
-- Quarterly performance audits
+1. Implement Mermaid diagram generation
+2. Create chapter-based navigation
+3. Develop PRD exploration UI
+4. Add diagram rendering capabilities
 
-## Future Roadmap
+### Phase 4: Community Features
 
-### Potential Enhancements
+1. Implement PRD rating system
+2. Add commenting functionality
+3. Create PRD library with search
+4. Develop user profiles and history
 
-- Desktop application packaging with Electron
-- Git provider expansion (GitLab, Bitbucket)
-- Advanced code analysis with specialized models
-- IDE integrations and plugins
+### Phase 5: Refinement and Optimization
 
-### Technical Debt Management
+1. Optimize LLM prompts for better results
+2. Improve performance and scalability
+3. Enhance error handling and recovery
+4. Refine UI/UX based on user feedback
 
-- Regular refactoring sessions
-- Deprecation policy for APIs and features
-- Documentation update cadence
+## Performance Considerations
+
+### LLM Performance
+
+- **Batch Processing**: Process repository chunks efficiently
+- **Context Optimization**: Minimize token usage with strategic prompting
+- **Model Selection**: Use appropriate models for different tasks
+- **Caching**: Cache repository data and intermediate results
+
+### Web Application Performance
+
+- **Server Components**: Leverage Next.js server components
+- **Static Generation**: Pre-render pages where possible
+- **API Optimization**: Efficient API design and caching
+- **Progressive Loading**: Show results as they become available
+
+## Security Considerations
+
+1. **Authentication**: Secure user authentication via GitHub OAuth
+2. **Authorization**: Proper access controls for repositories and PRDs
+3. **Data Protection**: Secure storage of API keys and user data
+4. **Rate Limiting**: Prevent API abuse
+5. **Sandbox Execution**: Safe execution of LLM operations
+
+## Monitoring and Debugging
+
+1. **Workflow Logging**: Detailed logs for each node execution
+2. **State Visualization**: Tools to inspect workflow state
+3. **Error Tracking**: Comprehensive error capture and reporting
+4. **Performance Monitoring**: Track LLM response times and resource usage
 
 ## Conclusion
 
-This architecture and implementation guide provides a comprehensive roadmap for building the Gist of Git application. By following these guidelines, the development team can create a robust, scalable, and maintainable application that delivers significant value to its users.
-
-**Key Success Factors**:
-
-- Strong focus on user privacy and local processing
-- Comprehensive testing strategy
-- Clear implementation phasing
-- Commitment to performance and security
-- Community engagement features
+Gitlify's architecture combines modern web technologies with advanced LLM orchestration to deliver a powerful PRD generation platform. The PocketFlow-inspired approach enables handling repositories of any size, while the chapter-based organization and visualization features make the generated PRDs highly accessible and valuable to users.

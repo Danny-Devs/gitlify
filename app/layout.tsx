@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'CodeGrok',
+  title: 'Gitlify',
   description:
-    'Rapidly master GitHub repositories with our revolutionary learning acceleration tools - completely FREE'
+    'Transform GitHub repositories into comprehensive PRDs to understand, rebuild, and contribute to open-source projects'
 };
 
 interface RootLayoutProps {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the REST API endpoints available in the Gist of Git application. The API allows clients to analyze GitHub repositories, manage templates, and access analysis results without sending code to external services.
+This document outlines the REST API endpoints available in the CodeGrok application. The API allows clients to analyze GitHub repositories, manage templates, and access analysis results without sending code to external services.
 
 ## Base URL
 

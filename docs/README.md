@@ -1,50 +1,73 @@
-# Gist of Git Documentation
+# Gitlify Documentation
 
-This directory contains documentation for the Gist of Git project, a tool designed to help developers quickly understand GitHub repositories through AI-powered analysis using locally-hosted Large Language Models (LLMs).
+Welcome to the Gitlify documentation. This guide will help you understand the platform's features, architecture, and implementation plan.
 
-## Documentation Index
+## Core Documentation
 
-### Project Overview
+These documents provide the essential understanding of the Gitlify platform:
 
-- [Project Vision](./project_vision.md) - Core vision, goals, and target users
+1. [Project Vision](project_vision.md): The overall vision and goals of Gitlify
+2. [PRD](prd.md): Detailed project requirements document
+3. [Technical Architecture](technical_architecture.md): System architecture and components
+4. [User Requirements](user_requirements.md): User needs and feature specifications
+5. [Implementation Plan](implementation_plan.md): Development roadmap and timeline
 
-### Implementation Strategy
+## Getting Started
 
-- [Implementation Plan](./implementation_plan.md) - Phased development approach with focus on simplicity
-- [Technical Architecture](./technical_architecture.md) - Simplified system design and components
-- [Database Schema](./database_schema.md) - Data structure and relationships
+- [Getting Started Guide](getting_started.md): How to start using or contributing to Gitlify
+- [Setup Guide](setup_guide.md): Setting up your development environment
+- [LLM Setup Guide](llm_setup_guide.md): Instructions for configuring local LLMs
 
-### Developer Guides
+## Technical Guides
 
-- [Setup Guide](./setup_guide.md) - How to set up the development environment
-- [API Documentation](./api_documentation.md) - REST API endpoints and usage
-- [Prompt Engineering](./prompt_engineering.md) - Guidelines for creating effective prompts
-- [Testing Strategy](./testing_strategy.md) - Testing approach
+- [Database Schema](database_schema.md): Complete database structure and relationships
+- [PocketFlow Guide](pocket_flow_guide.md): Implementation of PocketFlow-inspired workflow
+- [Mermaid Diagram Guide](mermaid-diagram-guide.md): Creating and using Mermaid diagrams
+- [Prompt Engineering](prompt_engineering.md): Guidelines for creating effective PRD generation prompts
+- [API Documentation](api_documentation.md): API endpoints and usage
 
-### User Guides
+## Development Resources
 
-- [Getting Started](./getting_started.md) - How to use Gist of Git
-- [LLM Setup Guide](./llm_setup_guide.md) - How to set up local LLMs (Ollama, etc.)
+- [Testing Strategy](testing_strategy.md): How to test the application components
+- [Glossary](glossary.md): Key terms and definitions used throughout the project
 
-### Reference Materials
+## Documentation Organization
 
-- [Glossary](./glossary.md) - Definitions of key terms
+The documentation is organized to support different roles and information needs:
 
-## Documentation Philosophy
+### For Product Understanding
 
-This documentation set follows these principles:
+Start with the [Project Vision](project_vision.md) and [PRD](prd.md) to understand what Gitlify does and why.
 
-1. **Simplicity First** - Start with core functionality before adding complexity
-2. **Practical Over Theoretical** - Focus on practical implementation guidance
-3. **User Self-Service** - Provide clear instructions for user-managed components (like LLM setup)
-4. **Incremental Development** - Build and document in manageable phases
+### For Users
 
-## Using This Documentation
+The [Getting Started Guide](getting_started.md) provides everything you need to begin using Gitlify.
 
-- **New contributors**: Start with the Project Vision and Implementation Plan
-- **Developers**: Review the Technical Architecture and Setup Guide
-- **End users**: See the Getting Started and LLM Setup guides
+### For Developers
 
-## Documentation Status
+Begin with the [Setup Guide](setup_guide.md), then explore the [Technical Architecture](technical_architecture.md) and [Database Schema](database_schema.md).
 
-These docs are being actively developed alongside the application. Files marked with 🚧 are work in progress.
+### For LLM Integration
+
+Review the [LLM Setup Guide](llm_setup_guide.md), [PocketFlow Guide](pocket_flow_guide.md), and [Prompt Engineering](prompt_engineering.md) documentation.
+
+## Contributing to Documentation
+
+The documentation is a living resource. To contribute:
+
+1. Identify areas that need clarification or expansion
+2. Follow the existing document structure and style
+3. Update related documents when making significant changes
+4. Submit documentation updates through pull requests
+
+## Support
+
+If you find issues or need clarification on any documentation:
+
+1. Check existing documentation first
+2. Search for related issues in the issue tracker
+3. Create a new issue if needed, with the "documentation" label
+
+## License
+
+Gitlify and its documentation are open-source and licensed under the MIT license.

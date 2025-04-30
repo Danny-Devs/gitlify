@@ -1,81 +1,128 @@
-# Getting Started with Gist of Git
+# Getting Started with Gitlify
 
-This guide will walk you through the basic steps to analyze your first GitHub repository with Gist of Git.
+This guide will help you get started with Gitlify, whether you're using the platform to generate PRDs, exploring the PRD library, or contributing to the project's development.
 
-## Prerequisites
+## For Users
 
-Before you begin, you'll need:
+### Prerequisites
 
-1. A modern web browser (Chrome, Firefox, Safari, or Edge)
-2. A local LLM setup (see the [LLM Setup Guide](./llm_setup_guide.md))
+- A modern web browser (Chrome, Firefox, Safari, Edge)
+- Basic familiarity with GitHub and software development concepts
+- Optional: Local LLM setup for enhanced PRD generation (see [LLM Setup Guide](llm_setup_guide.md))
 
-## Step 1: Access Gist of Git
+### Quick Start
 
-Visit [gistofgit.com](https://gistofgit.com) or your local installation URL.
+1. **Visit the Gitlify Platform**
 
-## Step 2: Configure Your LLM Connection
+   - Navigate to [gitlify.io](https://gitlify.io) (or your local development instance)
+   - Create an account or sign in with GitHub OAuth
 
-1. Click the **Settings** icon in the top right corner
-2. Under "LLM Configuration", enter:
-   - **LLM Provider**: Select "Ollama" or "LM Studio"
-   - **API URL**: Enter the URL of your local LLM service (typically `http://localhost:11434/api` for Ollama)
-   - **Model**: Select the model you want to use (we recommend CodeLlama-7b for a good balance of performance and resource usage)
-3. Click **Test Connection** to verify everything is working
-4. Click **Save**
+2. **Generate Your First PRD**
 
-## Step 3: Add a GitHub Repository
+   - Click "New PRD" from the dashboard
+   - Enter a GitHub repository URL or select from curated options
+   - Configure basic analysis options (depth, focus areas)
+   - Click "Generate PRD" and wait for the analysis to complete
 
-1. On the main page, enter a GitHub repository URL in the input field
-   - Example: `https://github.com/facebook/react`
-2. Click **Add Repository**
-3. Wait for Gist of Git to fetch the repository structure
+3. **Explore the PRD**
 
-## Step 4: Configure Your Analysis
+   - Browse through the generated document sections
+   - Use the navigation panel to jump to specific requirements
+   - Export the PRD if needed (PDF, Markdown, etc.)
 
-1. Select the analysis template(s) you want to use:
-   - **Project Overview**: High-level understanding of the project
-   - **Code Structure Analysis**: Directory and file organization
-   - **Dependency Analysis**: Libraries and frameworks used
-2. Adjust settings if needed:
-   - **Analysis Depth**: How detailed the analysis should be
-   - **File Types**: Which file extensions to include
-3. Click **Start Analysis**
+4. **Provide Feedback**
+   - Rate the PRD quality
+   - Leave comments on specific sections
+   - Suggest improvements
 
-## Step 5: View Results
+### Using PRDs for Learning and Contributing
 
-1. Wait for the analysis to complete (this can take a few minutes depending on the repository size and your hardware)
-2. Review the generated insights in the results panel
-3. Navigate between different sections using the tabs at the top of the results panel
-4. Use the file browser on the left to explore specific files
+1. **Understanding Projects**
 
-## Step 6: Export or Share Results (Optional)
+   - Use the PRD to understand project goals and requirements
+   - Compare requirements with actual implementation
+   - Learn from design decisions documented in the PRD
 
-1. Click the **Export** button to save the analysis as Markdown or PDF
-2. Use the **Share** button to generate a shareable link (if this feature is enabled)
+2. **Building Your Own Implementation**
 
-## Tips for Better Analysis
+   - Use the PRD as a blueprint for your own coding project
+   - Build a solution that meets the same requirements
+   - Experiment with alternative approaches
 
-- Start with smaller repositories first
-- Use the most powerful LLM model your hardware can support
-- Focus analysis on specific areas of interest rather than entire large repositories
-- Try different templates to get varied perspectives
-- Remember that LLM analyses are helpful but not perfect - use them as a guide
+3. **Contributing Back**
+   - Compare your implementation with the original
+   - Identify areas where your approach might be better
+   - Prepare meaningful contributions to the original project
 
-## Troubleshooting
+## For Developers
 
-If you encounter issues:
+### Setting Up Development Environment
 
-1. **Analysis is slow**: Try using a smaller model or focusing on a subset of files
-2. **LLM connection fails**: Check that your local LLM server is running
-3. **Poor quality analysis**: Try a different model or template
-4. **Repository too large**: Start with analyzing just the main directories first
+#### Prerequisites
+
+- Node.js 16+ and npm
+- PostgreSQL or Docker for local database
+- Git
+
+#### Installation Steps
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/yourusername/gitlify.git
+   cd gitlify
+   ```
+
+2. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set Up Environment Variables**
+
+   - Copy `.env.example` to `.env.local`
+   - Update values as needed for local development
+
+4. **Initialize Database**
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. **Start Development Server**
+
+   ```bash
+   npm run dev
+   ```
+
+6. **Access the Application**
+   - Visit `http://localhost:3000` in your browser
+
+### Project Structure
+
+- `/app` - Next.js application with pages, components, and API routes
+- `/components` - Reusable UI components
+- `/lib` - Utility functions and helpers
+- `/prisma` - Database schema and migrations
+- `/public` - Static assets
+
+### Development Workflow
+
+1. Create a feature branch from `main`
+2. Implement your changes
+3. Add tests for new functionality
+4. Run the test suite: `npm test`
+5. Submit a pull request with a clear description
+
+## Getting Help
+
+- **Documentation**: Check the [documentation](./README.md) for detailed guides
+- **GitHub Issues**: Report bugs or request features through the issue tracker
+- **Community Forums**: Join discussions about Gitlify usage and development
 
 ## Next Steps
 
-Once you're comfortable with basic analysis:
-
-- Explore the advanced templates
-- Try analyzing different types of repositories
-- Read the [Prompt Engineering Guide](./prompt_engineering.md) to understand how to customize templates
-
-For more detailed information, check the full [User Guide](./user_guide.md).
+- Explore the [PRD Library](https://gitlify.io/prds) for examples
+- Learn how to [customize PRD templates](./prd-customization.md)
+- Dive into [contributing guidelines](./contributing.md) if you want to help develop Gitlify

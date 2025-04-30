@@ -12,11 +12,12 @@ export default function Home() {
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-            Master GitHub Repositories In Record Time
+            Transform GitHub Repositories Into Comprehensive PRDs
           </h2>
           <p className="mt-3 text-xl text-gray-500 dark:text-gray-400 sm:mt-4">
-            Grok public repositories in record time with our revolutionary
-            learning tools - all for FREE using your own computing power.
+            Gitlify reverse-engineers detailed Project Requirement Documents
+            from any public GitHub repository, enabling you to understand,
+            rebuild, and contribute to open-source projects.
           </p>
           <div className="mt-8 flex justify-center">
             <Link
@@ -36,31 +37,31 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-6">
               <div className="text-lg font-medium text-gray-900 dark:text-white">
-                1. Choose
+                1. Select Repository
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Select any public GitHub repository you want to analyze.
+                Choose any public GitHub repository you want to analyze and
+                transform into a PRD.
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-6">
               <div className="text-lg font-medium text-gray-900 dark:text-white">
-                2. Analyze
+                2. Generate PRD
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Our intelligent system enhances local LLMs with specialized
-                algorithms to extract key architectural insights.
+                Our intelligent system uses local LLMs to extract requirements,
+                design decisions, and create architecture diagrams.
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-6">
               <div className="text-lg font-medium text-gray-900 dark:text-white">
-                3. Grok
+                3. Rebuild & Contribute
               </div>
               <div className="mt-2 text-gray-500 dark:text-gray-400">
-                Rapidly master any codebase with our multi-layered learning
-                tools that transform steep learning curves into fast-track
-                comprehension.
+                Use the detailed PRD to implement your own version, then
+                contribute improvements back to the original project.
               </div>
             </div>
           </div>
@@ -68,44 +69,44 @@ export default function Home() {
 
         <div className="mt-20">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-8">
-            Why CodeGrok?
+            Why Gitlify?
           </h3>
 
           <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
               <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Learning Acceleration
+                Comprehensive PRDs
               </div>
               <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                CodeGrok leverages the power of LLMs to transform steep learning
-                curves into fast-track comprehension through multi-layered
-                explanations, architectural insights, and specialized learning
-                tools that help users quickly understand code flow, patterns,
-                and structure.
+                Gitlify generates detailed Project Requirement Documents with
+                chapter-based organization, extracting the "why" behind
+                implementation decisions rather than just the "how." Understand
+                the original intent, requirements, and design rationale behind
+                any codebase.
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
               <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Cost Efficiency
+                Visual Architecture
               </div>
               <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                Users leverage their own computing resources and local LLMs
-                instead of paying for expensive closed-source LLM API calls,
-                making the tool completely free to use. No subscriptions, no
-                usage limits, no surprise bills.
+                Automatically generated Mermaid diagrams visualize component
+                relationships, data flows, entity relationships, and more. These
+                visual aids make it easier to understand complex architectures
+                and implement your own versions with confidence.
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 shadow overflow-hidden rounded-lg p-8">
               <div className="text-xl font-medium text-gray-900 dark:text-white mb-4">
-                Repository Reimagination
+                Community Curation
               </div>
               <div className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                Extract detailed project requirements from existing codebases,
-                then use them to build improved versions with modern best
-                practices. Identify opportunities to contribute superior
-                implementations back to the original projects.
+                Join a growing library of reverse-engineered PRDs that the
+                community can rate, review, and improve. Find PRDs for
+                technologies you're interested in, or contribute your own
+                expertise to help others learn and build better software.
               </div>
             </div>
           </div>

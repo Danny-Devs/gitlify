@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the features and capabilities required by users of the Gist of Git application. These requirements have been gathered through user interviews, competitive analysis, and market research to ensure the application meets the needs of its target audience.
+This document outlines the features and capabilities required by users of the Gitlify application. These requirements have been gathered through user interviews, competitive analysis, and market research to ensure the application meets the needs of its target audience.
 
 ## User Personas
 
@@ -49,101 +49,130 @@ This document outlines the features and capabilities required by users of the Gi
   1.2. **Analysis Configuration**
 
 - The system shall allow users to select analysis depth (basic, standard, deep)
-- The system shall allow users to choose analysis focus areas (architecture, dependencies, patterns, etc.)
-- The system shall enable users to apply custom prompt templates
-- The system shall provide recommended templates based on repository type
+- The system shall allow users to choose specific aspects of the project to focus on in the PRD
+- The system shall enable users to customize PRD format and organization
+- The system shall provide recommended analysis templates based on repository type and size
 
   1.3. **Processing**
 
-- The system shall display analysis progress indicators
+- The system shall display analysis progress indicators showing current processing stage
 - The system shall allow cancellation of in-progress analysis
+- The system shall handle large repositories through chunking and progressive processing
 - The system shall cache analysis results for repeated access
 - The system shall handle repositories of various sizes (up to GitHub API limits)
 
-### 2. Local LLM Integration
+### 2. PRD Generation
 
-2.1. **LLM Connection**
+2.1. **PRD Structure**
+
+- The system shall generate PRDs with a progressive chapter-based structure
+- The system shall create hierarchical document organization from overview to details
+- The system shall ensure each chapter builds on previous knowledge
+- The system shall maintain context and references between related sections
+- The system shall generate appropriate section headings and organization
+
+  2.2. **Content Quality**
+
+- The system shall extract implicit and explicit requirements from code
+- The system shall identify user stories and use cases from the implementation
+- The system shall document functional and non-functional requirements
+- The system shall capture design decisions and architectural patterns
+- The system shall analyze and document technical constraints
+
+  2.3. **Architecture Visualization**
+
+- The system shall generate Mermaid diagrams illustrating system architecture
+- The system shall create component relationship diagrams
+- The system shall visualize data flows between components
+- The system shall generate entity relationship diagrams where appropriate
+- The system shall create sequence diagrams for key processes
+- The system shall ensure diagrams are clear, accurate, and helpful
+
+### 3. Local LLM Integration
+
+3.1. **LLM Connection**
 
 - The system shall connect to locally running LLM servers (Ollama, LM Studio, LocalAI)
 - The system shall detect available local LLM endpoints
 - The system shall verify LLM compatibility before analysis
 - The system shall allow manual configuration of LLM endpoints
 
-  2.2. **Model Management**
+  3.2. **Workflow Orchestration**
+
+- The system shall implement a PocketFlow-inspired workflow for LLM processing
+- The system shall break down complex tasks into manageable nodes
+- The system shall manage data flow between processing stages
+- The system shall handle context limitations through progressive information refinement
+- The system shall recover gracefully from processing errors
+
+  3.3. **Model Management**
 
 - The system shall display available models from connected LLM services
 - The system shall recommend appropriate models for code analysis
 - The system shall indicate minimum hardware requirements for models
 - The system shall persist LLM configuration settings
 
-### 3. Analysis Results
+### 4. PRD Presentation
 
-3.1. **Summary View**
+4.1. **Viewer Interface**
 
-- The system shall provide a high-level summary of repository structure
-- The system shall identify the primary programming languages
-- The system shall recognize common architectural patterns
-- The system shall estimate repository complexity
+- The system shall provide a chapter-based navigation interface
+- The system shall render Mermaid diagrams inline with content
+- The system shall allow collapsing and expanding sections
+- The system shall support searching within PRD content
+- The system shall maintain reading position between sessions
 
-  3.2. **Component Breakdown**
+  4.2. **Export Options**
 
-- The system shall list major components with descriptions
-- The system shall identify relationships between components
-- The system shall categorize components by type (UI, API, database, etc.)
-- The system shall provide file counts and code metrics by component
+- The system shall support exporting complete PRDs in Markdown format
+- The system shall provide PDF export with proper formatting
+- The system shall enable exporting individual chapters
+- The system shall include diagrams in exported documents
+- The system shall allow customization of export format and style
 
-  3.3. **Dependency Analysis**
+### 5. Community Features
 
-- The system shall identify internal and external dependencies
-- The system shall visualize dependency relationships
-- The system shall detect potential dependency issues
-- The system shall provide information about dependency versions
+5.1. **PRD Library**
 
-  3.4. **Code Architecture**
+- The system shall maintain a searchable library of generated PRDs
+- The system shall categorize PRDs by technology, domain, and complexity
+- The system shall feature popular and high-quality PRDs
+- The system shall support following specific technologies or domains
+- The system shall recommend relevant PRDs based on user interest
 
-- The system shall identify design patterns used in the codebase
-- The system shall explain architectural decisions where possible
-- The system shall detect architectural layers
-- The system shall recognize testing approaches
+  5.2. **Feedback and Ratings**
 
-### 4. Prompt Template Management
+- The system shall allow users to rate PRD quality and accuracy
+- The system shall enable comments on specific sections of PRDs
+- The system shall provide a mechanism for suggesting improvements
+- The system shall track and display quality metrics for PRDs
+- The system shall use feedback to improve future PRD generation
 
-4.1. **Template Creation**
+  5.3. **User Profiles**
 
-- The system shall allow users to create custom analysis templates
-- The system shall provide a template editor with guidance
-- The system shall validate templates for effectiveness
-- The system shall support versioning of templates
+- The system shall maintain user profiles with generated and saved PRDs
+- The system shall track contribution activity and reputation
+- The system shall allow following other users
+- The system shall display user expertise and interests
+- The system shall notify users of relevant activity
 
-  4.2. **Template Library**
+### 6. Rebuild Support
 
-- The system shall include pre-built templates for common scenarios
-- The system shall allow searching/filtering of templates
-- The system shall display template popularity and ratings
-- The system shall categorize templates by purpose
+6.1. **Implementation Guidance**
 
-  4.3. **Template Sharing**
+- The system shall provide guidance for implementing from PRDs
+- The system shall highlight key design considerations
+- The system shall suggest implementation approaches
+- The system shall link to relevant documentation and resources
+- The system shall note potential implementation challenges
 
-- The system shall allow users to share templates
-- The system shall enable template importing/exporting
-- The system shall support community ratings and reviews
-- The system shall provide attribution for shared templates
+  6.2. **Comparison Tools**
 
-### 5. Export and Integration
-
-5.1. **Documentation Export**
-
-- The system shall generate documentation in markdown format
-- The system shall support export to PDF and HTML
-- The system shall include visualization in exports
-- The system shall organize exports in a logical structure
-
-  5.2. **Visualizations**
-
-- The system shall generate component relationship diagrams
-- The system shall create architecture visualizations
-- The system shall produce dependency graphs
-- The system shall support interactive exploration of visualizations
+- The system shall support comparing original implementations with rebuilt versions
+- The system shall identify potential improvements over original implementations
+- The system shall highlight innovative approaches in rebuilds
+- The system shall provide metrics for comparing implementations
+- The system shall suggest areas for contribution back to original repositories
 
 ## Non-Functional Requirements
 
@@ -151,10 +180,11 @@ This document outlines the features and capabilities required by users of the Gi
 
 1.1. **Response Time**
 
-- The system shall complete basic analysis within 2 minutes
-- The system shall complete standard analysis within 5 minutes
-- The system shall complete deep analysis within 15 minutes
+- The system shall complete basic analysis within 5 minutes
+- The system shall complete standard analysis within 10 minutes
+- The system shall complete deep analysis within 20 minutes
 - The system shall prioritize critical information in early results
+- The system shall optimize LLM prompt efficiency for faster processing
 
   1.2. **Resource Usage**
 
@@ -162,6 +192,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall minimize additional memory usage beyond LLM requirements
 - The system shall provide options to reduce resource usage for lower-end systems
 - The system shall warn users about potential performance limitations
+- The system shall implement efficient caching strategies to reduce redundant processing
 
 ### 2. Usability
 
@@ -171,6 +202,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall include tooltips for complex features
 - The system shall follow modern web application patterns
 - The system shall be responsive for various screen sizes
+- The system shall provide clear progress indication for long-running operations
 
   2.2. **Accessibility**
 
@@ -178,6 +210,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall support keyboard navigation
 - The system shall provide text alternatives for visualizations
 - The system shall maintain sufficient color contrast
+- The system shall ensure generated diagrams are accessible
 
 ### 3. Reliability
 
@@ -187,6 +220,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall recover from LLM connection failures
 - The system shall preserve user input during errors
 - The system shall provide clear error messages with resolution steps
+- The system shall implement fallback strategies for processing failures
 
   3.2. **Data Preservation**
 
@@ -194,6 +228,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall prevent accidental loss of custom templates
 - The system shall include export backup options
 - The system shall preserve user preferences between sessions
+- The system shall implement version control for user-modified PRDs
 
 ### 4. Security
 
@@ -203,6 +238,7 @@ This document outlines the features and capabilities required by users of the Gi
 - The system shall process all analysis locally
 - The system shall use secure storage for cached data
 - The system shall not require unnecessary permissions
+- The system shall implement appropriate authentication for user accounts
 
 ## Constraints and Assumptions
 
@@ -212,6 +248,7 @@ This document outlines the features and capabilities required by users of the Gi
 - Analysis quality depends on the capabilities of available LLMs
 - Performance is constrained by user hardware specifications
 - Repository size and complexity affects analysis time
+- Diagram complexity must balance detail with clarity
 
 ### Assumptions
 
@@ -219,3 +256,23 @@ This document outlines the features and capabilities required by users of the Gi
 - Users have sufficient hardware to run code-capable LLMs
 - Public GitHub repositories remain accessible via API
 - Users have basic understanding of software architecture concepts
+- Mermaid diagrams provide sufficient visual representation for most architectures
+
+## Prioritization
+
+The following features are considered core to the MVP:
+
+1. Repository analysis and basic PRD generation
+2. Chapter-based PRD structure with progressive organization
+3. Basic architecture visualization with Mermaid diagrams
+4. Local LLM integration with PocketFlow-inspired workflow
+5. Export functionality for generated PRDs
+6. User accounts and saved PRDs
+
+Secondary features to be implemented after the MVP:
+
+1. Community rating and feedback system
+2. Advanced diagram generation
+3. PRD library and discovery features
+4. Rebuild guidance and comparison tools
+5. User profiles and reputation system

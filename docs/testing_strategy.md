@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the comprehensive testing strategy for the Gist of Git application. A robust testing approach is essential to ensure the application works reliably across different environments, especially given the complex integrations with GitHub and local LLM instances.
+This document outlines the comprehensive testing strategy for the CodeGrok application. A robust testing approach is essential to ensure the application works reliably across different environments, especially given the complex integrations with GitHub and local LLM instances.
 
 ## Testing Principles
 
@@ -408,4 +408,4 @@ describe('analyzeDependencies', () => {
 
 ## Conclusion
 
-This testing strategy provides a comprehensive approach to ensure the quality and reliability of the Gist of Git application. By implementing these testing practices, we can confidently deliver new features and improvements while maintaining a stable and secure application.
+This testing strategy provides a comprehensive approach to ensure the quality and reliability of the CodeGrok application. By implementing these testing practices, we can confidently deliver new features and improvements while maintaining a stable and secure application.

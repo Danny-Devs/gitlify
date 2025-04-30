@@ -1,6 +1,6 @@
 # Environment Variables Setup Guide
 
-This guide explains how to set up the required environment variables for the Gist of Git application.
+This guide explains how to set up the required environment variables for the CodeGrok application.
 
 ## Core Environment Variables
 
@@ -24,7 +24,7 @@ GITHUB_CLIENT_ID="your-github-client-id"
 1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
 2. Click on "New OAuth App"
 3. Fill in the application details:
-   - **Application name**: Gist of Git
+   - **Application name**: CodeGrok
    - **Homepage URL**: http://localhost:3000
    - **Authorization callback URL**: http://localhost:3000/api/auth/callback/github
 4. Register the application

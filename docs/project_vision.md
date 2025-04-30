@@ -1,104 +1,99 @@
-# Project Vision: CodeNarrator
+# Project Vision: Gitlify
 
 ## Core Vision
 
-**CodeNarrator** transforms how developers learn from code by providing audio-guided tours of any public GitHub repository. Our goal is to create a "podcast-like" learning experience that allows developers to understand unfamiliar codebases while commuting, exercising, or relaxing away from their screens. By combining AI-powered code analysis with high-quality text-to-speech conversion, we enable passive consumption of complex technical knowledge in a format that mimics having an expert developer personally guiding you through the codebase.
+**Gitlify** transforms how developers learn from open-source projects by reverse-engineering comprehensive Project Requirement Documents (PRDs) from public GitHub repositories. Our goal is to create a platform where developers can access detailed specifications that capture the essence of successful repositories, enabling them to rebuild these projects from scratch based on requirements rather than code. This approach fosters deeper understanding, creativity, and ultimately enables developers to contribute meaningful improvements to original repositories.
 
 ## The Problem
 
-Developers face significant challenges when working with unfamiliar codebases:
+Developers face significant challenges when learning from and contributing to open-source codebases:
 
-- Understanding code requires constant, focused screen time that's mentally taxing
-- Documentation is often outdated, incomplete, or missing entirely
-- Learning from great codebases requires significant time investment
-- Existing solutions require active reading and concentration
-- Complex code visualization tools have steep learning curves
-- There's no equivalent to "tech podcasts" for specific codebase learning
-- Context-switching between documentation, code, and explanations is inefficient
+- Understanding existing code requires extensive time reading through implementations
+- Missing or incomplete documentation fails to explain the "why" behind design decisions
+- Learning by simply reading code results in shallow understanding of requirements
+- Traditional code exploration focuses on "how" something was built, not "what" it was meant to solve
+- Contributing meaningful improvements requires deep understanding of original project goals
+- There's no central repository of high-quality software requirement documents to learn from
 
 ## Our Solution
 
-CodeNarrator provides an audio-first approach to code learning with these key benefits:
+Gitlify provides a revolutionary approach to mastering repositories through reverse-engineered PRDs:
 
-- **Audio Learning**: Generate engaging spoken explanations of codebase architecture and implementation
-- **Passive Consumption**: Learn about code while doing other activities, maximizing productive time
-- **Logical Organization**: Tours follow a logical flow that tells a coherent story about the code
-- **Supporting Visuals**: Key diagrams and visualizations enhance the audio explanations
-- **Community Improvement**: Tours get better through user feedback and A/B testing
-- **Bookmark and Resume**: Save your position and continue learning when convenient
-- **Personalized Library**: Build a collection of codebases you want to study and learn from
+- **Comprehensive PRD Generation**: Extract detailed project requirements from existing codebases
+- **Requirement-First Learning**: Understand the "why" behind implementation decisions
+- **Rebuild Opportunity**: Create implementations based on requirements rather than copying code
+- **Innovation Platform**: Identify opportunities to improve on original implementations
+- **PRD Library**: Access a growing collection of high-quality requirements documents
+- **Community Curation**: Rate, review, and discover the most valuable PRDs
 
 ## Target Users
 
-- **Software Developers**: Looking to understand new codebases without intense screen time
-- **Open Source Contributors**: Wanting to comprehend project structure while commuting
-- **Software Engineering Students**: Learning from real-world code through audio explanations
-- **Busy Professionals**: Maximizing learning time by consuming code knowledge during other activities
-- **Audio Learners**: Developers who absorb information better through listening than reading
+- **Software Developers**: Looking to deeply understand successful open-source projects
+- **Open Source Contributors**: Wanting to contribute meaningful improvements to projects
+- **Software Engineering Students**: Learning software design through requirements-first approach
+- **Coding Educators**: Teaching students through structured project requirements
+- **Project Managers**: Learning how successful projects articulate requirements
 
 ## Minimum Viable Product
 
-The initial version of CodeNarrator will focus on these core capabilities:
+The initial version of Gitlify will focus on these core capabilities:
 
-1. **GitHub Repository Processing**:
+1. **Repository Analysis**:
 
    - Input any public GitHub repository URL
    - Analyze repository structure and code
-   - Identify key components and relationships
+   - Extract implicit requirements and design decisions
    - Save repositories to personal library
 
-2. **Audio Tour Generation**:
+2. **PRD Generation**:
 
-   - Generate engaging, natural language explanations
-   - Convert explanations to high-quality audio
-   - Organize content into logical "chapters"
-   - Create a cohesive narrative that explains the codebase
+   - Generate detailed project requirements documents
+   - Organize requirements into logical sections
+   - Include user stories, functional specifications, and technical constraints
+   - Highlight key design decisions and architectural patterns
 
-3. **Supporting Visualizations**:
+3. **PRD Library**:
 
-   - Generate simple architectural diagrams
-   - Create component relationship visuals
-   - Ensure diagrams complement the audio content
-   - Allow visualization browsing while listening
+   - Save and organize generated PRDs
+   - Browse PRDs by category, technology, or popularity
+   - Search for specific types of projects
+   - Export PRDs in common formats (PDF, Markdown)
 
-4. **User Feedback System**:
-   - A/B testing of different explanation approaches
-   - User voting on helpful explanations
-   - Continuous improvement through feedback
-   - Tour quality metrics and tracking
+4. **Community Features**:
+   - Rate and review PRDs for accuracy and completeness
+   - Share PRDs with the community
+   - Comment and suggest improvements
+   - Follow top PRD contributors
 
 ## Development Approach
 
-We'll build CodeNarrator with these principles:
+We'll build Gitlify with these principles:
 
-1. **Audio-first design**: Optimize for listening experience over text scanning
-2. **Learning science integration**: Apply principles of effective knowledge transfer
-3. **Community feedback loop**: Build mechanisms to measure and improve quality
-4. **Progressive enhancement**: Start with core audio capabilities, then enhance with visuals
-5. **User-centric improvement**: Let user preferences guide the evolution of the product
+1. **Requirements-first design**: Emphasize the importance of understanding requirements
+2. **Community curation**: Let users identify the most valuable PRDs
+3. **Learning-oriented**: Optimize for educational value and comprehension
+4. **Contribution-focused**: Enable users to make meaningful open-source contributions
 
 ## Success Criteria
 
 We'll consider the MVP successful if:
 
-1. Users report learning effectively while away from their computer screens
-2. Audio explanations are rated as informative, engaging, and accurate
-3. Users return to listen to multiple repositories
-4. Community feedback measurably improves tour quality over time
-5. Users report increased confidence in understanding repositories after listening
-6. Time to meaningful comprehension is significantly reduced compared to traditional methods
+1. Users successfully rebuild projects based on our generated PRDs
+2. The community actively contributes, rates, and shares PRDs
+3. Users report meaningful open-source contributions after using our platform
+4. The PRD library grows with high-quality, diverse project requirements
+5. Developers recognize Gitlify as a valuable learning and contribution preparation tool
 
 ## Future Enhancements
 
-After establishing the core audio tour functionality, we'll explore:
+After establishing the core PRD generation functionality, we'll explore:
 
-1. **Interactive Audio-Visual Sync**: Tighter integration between audio and visualizations
-2. **Custom Narrative Focus**: User-specified focus areas for repository exploration
-3. **Video Tour Generation**: Adding synchronized visual walkthrough components
-4. **Multi-Repository Learning Paths**: Connected tours across related repositories
-5. **Educational Assessments**: Optional knowledge checks after tour segments
-6. **Voice Customization**: Different narration styles and personalities
+1. **Differential Analysis**: Compare user implementations with original repositories
+2. **Contribution Guidance**: Identify specific areas where implementations could improve originals
+3. **PRD Templates**: Industry-specific templates for different types of applications
+4. **Enterprise PRD Repository**: Private PRD libraries for companies and educational institutions
+5. **PRD Versioning**: Track how requirements evolve over project history
 
 ## Conclusion
 
-CodeNarrator represents a paradigm shift in how developers learn from code. By transforming repositories into audio learning experiences, we enable efficient, passive consumption of technical knowledge that works with busy schedules and different learning styles. Our focus on continuous improvement through user feedback ensures that our tours will keep getting better, creating an ever-improving resource for the developer community.
+Gitlify represents a paradigm shift in how developers learn from open-source projects. By focusing on requirements rather than implementation, we enable deeper understanding, creative rebuilding, and meaningful contributions. Our community-driven platform will become the definitive resource for software project requirements, transforming how developers learn and contribute to open-source.

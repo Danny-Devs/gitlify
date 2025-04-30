@@ -1,10 +1,10 @@
 # Local LLM Setup Guide
 
-This guide will help you set up local Large Language Model (LLM) instances to use with Gist of Git. Running LLMs locally ensures privacy since your code never leaves your machine.
+This guide will help you set up local Large Language Model (LLM) instances to use with CodeGrok. Running LLMs locally ensures privacy since your code never leaves your machine.
 
 ## Overview
 
-Gist of Git works with locally-hosted LLM servers, particularly:
+CodeGrok works with locally-hosted LLM servers, particularly:
 
 1. **Ollama** - Easy-to-use tool for running models locally
 2. **LM Studio** - GUI application for running and managing models
@@ -105,10 +105,10 @@ Similar to Ollama, but with a more user-friendly interface:
 4. Once downloaded, select the model and click "Use in Chat"
 5. Go to the "Local Server" tab and click "Start Server"
 
-### Configuring LM Studio for Gist of Git
+### Configuring LM Studio for CodeGrok
 
-1. With the server running, note the API Base URL (typically http://localhost:1234/v1)
-2. In Gist of Git, provide this URL when setting up your LLM connection
+1. Set up the OpenAI API compatible server (instructions above)
+2. In CodeGrok, provide this URL when setting up your LLM connection
 
 ## Troubleshooting
 
@@ -128,7 +128,7 @@ Similar to Ollama, but with a more user-friendly interface:
 3. **Slow generation**
    - This is normal on CPU-only systems
    - Consider using a GPU if available
-   - Use smaller context sizes in the Gist of Git settings
+   - Use smaller context sizes in the CodeGrok settings
 
 ### Common LM Studio Issues
 
@@ -143,7 +143,7 @@ Similar to Ollama, but with a more user-friendly interface:
    - Use a smaller model variant
    - Check available disk space
 
-## Recommended Models for Gist of Git
+## Recommended Models for CodeGrok
 
 | Model                 | Size | Performance                            | Hardware Requirements     |
 | --------------------- | ---- | -------------------------------------- | ------------------------- |
