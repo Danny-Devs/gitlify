@@ -2,21 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/app/components/ui/use-toast';
 import RepositoryCard from './RepositoryCard';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/app/components/ui/input';
+import { Button } from '@/app/components/ui/button';
 import { Search, Plus } from 'lucide-react';
-
-interface Repository {
-  id: string;
-  name: string;
-  owner: string;
-  description: string;
-  url: string;
-  stars?: number;
-  forks?: number;
-}
+import { Repository } from '@/app/types/repository';
 
 interface RepositoryListProps {
   repositories: Repository[];

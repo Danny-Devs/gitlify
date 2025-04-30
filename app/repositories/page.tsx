@@ -2,10 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import RepositoryList from '../components/repository/RepositoryList';
-import AddRepositoryForm from '../components/repository/AddRepositoryForm';
+import { Button } from '@/app/components/ui/button';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/app/components/ui/tabs';
+import RepositoryList from '@/app/components/repository/RepositoryList';
+import AddRepositoryForm from '@/app/components/repository/AddRepositoryForm';
 import { getRepositories } from '../services/repository/repositoryService';
 
 export default function RepositoriesPage() {

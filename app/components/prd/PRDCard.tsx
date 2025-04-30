@@ -3,19 +3,19 @@
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock, Star, GitFork, FileText, UserCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/app/components/ui/badge';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@/app/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@/app/components/ui/tooltip';
 
 interface PRDCardProps {
   id: string;

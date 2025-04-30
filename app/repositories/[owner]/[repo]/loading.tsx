@@ -2,9 +2,10 @@ import {
   Card,
   CardContent,
   CardFooter,
-  CardHeader
-} from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+  CardHeader,
+  CardTitle
+} from '@/app/components/ui/card';
+import { Skeleton } from '@/app/components/ui/skeleton';
 
 export function RepoLoadingSkeleton() {
   return (

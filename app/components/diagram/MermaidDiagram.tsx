@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/app/components/ui/skeleton';
 
 interface MermaidDiagramProps {
   code: string;

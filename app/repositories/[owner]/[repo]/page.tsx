@@ -13,7 +13,7 @@ import {
   Book,
   Clock
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/app/components/ui/button';
 import {
   Card,
   CardContent,
@@ -21,12 +21,33 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+} from '@/app/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/app/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '@/app/components/ui/alert';
 import { createGitHubClient } from '@/lib/github/githubClient';
 import { RepoLoadingSkeleton } from './loading';
 import Link from 'next/link';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import {
+  Calendar,
+  Clock,
+  GitFork,
+  History,
+  Star,
+  Tag,
+  Users2,
+  BookOpen,
+  AlertTriangle,
+  FileText
+} from 'lucide-react';
+import { getServerSession } from 'next-auth';
+import { formatDistanceToNow } from 'date-fns';
 
 interface RepositoryDetailPageProps {
   params: {
