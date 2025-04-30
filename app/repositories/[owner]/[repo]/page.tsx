@@ -42,9 +42,10 @@ export default function RepositoryDetailPage({
   const router = useRouter();
   const { data: session, status } = useSession();
   const [repository, setRepository] = useState<any>(null);
+  const [savedRepository, setSavedRepository] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     async function fetchRepositoryDetails() {
@@ -56,6 +57,23 @@ export default function RepositoryDetailPage({
         const repoDetails = await githubClient.getRepo(owner, repo);
 
         setRepository(repoDetails);
+
+        // If user is authenticated, check if they have this repo saved
+        if (session?.user?.id) {
+          try {
+            const response = await fetch(
+              `/api/repositories?url=${repoDetails.html_url}`
+            );
+            if (response.ok) {
+              const data = await response.json();
+              if (data.repository) {
+                setSavedRepository(data.repository);
+              }
+            }
+          } catch (err) {
+            console.error('Error checking saved repository:', err);
+          }
+        }
       } catch (error) {
         console.error('Error fetching repository details:', error);
         setError(
@@ -67,9 +85,9 @@ export default function RepositoryDetailPage({
     }
 
     fetchRepositoryDetails();
-  }, [owner, repo]);
+  }, [owner, repo, session]);
 
-  const handleStartAnalysis = async () => {
+  const handleGeneratePRD = async () => {
     if (!session) {
       // Redirect to sign in if not authenticated
       router.push(
@@ -79,23 +97,44 @@ export default function RepositoryDetailPage({
       return;
     }
 
-    setIsAnalyzing(true);
-
-    // In a real implementation, we would:
-    // 1. Save this repository to the user's repositories if not already saved
-    // 2. Create a new analysis record in the database
-    // 3. Start the analysis process (potentially redirect to an analysis page)
+    setIsGenerating(true);
 
     try {
-      // Mock delay for demonstration
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Save repository if not already saved
+      if (!savedRepository) {
+        const saveResponse = await fetch('/api/repositories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: repository.name,
+            owner: repository.owner.login,
+            description: repository.description,
+            url: repository.html_url,
+            isPrivate: repository.private,
+            stars: repository.stargazers_count,
+            forks: repository.forks_count
+          })
+        });
 
-      // Redirect to the analysis page
-      router.push(`/analyses/new?owner=${owner}&repo=${repo}`);
+        if (!saveResponse.ok) {
+          throw new Error('Failed to save repository');
+        }
+
+        const savedRepo = await saveResponse.json();
+        setSavedRepository(savedRepo);
+
+        // Redirect to PRD creation page
+        router.push(`/prds/new?repositoryId=${savedRepo.id}`);
+      } else {
+        // Repository already saved, redirect to PRD creation
+        router.push(`/prds/new?repositoryId=${savedRepository.id}`);
+      }
     } catch (error) {
-      console.error('Error starting analysis:', error);
-      setError('Failed to start analysis. Please try again.');
-      setIsAnalyzing(false);
+      console.error('Error preparing for PRD generation:', error);
+      setError('Failed to prepare for PRD generation. Please try again.');
+      setIsGenerating(false);
     }
   };
 
@@ -173,11 +212,11 @@ export default function RepositoryDetailPage({
             </a>
 
             <Button
-              onClick={handleStartAnalysis}
-              disabled={isAnalyzing}
+              onClick={handleGeneratePRD}
+              disabled={isGenerating}
               className="ml-2"
             >
-              {isAnalyzing ? 'Starting Analysis...' : 'Start Analysis'}
+              {isGenerating ? 'Preparing...' : 'Generate PRD'}
             </Button>
           </div>
         </div>
@@ -215,30 +254,30 @@ export default function RepositoryDetailPage({
             <CardHeader>
               <CardTitle>Repository Overview</CardTitle>
               <CardDescription>
-                Start an analysis to get comprehensive insights into this
+                Generate a PRD to get comprehensive insights into this
                 repository
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="prose dark:prose-invert max-w-none">
                 <p>
-                  CodeGrok will help you master this repository by analyzing its
-                  structure, architecture, and code patterns. You'll get:
+                  Gitlify will help you master this repository by generating a
+                  detailed Project Requirement Document (PRD) that includes:
                 </p>
 
                 <ul className="mt-4 space-y-2">
                   <li className="flex items-start">
                     <FileCode className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                     <span>
-                      Multi-layered explanations from high-level architecture to
-                      implementation details
+                      A chapter-based organization of requirements and
+                      architecture
                     </span>
                   </li>
                   <li className="flex items-start">
                     <Book className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                     <span>
-                      Comprehensive Project Requirement Document (PRD) extracted
-                      from the codebase
+                      Detailed explanations of the project's purpose, goals, and
+                      implementation
                     </span>
                   </li>
                   <li className="flex items-start">
@@ -259,13 +298,11 @@ export default function RepositoryDetailPage({
             </CardContent>
             <CardFooter>
               <Button
-                onClick={handleStartAnalysis}
-                disabled={isAnalyzing}
+                onClick={handleGeneratePRD}
+                disabled={isGenerating}
                 className="w-full"
               >
-                {isAnalyzing
-                  ? 'Starting Analysis...'
-                  : 'Start Comprehensive Analysis'}
+                {isGenerating ? 'Preparing...' : 'Generate Comprehensive PRD'}
               </Button>
             </CardFooter>
           </Card>

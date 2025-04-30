@@ -21,7 +21,7 @@ export default function Header({ showNavigation = true }: HeaderProps) {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                CodeGrok
+                Gitlify
               </h1>
             </Link>
 
@@ -34,16 +34,10 @@ export default function Header({ showNavigation = true }: HeaderProps) {
                   Repositories
                 </Link>
                 <Link
-                  href="/analyses"
+                  href="/prds"
                   className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 text-sm font-medium"
                 >
-                  Analyses
-                </Link>
-                <Link
-                  href="/templates"
-                  className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 text-sm font-medium"
-                >
-                  Templates
+                  PRDs
                 </Link>
                 <Link
                   href="/settings"

@@ -65,9 +65,11 @@ model User {
   sessions      Session[]
   apiKeys       ApiKey[]
   repositories  Repository[]
-  analyses      Analysis[]
-  templates     Template[]
+  prds          PRD[]
   llmConfigs    LLMConfiguration[]
+  workflowRuns  WorkflowRun[]
+  ratings       Rating[]
+  comments      Comment[]
 
   @@map("users")
 }
@@ -97,86 +99,169 @@ model Repository {
   forks        Int?
   userId       String     @map("user_id")
   lastAnalyzed DateTime?  @map("last_analyzed")
+  lastCommitSha String?   @map("last_commit_sha")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at")
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  analyses     Analysis[]
+  prds         PRD[]
+  workflowRuns WorkflowRun[]
 
+  @@unique([url, userId])
+  @@index([userId])
   @@map("repositories")
 }
 
-model Analysis {
-  id            String          @id @default(cuid())
-  repositoryId  String          @map("repository_id")
-  userId        String          @map("user_id")
-  templateId    String?         @map("template_id")
-  status        String
-  startedAt     DateTime        @map("started_at")
-  completedAt   DateTime?       @map("completed_at")
-  error         String?
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @default(now()) @updatedAt @map("updated_at")
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  repository    Repository      @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
-  template      Template?       @relation(fields: [templateId], references: [id])
-  results       AnalysisResult[]
-  fileAnalyses  FileAnalysis[]
+model PRD {
+  id             String    @id @default(cuid())
+  title          String
+  summary        String    @db.Text
+  metadata       Json      @default("{}")
+  status         String    @default("draft") // draft, published, archived
+  repositoryId   String    @map("repository_id")
+  userId         String    @map("user_id")
+  workflowStateId String?  @map("workflow_state_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at")
+  
+  repository     Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowState  WorkflowState? @relation(fields: [workflowStateId], references: [id])
+  chapters       Chapter[]
+  diagrams       Diagram[]
+  ratings        Rating[]
+  comments       Comment[]
 
-  @@map("analyses")
+  @@index([repositoryId])
+  @@index([userId])
+  @@map("prds")
 }
 
-model AnalysisResult {
+model Chapter {
   id         String   @id @default(cuid())
-  analysisId String   @map("analysis_id")
-  summary    String
-  details    String   @db.Text
-  metadata   Json?
+  title      String
+  orderIndex Int      @map("order_index")
+  content    String   @db.Text
+  prdId      String   @map("prd_id")
   createdAt  DateTime @default(now()) @map("created_at")
-  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  prd        PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
+  diagrams   Diagram[]
 
-  @@map("analysis_results")
+  @@index([prdId, orderIndex])
+  @@map("chapters")
 }
 
-model FileAnalysis {
-  id         String   @id @default(cuid())
-  analysisId String   @map("analysis_id")
-  path       String
-  content    String?  @db.Text
-  analysis   String   @db.Text
-  createdAt  DateTime @default(now()) @map("created_at")
-  analysisRel Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+model Diagram {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // component, data_flow, entity_relationship, etc.
+  mermaidCode String   @db.Text @map("mermaid_code")
+  description String   @db.Text
+  prdId       String   @map("prd_id")
+  chapterId   String?  @map("chapter_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  prd         PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
+  chapter     Chapter?  @relation(fields: [chapterId], references: [id])
 
-  @@map("file_analyses")
+  @@index([prdId])
+  @@index([chapterId])
+  @@map("diagrams")
 }
 
-model Template {
-  id          String     @id @default(cuid())
-  name        String
-  description String
-  prompt      String     @db.Text
-  isSystem    Boolean    @default(false) @map("is_system")
-  userId      String?    @map("user_id")
-  parameters  Json?
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
-  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  analyses    Analysis[]
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int
+  feedback  String?  @db.Text
+  prdId     String   @map("prd_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  prd       PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("templates")
+  @@unique([prdId, userId])
+  @@map("ratings")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  prdId     String   @map("prd_id")
+  userId    String   @map("user_id")
+  parentId  String?  @map("parent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  prd       PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([prdId])
+  @@index([parentId])
+  @@map("comments")
 }
 
 model LLMConfiguration {
-  id          String   @id @default(cuid())
-  name        String
-  endpoint    String
-  apiKey      String?  @map("api_key")
-  model       String
-  parameters  Json?
-  isActive    Boolean  @default(true) @map("is_active")
-  userId      String   @map("user_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id @default(cuid())
+  name           String
+  endpoint       String
+  apiKey         String?  @map("api_key")
+  modelName      String   @map("model_name")
+  contextWindow  Int      @map("context_window")
+  isActive       Boolean  @default(true) @map("is_active")
+  userId         String   @map("user_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowRuns   WorkflowRun[]
 
   @@map("llm_configurations")
+}
+
+model WorkflowRun {
+  id              String   @id @default(cuid())
+  status          String   // pending, running, completed, failed
+  startedAt       DateTime @default(now()) @map("started_at")
+  completedAt     DateTime? @map("completed_at")
+  repositoryId    String   @map("repository_id")
+  userId          String   @map("user_id")
+  configurationId String   @map("configuration_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  repository      Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuration   LLMConfiguration @relation(fields: [configurationId], references: [id])
+  workflowStates  WorkflowState[]
+
+  @@index([repositoryId])
+  @@map("workflow_runs")
+}
+
+model WorkflowState {
+  id            String   @id @default(cuid())
+  nodeName      String   @map("node_name")
+  status        String   // pending, running, completed, failed
+  input         Json     @default("{}")
+  output        Json     @default("{}")
+  workflowRunId String   @map("workflow_run_id")
+  parentStateId String?  @map("parent_state_id")
+  startedAt     DateTime? @map("started_at")
+  completedAt   DateTime? @map("completed_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+  parentState   WorkflowState? @relation("WorkflowStateHierarchy", fields: [parentStateId], references: [id])
+  childStates   WorkflowState[] @relation("WorkflowStateHierarchy")
+  prds          PRD[]
+
+  @@index([workflowRunId])
+  @@map("workflow_states")
 } 
