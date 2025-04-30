@@ -1,8 +1,9 @@
 'use client';
 
-import { Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/app/components/ui/button';
 import {
   Tabs,
@@ -10,91 +11,54 @@ import {
   TabsList,
   TabsTrigger
 } from '@/app/components/ui/tabs';
-import { FileText } from 'lucide-react';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import prisma from '@/app/lib/prisma';
+import { FileText, Loader2 } from 'lucide-react';
 import PRDCard from '@/app/components/prd/PRDCard';
 
-export const dynamic = 'force-dynamic';
+export default function PRDsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const [prds, setPrds] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default async function PRDsPage({
-  searchParams
-}: {
-  searchParams: { tab?: string };
-}) {
-  const session = await getServerSession(authOptions);
-  const activeTab = searchParams.tab || 'all';
+  const activeTab = searchParams?.get('tab') || 'all';
 
-  if (!session) {
-    redirect('/auth/signin?callbackUrl=/prds');
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin?callbackUrl=/prds');
+    }
+
+    if (status === 'authenticated') {
+      fetchPRDs();
+    }
+  }, [status, activeTab]);
+
+  async function fetchPRDs() {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/prds?tab=${activeTab}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch PRDs');
+      }
+      const data = await response.json();
+      setPrds(data);
+    } catch (error) {
+      console.error('Error fetching PRDs:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  // Fetch PRDs based on the active tab
-  let prds;
-  switch (activeTab) {
-    case 'mine':
-      prds = await prisma.pRD.findMany({
-        where: {
-          userId: session.user.id
-        },
-        include: {
-          repository: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true
-            }
-          },
-          chapters: {
-            select: {
-              id: true
-            }
-          },
-          _count: {
-            select: {
-              ratings: true,
-              comments: true
-            }
-          }
-        },
-        orderBy: {
-          updatedAt: 'desc'
-        }
-      });
-      break;
-    default:
-      prds = await prisma.pRD.findMany({
-        where: {
-          status: 'published'
-        },
-        include: {
-          repository: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true
-            }
-          },
-          chapters: {
-            select: {
-              id: true
-            }
-          },
-          _count: {
-            select: {
-              ratings: true,
-              comments: true
-            }
-          }
-        },
-        orderBy: {
-          updatedAt: 'desc'
-        }
-      });
-      break;
+  if (status === 'loading') {
+    return (
+      <div className="container mx-auto px-4 py-6 flex justify-center items-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (status === 'unauthenticated') {
+    return null; // We're redirecting in the useEffect
   }
 
   return (
@@ -110,53 +74,61 @@ export default async function PRDsPage({
           </Link>
         </div>
 
-        <Tabs defaultValue={activeTab} className="w-full">
+        <Tabs value={activeTab} className="w-full">
           <TabsList>
-            <TabsTrigger value="all" asChild>
-              <Link href="/prds?tab=all">All PRDs</Link>
+            <TabsTrigger
+              value="all"
+              onClick={() => router.push('/prds?tab=all')}
+            >
+              All PRDs
             </TabsTrigger>
-            <TabsTrigger value="mine" asChild>
-              <Link href="/prds?tab=mine">My PRDs</Link>
+            <TabsTrigger
+              value="mine"
+              onClick={() => router.push('/prds?tab=mine')}
+            >
+              My PRDs
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value={activeTab} className="mt-6">
-            <Suspense fallback={<p>Loading PRDs...</p>}>
-              {prds.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {prds.map(prd => (
-                    <PRDCard
-                      key={prd.id}
-                      id={prd.id}
-                      title={prd.title}
-                      summary={prd.summary}
-                      status={prd.status}
-                      createdAt={prd.createdAt}
-                      updatedAt={prd.updatedAt}
-                      repository={{
-                        name: prd.repository.name,
-                        owner: prd.repository.owner,
-                        stars: prd.repository.stars,
-                        forks: prd.repository.forks
-                      }}
-                      user={prd.user}
-                      chapterCount={prd.chapters.length}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground mb-4">
-                    {activeTab === 'mine'
-                      ? "You haven't created any PRDs yet."
-                      : 'No published PRDs available.'}
-                  </p>
-                  <Link href="/repositories">
-                    <Button>Generate Your First PRD</Button>
-                  </Link>
-                </div>
-              )}
-            </Suspense>
+            {isLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            ) : prds.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {prds.map(prd => (
+                  <PRDCard
+                    key={prd.id}
+                    id={prd.id}
+                    title={prd.title}
+                    summary={prd.summary}
+                    status={prd.status}
+                    createdAt={prd.createdAt}
+                    updatedAt={prd.updatedAt}
+                    repository={{
+                      name: prd.repository.name,
+                      owner: prd.repository.owner,
+                      stars: prd.repository.stars,
+                      forks: prd.repository.forks
+                    }}
+                    user={prd.user}
+                    chapterCount={prd.chapters?.length || 0}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground mb-4">
+                  {activeTab === 'mine'
+                    ? "You haven't created any PRDs yet."
+                    : 'No published PRDs available.'}
+                </p>
+                <Link href="/repositories">
+                  <Button>Generate Your First PRD</Button>
+                </Link>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

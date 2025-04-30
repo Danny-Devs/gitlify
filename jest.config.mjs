@@ -36,6 +36,18 @@ const config = {
     "**/__tests__/**/*.[jt]s?(x)"
   ],
 
+  // Module paths for resolving imports
+  modulePaths: ['<rootDir>'],
+
+  // Module name mapper for path aliases
+  moduleNameMapper: {
+    '^@/app/(.*)$': '<rootDir>/app/$1',
+    '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@/components/(.*)$': '<rootDir>/app/components/$1',
+    '^@/tests/(.*)$': '<rootDir>/tests/$1',
+    '^@/utils/(.*)$': '<rootDir>/utils/$1'
+  },
+
   // Transform to handle TypeScript and JSX
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],

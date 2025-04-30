@@ -11,36 +11,49 @@ import {
 } from '@/app/components/ui/tabs';
 import RepositoryList from '@/app/components/repository/RepositoryList';
 import AddRepositoryForm from '@/app/components/repository/AddRepositoryForm';
-import { getRepositories } from '../services/repository/repositoryService';
+import { useToast } from '@/app/components/ui/use-toast';
+import { Repository } from '@/app/types/repository';
 
 export default function RepositoriesPage() {
   const { data: session, status } = useSession();
-  const [userRepos, setUserRepos] = useState<any[]>([]);
+  const [userRepos, setUserRepos] = useState<Repository[]>([]);
   const [isLoadingUserRepos, setIsLoadingUserRepos] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [activeTab, setActiveTab] = useState('your-repos');
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
+  // Fetch repositories on mount and when session changes
   useEffect(() => {
-    fetchUserRepositories();
-  }, [session]);
+    if (status === 'authenticated') {
+      fetchUserRepositories();
+    }
+  }, [status]);
 
   async function fetchUserRepositories() {
-    if (session?.user) {
-      setIsLoadingUserRepos(true);
-      try {
-        const response = await fetch('/api/repositories');
+    setIsLoadingUserRepos(true);
+    setError(null);
 
-        if (response.ok) {
-          const data = await response.json();
-          setUserRepos(data);
-        } else {
-          console.error('Failed to fetch repositories');
-        }
-      } catch (error) {
-        console.error('Error fetching repositories:', error);
-      } finally {
-        setIsLoadingUserRepos(false);
+    try {
+      const response = await fetch('/api/repositories');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch repositories');
       }
+
+      const data = await response.json();
+      setUserRepos(data);
+    } catch (error) {
+      console.error('Error fetching repositories:', error);
+      setError(
+        error instanceof Error ? error.message : 'Failed to fetch repositories'
+      );
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch repositories. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoadingUserRepos(false);
     }
   }
 
@@ -79,6 +92,20 @@ export default function RepositoriesPage() {
           Manage GitHub repositories to generate PRDs from
         </p>
       </div>
+
+      {error && (
+        <div className="bg-destructive/15 p-4 rounded-md mb-6">
+          <p className="text-destructive font-medium">{error}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchUserRepositories}
+            className="mt-2"
+          >
+            Try Again
+          </Button>
+        </div>
+      )}
 
       {showAddForm ? (
         <div className="mb-8">

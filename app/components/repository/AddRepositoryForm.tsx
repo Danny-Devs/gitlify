@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/app/components/ui/card';
-import { parseGitHubUrl } from '@/app/services/repository/repositoryService';
+import { parseGitHubUrl } from '@/app/lib/github/utils';
 
 interface AddRepositoryFormProps {
   onComplete?: () => void;

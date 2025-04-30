@@ -14,18 +14,24 @@ export default function Header({ showNavigation = true }: HeaderProps) {
   const { data: session, status } = useSession();
   const isAuthenticated = status === 'authenticated';
 
+  // Always show navigation for authenticated users
+  const shouldShowNavigation = isAuthenticated || showNavigation;
+
   return (
     <header className="border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
+            <Link
+              href={isAuthenticated ? '/repositories' : '/'}
+              className="flex-shrink-0"
+            >
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                 Gitlify
               </h1>
             </Link>
 
-            {showNavigation && (
+            {shouldShowNavigation && (
               <nav className="hidden md:ml-8 md:flex md:space-x-6">
                 <Link
                   href="/repositories"

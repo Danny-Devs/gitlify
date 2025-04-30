@@ -1,10 +1,36 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
+  const router = useRouter();
+  const { status } = useSession();
+
+  // Redirect authenticated users directly to repositories page
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/repositories');
+    }
+  }, [status, router]);
+
+  // Only show homepage content for unauthenticated users
+  if (status === 'authenticated') {
+    return null; // Return null while redirecting
+  }
+
+  const handleGetStarted = () => {
+    router.push('/auth/signin');
+  };
+
+  const handleLearnMore = () => {
+    router.push('/about'); // Now points to the dedicated About page
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <Header showNavigation={false} />
@@ -18,10 +44,16 @@ export default function Home() {
             Transform GitHub repositories into engaging audio code tours
           </p>
           <div className="flex justify-center gap-4">
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90">
+            <button
+              className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+              onClick={handleGetStarted}
+            >
               Get Started
             </button>
-            <button className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-secondary/90">
+            <button
+              className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-secondary/90"
+              onClick={handleLearnMore}
+            >
               Learn More
             </button>
           </div>

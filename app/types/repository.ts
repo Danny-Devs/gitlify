@@ -1,11 +1,18 @@
+/**
+ * Repository type definition
+ */
 export interface Repository {
   id: string;
   name: string;
   owner: string;
-  description: string;
+  description?: string;
   url: string;
+  isPrivate?: boolean;
   stars?: number;
   forks?: number;
-  language?: string;
-  topics?: string[];
+  lastAnalyzed?: string;
+  lastCommitSha?: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }

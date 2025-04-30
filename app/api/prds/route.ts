@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/app/lib/prisma';
+import { NextRequest } from 'next/server';
 
 // Schema for PRD creation validation
 const createPRDSchema = z.object({
@@ -119,6 +120,97 @@ export async function POST(request: Request) {
     console.error('Error creating PRD:', error);
     return NextResponse.json(
       { error: 'Failed to create PRD' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * GET /api/prds
+ * Get PRDs based on the tab filter (all or mine)
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const url = new URL(request.url);
+    const tab = url.searchParams.get('tab') || 'all';
+    const userId = session.user.id;
+
+    let prds;
+    if (tab === 'mine') {
+      // Get PRDs created by the current user
+      prds = await prisma.pRD.findMany({
+        where: {
+          userId
+        },
+        include: {
+          repository: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true
+            }
+          },
+          chapters: {
+            select: {
+              id: true
+            }
+          },
+          _count: {
+            select: {
+              ratings: true,
+              comments: true
+            }
+          }
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      });
+    } else {
+      // Get all published PRDs
+      prds = await prisma.pRD.findMany({
+        where: {
+          status: 'published'
+        },
+        include: {
+          repository: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true
+            }
+          },
+          chapters: {
+            select: {
+              id: true
+            }
+          },
+          _count: {
+            select: {
+              ratings: true,
+              comments: true
+            }
+          }
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      });
+    }
+
+    return NextResponse.json(prds);
+  } catch (error) {
+    console.error('Error in GET /api/prds:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
