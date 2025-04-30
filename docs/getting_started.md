@@ -99,6 +99,22 @@ This guide will help you get started with Gitlify, whether you're using the plat
 6. **Access the Application**
    - Visit `http://localhost:3000` in your browser
 
+#### Tailwind CSS v4 Configuration
+
+Gitlify uses Tailwind CSS v4, which has significant differences from Tailwind v3:
+
+- **Plugin System**: Uses `@tailwindcss/postcss` instead of the previous plugins
+- **Import Syntax**: Uses `@import "tailwindcss";` instead of `@tailwind` directives
+- **Opacity Syntax**: Uses the slash syntax (e.g., `bg-primary/90` for 90% opacity)
+- **Theme Configuration**: Uses modern `@theme` directives in CSS
+
+When working with styles, ensure you follow the v4 patterns. For reference, check:
+
+- `postcss.config.mjs` for plugin configuration
+- `app/globals.css` for import and theme setup
+
+For more details, refer to the [Tailwind CSS v4 documentation](https://tailwindcss.com/docs).
+
 ### Project Structure
 
 - `/app` - Next.js application with pages, components, and API routes

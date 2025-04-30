@@ -41,10 +41,12 @@ This approach enables Gitlify to generate high-quality PRDs from even the larges
 
 ## 🛠️ Technology Stack
 
-- Next.js and React for the frontend and API routes
+- Next.js 15+ and React 19+ for the frontend and API routes
 - TypeScript for type safety
 - PostgreSQL with Prisma ORM for data storage
-- TailwindCSS with Shadcn/UI for UI components
+- Tailwind CSS v4 with Shadcn/UI for UI components
+  - Using modern @tailwindcss/postcss plugin configuration
+  - CSS imports via `@import "tailwindcss";` syntax
 - Local LLM integration (Ollama, LM Studio)
 - Mermaid.js for architecture diagrams
 - PocketFlow-inspired workflow for LLM orchestration

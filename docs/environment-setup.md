@@ -1,6 +1,6 @@
 # Environment Variables Setup Guide
 
-This guide explains how to set up the required environment variables for the CodeGrok application.
+This guide explains how to set up the required environment variables for the Gitlify application.
 
 ## Core Environment Variables
 
@@ -8,7 +8,7 @@ Create a `.env` file in the root directory of the project with the following var
 
 ```env
 # Database Connection
-DATABASE_URL="postgresql://postgres:password@localhost:5432/gistofgit?schema=public"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/gitlify?schema=public"
 
 # NextAuth Configuration
 NEXTAUTH_URL="http://localhost:3000"
@@ -24,7 +24,7 @@ GITHUB_CLIENT_ID="your-github-client-id"
 1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
 2. Click on "New OAuth App"
 3. Fill in the application details:
-   - **Application name**: CodeGrok
+   - **Application name**: Gitlify
    - **Homepage URL**: http://localhost:3000
    - **Authorization callback URL**: http://localhost:3000/api/auth/callback/github
 4. Register the application
@@ -51,7 +51,7 @@ DATABASE_URL="postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA"
 
 - Replace `USERNAME` and `PASSWORD` with your database credentials
 - Replace `HOST` and `PORT` with your database server details (default: localhost:5432)
-- Replace `DATABASE` with your database name (default: gistofgit)
+- Replace `DATABASE` with your database name (default: gitlify)
 
 ## Development vs Production
 

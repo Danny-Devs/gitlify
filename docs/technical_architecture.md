@@ -130,16 +130,17 @@ graph TD
 
 For efficient development and scalability, we'll use:
 
-| Component       | Technology                  | Justification                                       |
-| --------------- | --------------------------- | --------------------------------------------------- |
-| Frontend        | Next.js, React, TailwindCSS | Modern, responsive UI with efficient routing        |
-| Backend         | Next.js API routes          | Unified deployment, serverless architecture         |
-| Database        | PostgreSQL, Prisma          | Type-safe database access, robust ORM               |
-| GitHub Access   | Octokit.js                  | Well-maintained GitHub API client                   |
-| LLM Integration | REST clients                | Flexible integration with various LLM providers     |
-| UI Components   | Shadcn/UI                   | Consistent, accessible interface components         |
-| Diagramming     | Mermaid.js                  | Industry-standard diagram rendering in Markdown     |
-| LLM Workflow    | PocketFlow-inspired         | Simple, transparent orchestration of LLM operations |
+| Component       | Technology                              | Justification                                       |
+| --------------- | --------------------------------------- | --------------------------------------------------- |
+| Frontend        | Next.js 15+, React 19+, Tailwind CSS v4 | Modern, responsive UI with efficient routing        |
+| Backend         | Next.js API routes                      | Unified deployment, serverless architecture         |
+| Database        | PostgreSQL, Prisma                      | Type-safe database access, robust ORM               |
+| GitHub Access   | Octokit.js                              | Well-maintained GitHub API client                   |
+| LLM Integration | REST clients                            | Flexible integration with various LLM providers     |
+| UI Components   | Shadcn/UI                               | Consistent, accessible interface components         |
+| CSS Framework   | Tailwind CSS v4 (@tailwindcss/postcss)  | Modern utility-first CSS with updated plugin system |
+| Diagramming     | Mermaid.js                              | Industry-standard diagram rendering in Markdown     |
+| LLM Workflow    | PocketFlow-inspired                     | Simple, transparent orchestration of LLM operations |
 
 ## LLM Processing Architecture
 

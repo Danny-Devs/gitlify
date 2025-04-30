@@ -2,18 +2,18 @@
 
 ## Overview
 
-This document outlines the REST API endpoints available in the CodeGrok application. The API allows clients to analyze GitHub repositories, manage templates, and access analysis results without sending code to external services.
+This document outlines the REST API endpoints available in the Gitlify application. The API allows clients to analyze GitHub repositories, generate PRDs, and access analysis results without sending code to external services.
 
 ## Base URL
 
 ```
-https://api.gistofgit.com/v1
+https://api.gitlify.com/api
 ```
 
 For local development:
 
 ```
-http://localhost:3000/api/v1
+http://localhost:3000/api
 ```
 
 ## Authentication
@@ -58,7 +58,7 @@ Returns a list of repositories that the user has analyzed.
 
 ```json
 {
-  "data": [
+  "repositories": [
     {
       "id": "uuid",
       "url": "https://github.com/owner/repo",
@@ -68,20 +68,14 @@ Returns a list of repositories that the user has analyzed.
       "createdAt": "2023-06-15T10:00:00Z",
       "updatedAt": "2023-06-15T10:30:00Z"
     }
-  ],
-  "pagination": {
-    "total": 100,
-    "limit": 10,
-    "offset": 0,
-    "hasMore": true
-  }
+  ]
 }
 ```
 
 #### Get Repository
 
 ```http
-GET /repositories/:id
+GET /repositories?url=https://github.com/owner/repo
 ```
 
 Returns details about a specific repository.
@@ -90,14 +84,16 @@ Returns details about a specific repository.
 
 ```json
 {
-  "id": "uuid",
-  "url": "https://github.com/owner/repo",
-  "name": "repo",
-  "owner": "owner",
-  "lastAnalyzed": "2023-06-15T10:30:00Z",
-  "lastCommitSha": "a1b2c3d4e5f6g7h8i9j0",
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:30:00Z"
+  "repository": {
+    "id": "uuid",
+    "url": "https://github.com/owner/repo",
+    "name": "repo",
+    "owner": "owner",
+    "lastAnalyzed": "2023-06-15T10:30:00Z",
+    "lastCommitSha": "a1b2c3d4e5f6g7h8i9j0",
+    "createdAt": "2023-06-15T10:00:00Z",
+    "updatedAt": "2023-06-15T10:30:00Z"
+  }
 }
 ```
 
@@ -113,7 +109,13 @@ Adds a new repository for analysis.
 
 ```json
 {
-  "url": "https://github.com/owner/repo"
+  "name": "repo",
+  "owner": "owner",
+  "description": "Repository description",
+  "url": "https://github.com/owner/repo",
+  "isPrivate": false,
+  "stars": 100,
+  "forks": 50
 }
 ```
 
@@ -125,510 +127,183 @@ Adds a new repository for analysis.
   "url": "https://github.com/owner/repo",
   "name": "repo",
   "owner": "owner",
+  "description": "Repository description",
+  "isPrivate": false,
+  "stars": 100,
+  "forks": 50,
   "createdAt": "2023-06-15T10:00:00Z",
   "updatedAt": "2023-06-15T10:00:00Z"
 }
 ```
 
-#### Delete Repository
+### GitHub API
+
+#### Search Repositories
 
 ```http
-DELETE /repositories/:id
+GET /github?query=react
 ```
 
-Removes a repository and all associated analyses.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Repository deleted successfully"
-}
-```
-
-### Analyses
-
-#### List Analyses
-
-```http
-GET /repositories/:repoId/analyses
-```
-
-Returns a list of analyses for a specific repository.
+Searches for repositories on GitHub.
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                                         |
-| --------- | ------ | --------------------------------------------------- |
-| limit     | number | Maximum number of items to return                   |
-| offset    | number | Number of items to skip                             |
-| status    | string | Filter by status (pending/running/completed/failed) |
+| Parameter | Type   | Description                      |
+| --------- | ------ | -------------------------------- |
+| query     | string | Search term to find repositories |
 
 **Response:**
 
 ```json
 {
-  "data": [
+  "items": [
     {
-      "id": "uuid",
-      "status": "completed",
-      "startedAt": "2023-06-15T10:00:00Z",
-      "completedAt": "2023-06-15T10:30:00Z",
-      "repositoryId": "uuid",
-      "createdAt": "2023-06-15T10:00:00Z",
-      "updatedAt": "2023-06-15T10:30:00Z"
+      "id": 10270250,
+      "name": "react",
+      "full_name": "facebook/react",
+      "owner": {
+        "login": "facebook"
+      },
+      "html_url": "https://github.com/facebook/react",
+      "description": "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
+      "stargazers_count": 200000,
+      "forks_count": 40000
     }
   ],
-  "pagination": {
-    "total": 10,
-    "limit": 10,
-    "offset": 0,
-    "hasMore": false
-  }
+  "total_count": 100
 }
 ```
 
-#### Get Analysis
+#### Get Repository Details
 
 ```http
-GET /analyses/:id
+GET /github/repo?owner=facebook&repo=react
 ```
 
-Returns details about a specific analysis.
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "status": "completed",
-  "startedAt": "2023-06-15T10:00:00Z",
-  "completedAt": "2023-06-15T10:30:00Z",
-  "repositoryId": "uuid",
-  "repository": {
-    "id": "uuid",
-    "name": "repo",
-    "owner": "owner",
-    "url": "https://github.com/owner/repo"
-  },
-  "configuration": {
-    "id": "uuid",
-    "name": "Default Configuration",
-    "modelName": "llama3-70b"
-  },
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:30:00Z"
-}
-```
-
-#### Start Analysis
-
-```http
-POST /repositories/:repoId/analyses
-```
-
-Starts a new analysis for the specified repository.
-
-**Request Body:**
-
-```json
-{
-  "configurationId": "uuid",
-  "templateIds": ["uuid1", "uuid2"],
-  "branch": "main",
-  "commitSha": "a1b2c3d4e5f6g7h8i9j0"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "status": "pending",
-  "repositoryId": "uuid",
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Cancel Analysis
-
-```http
-POST /analyses/:id/cancel
-```
-
-Cancels a running analysis.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Analysis canceled successfully"
-}
-```
-
-#### List Analysis Results
-
-```http
-GET /analyses/:id/results
-```
-
-Returns the results of a specific analysis.
+Gets detailed information about a specific GitHub repository.
 
 **Query Parameters:**
 
-| Parameter | Type   | Description               |
-| --------- | ------ | ------------------------- |
-| category  | string | Filter by result category |
+| Parameter | Type   | Description                   |
+| --------- | ------ | ----------------------------- |
+| owner     | string | Repository owner/organization |
+| repo      | string | Repository name               |
 
 **Response:**
 
 ```json
 {
-  "data": [
+  "id": 10270250,
+  "name": "react",
+  "full_name": "facebook/react",
+  "owner": {
+    "login": "facebook"
+  },
+  "html_url": "https://github.com/facebook/react",
+  "description": "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
+  "stargazers_count": 200000,
+  "forks_count": 40000,
+  "created_at": "2013-05-24T16:15:54Z",
+  "updated_at": "2023-06-15T10:00:00Z"
+}
+```
+
+### PRDs
+
+#### List PRDs
+
+```http
+GET /prds
+```
+
+Returns a list of PRDs generated by the user.
+
+**Response:**
+
+```json
+{
+  "prds": [
     {
       "id": "uuid",
-      "title": "Architecture Overview",
-      "summary": "This repository follows a Model-View-Controller architecture...",
-      "category": "architecture",
-      "createdAt": "2023-06-15T10:30:00Z",
-      "updatedAt": "2023-06-15T10:30:00Z"
+      "title": "React - Project Requirements",
+      "summary": "Comprehensive analysis of the React library",
+      "repositoryId": "uuid",
+      "createdAt": "2023-06-15T10:00:00Z",
+      "updatedAt": "2023-06-15T10:30:00Z",
+      "status": "published"
     }
   ]
 }
 ```
 
-#### Get Analysis Result
+#### Get PRD
 
 ```http
-GET /analyses/results/:resultId
+GET /prds/:id
 ```
 
-Returns a specific analysis result with detailed content.
+Returns details about a specific PRD, including chapters and diagrams.
 
 **Response:**
 
 ```json
 {
   "id": "uuid",
-  "title": "Architecture Overview",
-  "summary": "This repository follows a Model-View-Controller architecture...",
-  "category": "architecture",
-  "content": {
-    "description": "Detailed description of the architecture...",
-    "components": [
-      {
-        "name": "Controllers",
-        "description": "Handle HTTP requests and responses..."
-      },
-      {
-        "name": "Models",
-        "description": "Represent data structures and business logic..."
-      },
-      {
-        "name": "Views",
-        "description": "Render data for the client..."
-      }
-    ],
-    "diagram": "ASCII or URL to diagram"
-  },
-  "createdAt": "2023-06-15T10:30:00Z",
-  "updatedAt": "2023-06-15T10:30:00Z"
-}
-```
-
-#### List File Analyses
-
-```http
-GET /analyses/:id/files
-```
-
-Returns analysis results for individual files.
-
-**Query Parameters:**
-
-| Parameter | Type   | Description                                  |
-| --------- | ------ | -------------------------------------------- |
-| path      | string | Filter by file path (supports glob patterns) |
-| language  | string | Filter by programming language               |
-| limit     | number | Maximum number of items to return            |
-| offset    | number | Number of items to skip                      |
-
-**Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": "uuid",
-      "filePath": "src/main.js",
-      "language": "JavaScript",
-      "size": 1024,
-      "summary": "Application entry point that initializes the router...",
-      "createdAt": "2023-06-15T10:30:00Z",
-      "updatedAt": "2023-06-15T10:30:00Z"
-    }
-  ],
-  "pagination": {
-    "total": 120,
-    "limit": 10,
-    "offset": 0,
-    "hasMore": true
-  }
-}
-```
-
-#### Get File Analysis
-
-```http
-GET /analyses/files/:fileId
-```
-
-Returns detailed analysis for a specific file.
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "filePath": "src/main.js",
-  "language": "JavaScript",
-  "size": 1024,
-  "summary": "Application entry point that initializes the router...",
-  "content": {
-    "description": "This file serves as the entry point for the application...",
-    "complexity": {
-      "cognitive": 12,
-      "cyclomaticAverage": 3.5
-    },
-    "dependencies": [
-      {
-        "name": "vue",
-        "usage": "Imported to create the Vue application instance"
-      }
-    ],
-    "functions": [
-      {
-        "name": "main",
-        "description": "Initializes the application...",
-        "parameters": [
-          {
-            "name": "options",
-            "type": "Object",
-            "description": "Configuration options"
-          }
-        ]
-      }
-    ]
-  },
-  "createdAt": "2023-06-15T10:30:00Z",
-  "updatedAt": "2023-06-15T10:30:00Z"
-}
-```
-
-### Templates
-
-#### List Templates
-
-```http
-GET /templates
-```
-
-Returns a list of analysis templates.
-
-**Query Parameters:**
-
-| Parameter | Type   | Description                       |
-| --------- | ------ | --------------------------------- |
-| category  | string | Filter by template category       |
-| limit     | number | Maximum number of items to return |
-| offset    | number | Number of items to skip           |
-
-**Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": "uuid",
-      "name": "Architecture Analysis",
-      "description": "Analyzes the architectural patterns used in the repository",
-      "category": "architecture",
-      "createdAt": "2023-06-01T10:00:00Z",
-      "updatedAt": "2023-06-01T10:00:00Z"
-    }
-  ],
-  "pagination": {
-    "total": 15,
-    "limit": 10,
-    "offset": 0,
-    "hasMore": true
-  }
-}
-```
-
-#### Get Template
-
-```http
-GET /templates/:id
-```
-
-Returns details about a specific template.
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Architecture Analysis",
-  "description": "Analyzes the architectural patterns used in the repository",
-  "content": "Template prompt content with instructions for the LLM...",
-  "category": "architecture",
-  "createdAt": "2023-06-01T10:00:00Z",
-  "updatedAt": "2023-06-01T10:00:00Z"
-}
-```
-
-#### Create Template
-
-```http
-POST /templates
-```
-
-Creates a new analysis template.
-
-**Request Body:**
-
-```json
-{
-  "name": "Security Analysis",
-  "description": "Identifies potential security vulnerabilities in the code",
-  "content": "Template prompt content with instructions for the LLM...",
-  "category": "security"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Security Analysis",
-  "description": "Identifies potential security vulnerabilities in the code",
-  "content": "Template prompt content with instructions for the LLM...",
-  "category": "security",
+  "title": "React - Project Requirements",
+  "summary": "Comprehensive analysis of the React library",
+  "repositoryId": "uuid",
+  "status": "published",
   "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Update Template
-
-```http
-PUT /templates/:id
-```
-
-Updates an existing template.
-
-**Request Body:**
-
-```json
-{
-  "name": "Updated Template Name",
-  "description": "Updated description",
-  "content": "Updated template content...",
-  "category": "security"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Updated Template Name",
-  "description": "Updated description",
-  "content": "Updated template content...",
-  "category": "security",
-  "createdAt": "2023-06-01T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Delete Template
-
-```http
-DELETE /templates/:id
-```
-
-Deletes a template.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Template deleted successfully"
+  "updatedAt": "2023-06-15T10:30:00Z",
+  "chapters": [
+    {
+      "id": "uuid",
+      "title": "Introduction and Overview",
+      "orderIndex": 0,
+      "content": "Markdown content here...",
+      "diagrams": [
+        {
+          "id": "uuid",
+          "title": "Component Architecture",
+          "type": "component",
+          "mermaidCode": "graph TD\nA[Component] --> B[Renderer]\n...",
+          "description": "Visualization of React's component architecture"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 ### LLM Configurations
 
-#### List Configurations
+#### List LLM Configurations
 
 ```http
-GET /llm-configurations
+GET /llm/configs
 ```
 
-Returns a list of LLM configurations.
+Returns a list of LLM configurations for the user.
 
 **Response:**
 
 ```json
-{
-  "data": [
-    {
-      "id": "uuid",
-      "name": "Local LLaMA",
-      "endpoint": "http://localhost:8080/v1",
-      "modelName": "llama3-70b",
-      "contextWindow": 32768,
-      "createdAt": "2023-06-01T10:00:00Z",
-      "updatedAt": "2023-06-01T10:00:00Z"
-    }
-  ]
-}
+[
+  {
+    "id": "uuid",
+    "name": "Ollama - CodeLlama 7B",
+    "modelName": "codellama:7b",
+    "contextWindow": 4096,
+    "isActive": true,
+    "ownedByUser": true
+  }
+]
 ```
 
-#### Get Configuration
+#### Create LLM Configuration
 
 ```http
-GET /llm-configurations/:id
-```
-
-Returns details about a specific LLM configuration.
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Local LLaMA",
-  "endpoint": "http://localhost:8080/v1",
-  "modelName": "llama3-70b",
-  "contextWindow": 32768,
-  "createdAt": "2023-06-01T10:00:00Z",
-  "updatedAt": "2023-06-01T10:00:00Z"
-}
-```
-
-#### Create Configuration
-
-```http
-POST /llm-configurations
+POST /llm/configs
 ```
 
 Creates a new LLM configuration.
@@ -637,11 +312,12 @@ Creates a new LLM configuration.
 
 ```json
 {
-  "name": "Local Mistral",
-  "endpoint": "http://localhost:11434/v1",
+  "name": "LM Studio - WizardCoder",
+  "endpoint": "http://localhost:8080/v1",
   "apiKey": "optional-api-key",
-  "modelName": "mistral-7b",
-  "contextWindow": 16384
+  "modelName": "WizardCoder-15B-V1.0",
+  "contextWindow": 8192,
+  "isActive": true
 }
 ```
 
@@ -650,362 +326,40 @@ Creates a new LLM configuration.
 ```json
 {
   "id": "uuid",
-  "name": "Local Mistral",
-  "endpoint": "http://localhost:11434/v1",
-  "modelName": "mistral-7b",
-  "contextWindow": 16384,
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
+  "name": "LM Studio - WizardCoder",
+  "endpoint": "http://localhost:8080/v1",
+  "modelName": "WizardCoder-15B-V1.0",
+  "contextWindow": 8192,
+  "isActive": true,
+  "createdAt": "2023-06-15T10:00:00Z"
 }
 ```
 
-#### Update Configuration
+## Rate Limits
 
-```http
-PUT /llm-configurations/:id
-```
+To ensure fair usage, the API has the following rate limits:
 
-Updates an existing LLM configuration.
+- 100 requests per minute for authenticated users
+- 1000 requests per day per API key
 
-**Request Body:**
-
-```json
-{
-  "name": "Updated Configuration Name",
-  "endpoint": "http://localhost:11434/v1",
-  "apiKey": "new-api-key",
-  "modelName": "mistral-7b",
-  "contextWindow": 32768
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Updated Configuration Name",
-  "endpoint": "http://localhost:11434/v1",
-  "modelName": "mistral-7b",
-  "contextWindow": 32768,
-  "createdAt": "2023-06-01T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Delete Configuration
-
-```http
-DELETE /llm-configurations/:id
-```
-
-Deletes an LLM configuration.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Configuration deleted successfully"
-}
-```
-
-#### Test Configuration
-
-```http
-POST /llm-configurations/:id/test
-```
-
-Tests connectivity to the configured LLM.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Successfully connected to LLM endpoint",
-  "details": {
-    "modelInfo": {
-      "name": "mistral-7b",
-      "version": "1.0.0"
-    },
-    "latency": 120, // ms
-    "maxContextWindow": 32768
-  }
-}
-```
-
-### API Keys
-
-#### List API Keys
-
-```http
-GET /api-keys
-```
-
-Returns a list of API keys for the authenticated user.
-
-**Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": "uuid",
-      "name": "Development Key",
-      "expiresAt": "2024-06-15T10:00:00Z",
-      "lastUsedAt": "2023-06-15T10:00:00Z",
-      "active": true,
-      "createdAt": "2023-06-01T10:00:00Z",
-      "updatedAt": "2023-06-01T10:00:00Z"
-    }
-  ]
-}
-```
-
-#### Create API Key
-
-```http
-POST /api-keys
-```
-
-Creates a new API key.
-
-**Request Body:**
-
-```json
-{
-  "name": "Production Key",
-  "expiresAt": "2024-06-15T10:00:00Z"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "key": "gog_a1b2c3d4e5f6g7h8i9j0", // Only returned once on creation
-  "name": "Production Key",
-  "expiresAt": "2024-06-15T10:00:00Z",
-  "active": true,
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Update API Key
-
-```http
-PUT /api-keys/:id
-```
-
-Updates an API key.
-
-**Request Body:**
-
-```json
-{
-  "name": "Updated Key Name",
-  "expiresAt": "2025-06-15T10:00:00Z",
-  "active": false
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "Updated Key Name",
-  "expiresAt": "2025-06-15T10:00:00Z",
-  "lastUsedAt": "2023-06-15T10:00:00Z",
-  "active": false,
-  "createdAt": "2023-06-01T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-#### Delete API Key
-
-```http
-DELETE /api-keys/:id
-```
-
-Deletes an API key.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "API key deleted successfully"
-}
-```
-
-### User
-
-#### Get Current User
-
-```http
-GET /user
-```
-
-Returns information about the authenticated user.
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "image": "https://example.com/avatar.jpg",
-  "createdAt": "2023-01-01T10:00:00Z",
-  "updatedAt": "2023-06-01T10:00:00Z"
-}
-```
-
-#### Update User
-
-```http
-PUT /user
-```
-
-Updates the authenticated user's information.
-
-**Request Body:**
-
-```json
-{
-  "name": "John Smith"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "name": "John Smith",
-  "email": "john.doe@example.com",
-  "image": "https://example.com/avatar.jpg",
-  "createdAt": "2023-01-01T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
+Exceeding these limits will result in a 429 Too Many Requests response.
 
 ## Error Handling
 
-All API endpoints follow a consistent error format:
+All endpoints return standard HTTP status codes:
+
+- 200: Success
+- 400: Bad Request (invalid parameters)
+- 401: Unauthorized (missing or invalid authentication)
+- 403: Forbidden (insufficient permissions)
+- 404: Not Found
+- 429: Too Many Requests (rate limit exceeded)
+- 500: Internal Server Error
+
+Error responses include a JSON body with details:
 
 ```json
 {
-  "error": {
-    "code": "resource_not_found",
-    "message": "The requested resource was not found",
-    "details": {
-      "resource": "repository",
-      "id": "invalid-uuid"
-    }
-  }
+  "error": "Error message describing the issue"
 }
 ```
-
-### Common Error Codes
-
-| Code                  | HTTP Status | Description                           |
-| --------------------- | ----------- | ------------------------------------- |
-| unauthorized          | 401         | Authentication required or failed     |
-| forbidden             | 403         | Permission denied                     |
-| resource_not_found    | 404         | The requested resource does not exist |
-| validation_failed     | 422         | Request data failed validation        |
-| rate_limit_exceeded   | 429         | Too many requests                     |
-| internal_server_error | 500         | Unexpected server error               |
-
-## Rate Limiting
-
-API requests are subject to rate limiting:
-
-- 100 requests per minute for most endpoints
-- 10 analysis requests per minute
-
-Rate limit information is included in response headers:
-
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1623760800
-```
-
-## Webhooks
-
-### Available Events
-
-- `analysis.started`: When an analysis begins
-- `analysis.completed`: When an analysis completes successfully
-- `analysis.failed`: When an analysis fails
-
-### Setting Up Webhooks
-
-Webhooks can be configured through the dashboard or the API:
-
-```http
-POST /webhooks
-```
-
-**Request Body:**
-
-```json
-{
-  "url": "https://example.com/webhook",
-  "events": ["analysis.completed", "analysis.failed"],
-  "secret": "webhook-secret-for-verification"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "uuid",
-  "url": "https://example.com/webhook",
-  "events": ["analysis.completed", "analysis.failed"],
-  "active": true,
-  "createdAt": "2023-06-15T10:00:00Z",
-  "updatedAt": "2023-06-15T10:00:00Z"
-}
-```
-
-### Webhook Payload
-
-```json
-{
-  "id": "uuid",
-  "type": "analysis.completed",
-  "createdAt": "2023-06-15T10:30:00Z",
-  "data": {
-    "analysis": {
-      "id": "uuid",
-      "status": "completed",
-      "startedAt": "2023-06-15T10:00:00Z",
-      "completedAt": "2023-06-15T10:30:00Z",
-      "repository": {
-        "id": "uuid",
-        "name": "repo",
-        "owner": "owner"
-      }
-    }
-  }
-}
-```
-
-### Webhook Signature
-
-To verify webhook authenticity, a signature is included in the `X-GOG-Signature` header:
-
-```
-X-GOG-Signature: sha256=a1b2c3d4e5f6g7h8i9j0
-```
-
-The signature is generated using the webhook secret and the request body.

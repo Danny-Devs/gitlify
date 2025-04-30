@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { createGitHubClient } from '@/app/lib/github/githubClient';
+import { createGitHubClient } from '@/lib/github/githubClient';
 import { RepoLoadingSkeleton } from './loading';
 import Link from 'next/link';
 

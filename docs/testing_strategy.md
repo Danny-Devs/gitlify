@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the comprehensive testing strategy for the CodeGrok application. A robust testing approach is essential to ensure the application works reliably across different environments, especially given the complex integrations with GitHub and local LLM instances.
+This document outlines the comprehensive testing strategy for the Gitlify application. A robust testing approach is essential to ensure the application works reliably across different environments, especially given the complex integrations with GitHub and local LLM instances.
 
 ## Testing Principles
 
@@ -35,315 +35,212 @@ Unit tests verify that individual components work as expected in isolation.
 **Example Unit Test:**
 
 ```typescript
-// Testing an API service function
-describe('createApiKey', () => {
-  it('should create a new API key for an authenticated user', async () => {
+// Testing a utility function for PRD generation
+import { formatPRDContent } from '@/lib/prd-formatter';
+
+describe('formatPRDContent', () => {
+  it('should format raw PRD content into structured markdown', () => {
     // Arrange
-    const mockUser = { id: 'user-id', name: 'Test User' };
-    const mockNewKeyData = { name: 'Test Key', type: 'dev' };
-    const mockPrisma = mockPrismaClient();
-    mockPrisma.apiKey.create.mockResolvedValue({
-      id: 'key-id',
-      name: 'Test Key',
-      keyValue: 'test-key-value',
-      userId: 'user-id',
-      scopes: ['dev'],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    const rawContent = {
+      title: 'Project Requirements',
+      sections: [
+        { heading: 'Overview', content: 'This is an overview.' },
+        { heading: 'Features', content: 'Feature list here.' }
+      ]
+    };
 
     // Act
-    const result = await createApiKey(mockNewKeyData, mockUser, mockPrisma);
+    const result = formatPRDContent(rawContent);
 
     // Assert
-    expect(mockPrisma.apiKey.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        name: 'Test Key',
-        userId: 'user-id',
-        scopes: ['dev']
-      })
-    });
-    expect(result).toEqual(
-      expect.objectContaining({
-        id: 'key-id',
-        name: 'Test Key',
-        key: 'test-key-value'
-      })
-    );
+    expect(result).toContain('# Project Requirements');
+    expect(result).toContain('## Overview');
+    expect(result).toContain('This is an overview.');
+    expect(result).toContain('## Features');
+    expect(result).toContain('Feature list here.');
   });
 });
 ```
 
 ### Integration Tests
 
-Integration tests verify that different components work together correctly.
+Integration tests verify that different parts of the application work together correctly.
 
 **Key Areas for Integration Testing:**
 
-- API endpoints with database interactions
-- User authentication flows
+- API endpoints and database interactions
+- User authentication flow
+- Repository analysis workflow
+- PRD generation pipeline
 - GitHub API integration
-- LLM connectivity and processing
 
 **Technology:**
 
 - Jest with Supertest for API testing
-- Test database environment
-- Mock external services (GitHub API, LLM services)
+- Test database for data persistence tests
+- Mock responses for external services
 
 **Example Integration Test:**
 
 ```typescript
-// Testing an API endpoint
-describe('POST /api/repositories', () => {
-  it('should add a repository and return repository details', async () => {
-    // Arrange
-    const repoUrl = 'https://github.com/owner/repo';
-    await setupTestUser();
+// Testing the repository API endpoint
+import { createServer } from '@/server';
+import { prisma } from '@/lib/prisma';
+import supertest from 'supertest';
 
-    // Mock GitHub API response
-    mockGitHubApi.getRepository.mockResolvedValue({
-      name: 'repo',
-      owner: { login: 'owner' },
-      html_url: repoUrl
-    });
+describe('Repository API', () => {
+  let app;
+  let authToken;
 
-    // Act
-    const response = await request(app)
+  beforeAll(async () => {
+    app = createServer();
+    // Setup authentication and get token
+    const authResponse = await supertest(app)
+      .post('/api/auth/login')
+      .send({ username: 'testuser', password: 'password' });
+
+    authToken = authResponse.body.token;
+  });
+
+  beforeEach(async () => {
+    // Clear test database
+    await prisma.repository.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('should create a new repository', async () => {
+    const response = await supertest(app)
       .post('/api/repositories')
-      .set('Authorization', `Bearer ${testApiKey}`)
-      .send({ url: repoUrl });
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
+        name: 'react',
+        owner: 'facebook',
+        url: 'https://github.com/facebook/react',
+        description: 'A JavaScript library for building user interfaces'
+      });
 
-    // Assert
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        url: repoUrl,
-        name: 'repo',
-        owner: 'owner'
-      })
-    );
-
-    // Verify database record was created
-    const dbRecord = await prisma.repository.findFirst({
-      where: { url: repoUrl }
-    });
-    expect(dbRecord).not.toBeNull();
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body.name).toBe('react');
+    expect(response.body.owner).toBe('facebook');
   });
 });
 ```
 
 ### End-to-End Tests
 
-E2E tests verify complete user flows and interact with the application as a user would.
+E2E tests verify the entire application flow from the user's perspective.
 
-**Key User Flows to Test:**
+**Key Areas for E2E Testing:**
 
 - User registration and login
-- Repository addition and analysis
-- Template creation and application
-- LLM configuration
-- Viewing and exploring analysis results
+- Repository search and selection
+- PRD generation flow
+- PRD viewing and navigation
+- User settings management
 
 **Technology:**
 
-- Playwright for browser automation
-- Mocked external services where necessary
-- Visual regression testing
+- Playwright for browser-based testing
+- Mocked backend responses for deterministic testing
+- Visual regression testing for UI components
 
 **Example E2E Test:**
 
 ```typescript
-// Testing repository analysis flow
-test('User can add and analyze a repository', async ({ page }) => {
-  // Arrange
-  await loginUser(page);
+// Testing the PRD generation flow
+import { test, expect } from '@playwright/test';
 
-  // Act - Navigate to dashboard
-  await page.goto('/dashboard');
+test('user can generate a PRD for a repository', async ({ page }) => {
+  // Login
+  await page.goto('/auth/signin');
+  await page.fill('input[name="email"]', 'test@example.com');
+  await page.fill('input[name="password"]', 'password');
+  await page.click('button[type="submit"]');
 
-  // Add repository
-  await page.getByRole('button', { name: 'Add Repository' }).click();
-  await page.getByLabel('Repository URL').fill('https://github.com/owner/repo');
-  await page.getByRole('button', { name: 'Submit' }).click();
+  // Navigate to repository search
+  await page.goto('/repositories');
 
-  // Wait for repository to be added
-  await page.waitForSelector('text=Repository added successfully');
+  // Search for a repository
+  await page.fill('input[placeholder="Search repositories"]', 'react');
+  await page.click('button[aria-label="Search"]');
 
-  // Start analysis
-  await page.getByText('repo').click();
-  await page.getByRole('button', { name: 'Analyze' }).click();
+  // Wait for search results and select the first repository
+  await page.waitForSelector('.repository-card');
+  await page.click('.repository-card:first-child');
 
-  // Select template
-  await page.getByLabel('Architecture Analysis').check();
-  await page.getByRole('button', { name: 'Start Analysis' }).click();
+  // Start PRD generation
+  await page.click('button:has-text("Generate PRD")');
 
-  // Assert - Wait for analysis to complete
-  await page.waitForSelector('text=Analysis completed', { timeout: 30000 });
+  // Confirm PRD generation options
+  await page.click('button:has-text("Confirm")');
 
-  // Verify results are displayed
-  expect(await page.isVisible('text=Architecture Overview')).toBeTruthy();
-  expect(await page.isVisible('text=Components')).toBeTruthy();
+  // Wait for generation to complete (may take some time in real testing)
+  await page.waitForSelector('div:has-text("PRD Generated Successfully")', {
+    timeout: 30000
+  });
+
+  // Verify PRD was created and is viewable
+  await page.click('a:has-text("View PRD")');
+  await expect(page).toHaveURL(/\/prds\/[a-zA-Z0-9-]+$/);
+  await expect(page.locator('h1')).toContainText('React');
 });
-```
-
-### Performance Tests
-
-Performance tests verify that the application meets performance requirements.
-
-**Key Performance Metrics:**
-
-- Page load time
-- API response time
-- Analysis processing time
-- Database query performance
-
-**Technology:**
-
-- Lighthouse for web performance
-- Custom timing metrics in key flows
-- Load testing with k6 for API endpoints
-
-**Example Performance Test:**
-
-```typescript
-// Load testing an API endpoint with k6
-import http from 'k6/http';
-import { check, sleep } from 'k6';
-
-export default function () {
-  const payload = JSON.stringify({
-    url: 'https://github.com/owner/repo'
-  });
-
-  const params = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${__ENV.API_KEY}`
-    }
-  };
-
-  const res = http.post(
-    'https://api.gistofgit.com/v1/repositories',
-    payload,
-    params
-  );
-
-  check(res, {
-    'status is 200': r => r.status === 200,
-    'response time < 500ms': r => r.timings.duration < 500
-  });
-
-  sleep(1);
-}
 ```
 
 ### Security Tests
 
-Security tests identify potential vulnerabilities in the application.
+Security tests verify that the application is protected against common vulnerabilities.
 
-**Key Security Areas:**
+**Key Areas for Security Testing:**
 
 - Authentication and authorization
-- Input validation
+- Input validation and sanitization
 - API security
-- Dependency security
+- Data protection
+- Dependency vulnerabilities
 
 **Technology:**
 
 - OWASP ZAP for automated security scanning
-- npm audit for dependency vulnerabilities
+- npm audit for dependency checking
 - Manual penetration testing
 
-## Test Environments
+### Performance Tests
 
-### Local Development Environment
+Performance tests verify that the application performs well under expected and peak loads.
 
-- Developers run tests locally before committing code
-- Mock external dependencies
-- Use Docker for database and infrastructure dependencies
+**Key Areas for Performance Testing:**
 
-### CI/CD Environment
+- API response times
+- PRD generation performance
+- UI rendering performance
+- Database query performance
 
-- Automated test runs on pull requests and merge to main
-- Integration with GitHub Actions
-- Test database provisioned for each CI run
+**Technology:**
 
-### Staging Environment
+- Lighthouse for frontend performance
+- k6 for load testing API endpoints
+- Custom benchmarking for LLM operations
 
-- Complete application deployment
-- Integration with real (test) external services
-- Performance and security testing
+### Accessibility Tests
 
-## Test Data Management
+Accessibility tests verify that the application is usable by people with disabilities.
 
-### Test Data Sources
+**Key Areas for Accessibility Testing:**
 
-- Synthetic data generation for most tests
-- Anonymized production data for complex scenarios
-- GitHub test repositories for repository analysis tests
+- Keyboard navigation
+- Screen reader compatibility
+- Color contrast
+- Focus management
 
-### Database Seeding
+**Technology:**
 
-- Seed scripts for consistent test data
-- Database reset between test runs
-- Fixtures for common test scenarios
-
-## Testing LLM Integrations
-
-LLM integration testing requires special consideration due to the variability of LLM responses.
-
-### Strategies for Testing LLM Integration:
-
-1. **Mock LLM responses** for deterministic testing
-2. **Test for structure rather than exact content**
-3. **Implement validation rules** to verify LLM outputs
-4. **Record and replay** approach for complex scenarios
-
-**Example LLM Integration Test:**
-
-```typescript
-// Testing the LLM analysis service
-describe('analyzeDependencies', () => {
-  it('should process repository content and return dependency analysis', async () => {
-    // Arrange
-    const mockRepoContent = {
-      'package.json': JSON.stringify({
-        dependencies: {
-          react: '^18.0.0',
-          next: '^13.0.0'
-        }
-      })
-    };
-    const mockLlmResponse = {
-      summary: 'This is a React application with Next.js',
-      dependencies: [
-        { name: 'react', category: 'ui', isCritical: true },
-        { name: 'next', category: 'framework', isCritical: true }
-      ]
-    };
-
-    mockLlmService.analyze.mockResolvedValue(mockLlmResponse);
-
-    // Act
-    const result = await analyzeDependencies('repo-id', mockRepoContent);
-
-    // Assert
-    expect(mockLlmService.analyze).toHaveBeenCalledWith(
-      expect.objectContaining({
-        template: 'dependency-analysis',
-        content: expect.any(String)
-      })
-    );
-
-    expect(result).toHaveProperty('summary');
-    expect(result).toHaveProperty('dependencies');
-    expect(result.dependencies.length).toBeGreaterThan(0);
-    expect(result.dependencies[0]).toHaveProperty('name');
-    expect(result.dependencies[0]).toHaveProperty('category');
-  });
-});
-```
+- axe for automated accessibility testing
+- Manual testing with screen readers
+- Keyboard-only navigation testing
 
 ## Continuous Integration/Continuous Deployment
 
@@ -408,4 +305,4 @@ describe('analyzeDependencies', () => {
 
 ## Conclusion
 
-This testing strategy provides a comprehensive approach to ensure the quality and reliability of the CodeGrok application. By implementing these testing practices, we can confidently deliver new features and improvements while maintaining a stable and secure application.
+This testing strategy provides a comprehensive approach to ensure the quality and reliability of the Gitlify application. By implementing these testing practices, we can confidently deliver new features and improvements while maintaining a stable and secure application.

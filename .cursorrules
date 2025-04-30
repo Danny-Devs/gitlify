@@ -73,7 +73,10 @@ CodeNarrator transforms public GitHub repositories into engaging audio code tour
 - Next.js 15+ with App Router for frontend and API routes
 - TypeScript for type safety throughout
 - PostgreSQL with Prisma ORM for database
-- TailwindCSS with Shadcn/UI components for UI
+- TailwindCSS v4 with Shadcn/UI components for UI
+  - Using @tailwindcss/postcss plugin (NOT autoprefixer/postcss-import from v3)
+  - Imports via `@import "tailwindcss";` (not @tailwind directives)
+  - Uses new opacity syntax with / (e.g., bg-primary/90)
 - Lucide icons through Shadcn/UI integration for iconography
 - Octokit.js for GitHub API access
 - Text-to-speech services for audio generation

@@ -11,21 +11,19 @@ export default function Home() {
 
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-            Transform GitHub Repositories Into Comprehensive PRDs
-          </h2>
-          <p className="mt-3 text-xl text-gray-500 dark:text-gray-400 sm:mt-4">
-            Gitlify reverse-engineers detailed Project Requirement Documents
-            from any public GitHub repository, enabling you to understand,
-            rebuild, and contribute to open-source projects.
+          <h1 className="text-4xl font-bold mb-4 text-primary">
+            Welcome to Gitlify
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Transform GitHub repositories into engaging audio code tours
           </p>
-          <div className="mt-8 flex justify-center">
-            <Link
-              href="/repositories"
-              className="px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            >
+          <div className="flex justify-center gap-4">
+            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90">
               Get Started
-            </Link>
+            </button>
+            <button className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-secondary/90">
+              Learn More
+            </button>
           </div>
         </div>
 

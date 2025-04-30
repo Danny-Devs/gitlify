@@ -1,6 +1,6 @@
 # Glossary
 
-This document defines key terminology used throughout the CodeGrok project documentation.
+This document defines key terminology used throughout the Gitlify project documentation.
 
 ## Project-Specific Terms
 
@@ -8,13 +8,13 @@ This document defines key terminology used throughout the CodeGrok project docum
 
 The process of examining a GitHub repository with LLMs to generate insights about its structure, architecture, dependencies, and other characteristics.
 
-### Analysis Result
+### PRD (Project Requirement Document)
 
-The output of an analysis process, containing structured insights about a repository or specific aspects of it.
+A comprehensive document that outlines the requirements, specifications, and design of a software project, including functional and non-functional requirements, architecture, and implementation details.
 
-### File Analysis
+### Chapter
 
-Analysis of individual files within a repository, focusing on their purpose, complexity, and relationships.
+A section of a PRD that focuses on a specific aspect of the project requirements or architecture, organized in a progressive manner from high-level concepts to detailed implementation.
 
 ### LLM Configuration
 
@@ -24,19 +24,15 @@ Settings that define how to connect to and interact with a local Large Language 
 
 A predefined structure for generating prompts to send to LLMs, designed to extract specific types of insights from repositories.
 
-### Template Category
+### Repository Analysis
 
-A classification for prompt templates based on their purpose (architecture, dependencies, code quality, etc.).
-
-### Template Usage
-
-A record of when and how a template was used during an analysis, including success metrics.
+The process of examining a GitHub repository to extract requirements, architecture, and other insights for PRD generation.
 
 ## Technical Terms
 
 ### API Key
 
-A unique identifier used for authentication with the CodeGrok API.
+A unique identifier used for authentication with the Gitlify API.
 
 ### Context Window
 
@@ -158,9 +154,13 @@ A design philosophy that starts with a basic level of user experience and builds
 
 ## Additional Terms
 
-### Micro-SaaS
+### PocketFlow
 
-A small, focused Software-as-a-Service application targeting a specific niche or solving a specific problem.
+A workflow system for orchestrating large language model operations across multiple processing steps, handling large repositories and complex analyses effectively.
+
+### Mermaid Diagram
+
+A text-based diagramming and charting tool that renders Markdown-inspired text definitions to create diagrams dynamically.
 
 ### Rate Limiting
 

@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="flex justify-between items-center">
           <div className="text-gray-500 dark:text-gray-400">
             <p>
-              &copy; {new Date().getFullYear()} CodeGrok. All rights reserved.
+              &copy; {new Date().getFullYear()} Gitlify. All rights reserved.
             </p>
           </div>
           <div className="flex space-x-6">
@@ -28,7 +28,7 @@ export default function Footer() {
               Terms
             </a>
             <a
-              href="https://github.com/your-username/code-grok"
+              href="https://github.com/yourusername/gitlify"
               className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
             >
               GitHub
